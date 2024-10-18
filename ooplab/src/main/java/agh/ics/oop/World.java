@@ -17,13 +17,16 @@ public class World {
   }
 
   public static void run(MoveDirection[] directions) {
+    StringBuilder message = new StringBuilder();
     for (MoveDirection direction : directions) {
       switch (direction) {
-        case FORWARD -> System.out.println(GO_FORWARD_MESSAGE);
-        case BACKWARD -> System.out.println(GO_BACKWARD_MESSAGE);
-        case RIGHT -> System.out.println(GO_RIGHT_MESSAGE);
-        case LEFT -> System.out.println(GO_LEFT_MESSAGE);
+        case FORWARD -> message.append(GO_FORWARD_MESSAGE).append(",\n");
+        case BACKWARD -> message.append(GO_BACKWARD_MESSAGE).append(",\n");
+        case RIGHT -> message.append(GO_RIGHT_MESSAGE).append(",\n");
+        case LEFT -> message.append(GO_LEFT_MESSAGE).append(",\n");
       }
     }
+    message.deleteCharAt(message.length() - 2);
+    System.out.println(message);
   }
 }
