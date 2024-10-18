@@ -20,10 +20,10 @@ public class World {
     StringBuilder message = new StringBuilder();
     for (MoveDirection direction : directions) {
       switch (direction) {
-        case FORWARD -> message.append(GO_FORWARD_MESSAGE).append(",\n");
-        case BACKWARD -> message.append(GO_BACKWARD_MESSAGE).append(",\n");
-        case RIGHT -> message.append(GO_RIGHT_MESSAGE).append(",\n");
-        case LEFT -> message.append(GO_LEFT_MESSAGE).append(",\n");
+        case FORWARD -> message.append(GO_FORWARD_MESSAGE).append(", ");
+        case BACKWARD -> message.append(GO_BACKWARD_MESSAGE).append(", ");
+        case RIGHT -> message.append(GO_RIGHT_MESSAGE).append(", ");
+        case LEFT -> message.append(GO_LEFT_MESSAGE).append(", ");
       }
     }
     message.deleteCharAt(message.length() - 2);
