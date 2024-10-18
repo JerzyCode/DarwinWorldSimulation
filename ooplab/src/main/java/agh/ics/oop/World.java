@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.mappers.OptionsParser;
 import agh.ics.oop.model.MoveDirection;
 
 public class World {

@@ -1,4 +1,4 @@
-package agh.ics.oop.mappers;
+package agh.ics.oop;
 
 import agh.ics.oop.model.MoveDirection;
 
