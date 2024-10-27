@@ -15,7 +15,7 @@ class Vector2dTest {
   private static final int MAX_RANDOM = 100000;
 
   @Test
-  void shouldAddTwoVectors() {
+  void shouldAddVectors() {
     //given
     var vector1 = new Vector2d(RANDOM.nextInt(MAX_RANDOM), RANDOM.nextInt(MAX_RANDOM));
     var vector2 = new Vector2d(RANDOM.nextInt(MAX_RANDOM), RANDOM.nextInt(MAX_RANDOM));
@@ -29,7 +29,7 @@ class Vector2dTest {
   }
 
   @Test
-  void shouldSubtractTwoVectors() {
+  void shouldSubtractVectors() {
     //given
     var vector1 = new Vector2d(RANDOM.nextInt(MAX_RANDOM), RANDOM.nextInt(MAX_RANDOM));
     var vector2 = new Vector2d(RANDOM.nextInt(MAX_RANDOM), RANDOM.nextInt(MAX_RANDOM));
@@ -171,7 +171,6 @@ class Vector2dTest {
         Arguments.of(new Vector2d(2, 3), new Vector2d(3, 1), new Vector2d(3, 3)),
         Arguments.of(new Vector2d(1, 3), new Vector2d(4, 4), new Vector2d(4, 4)),
         Arguments.of(new Vector2d(4, 4), new Vector2d(1, 3), new Vector2d(4, 4))
-
     );
   }
 
@@ -182,7 +181,6 @@ class Vector2dTest {
         Arguments.of(new Vector2d(2, 3), new Vector2d(3, 1), new Vector2d(2, 1)),
         Arguments.of(new Vector2d(1, 3), new Vector2d(-1, -4), new Vector2d(-1, -4)),
         Arguments.of(new Vector2d(-4, -4), new Vector2d(1, 3), new Vector2d(-4, -4))
-
     );
   }
 }
