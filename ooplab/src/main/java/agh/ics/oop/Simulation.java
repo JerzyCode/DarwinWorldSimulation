@@ -35,4 +35,8 @@ public class Simulation {
     animalsPositions.forEach(position -> animals.add(new Animal(position)));
     return animals;
   }
+
+  public List<Animal> getAnimals() {
+    return animals;
+  }
 }
