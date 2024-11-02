@@ -1,7 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 
@@ -15,26 +13,18 @@ public class World {
 
   public static void main(String[] args) {
     System.out.println("Start");
-    run(OptionsParser.parse(args));
+
+    //    f b r l f f r r f f f f f f f f
+    var directions = OptionsParser.parse(args);
+    var positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
+
+    var simulation = new Simulation(positions, directions);
+    simulation.run();
+
     System.out.println("Stop");
-
-    Vector2d position1 = new Vector2d(1, 2);
-    System.out.println(position1);
-    Vector2d position2 = new Vector2d(-2, 1);
-    System.out.println(position2);
-    System.out.println(position1.add(position2));
-    System.out.println(position1.subtract(position2));
-
-    MapDirection mapDirection = MapDirection.NORTH;
-    System.out.println(mapDirection.next());
-    System.out.println(mapDirection.previous());
-    System.out.println(mapDirection.toUnitVector());
-
-    var animal = new Animal();
-    System.out.println(animal);
   }
 
-  private static void run(List<MoveDirection> directions) {
+  private static void printDirections(MoveDirection[] directions) {
     StringBuilder message = new StringBuilder();
     for (MoveDirection direction : directions) {
       switch (direction) {
@@ -47,4 +37,5 @@ public class World {
     message.deleteCharAt(message.length() - 2);
     System.out.println(message);
   }
+
 }
