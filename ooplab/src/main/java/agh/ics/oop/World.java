@@ -1,8 +1,11 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
+
+import java.util.List;
 
 public class World {
   private static final String GO_FORWARD_MESSAGE = "Zwierzak idzie do przodu";
@@ -26,9 +29,12 @@ public class World {
     System.out.println(mapDirection.next());
     System.out.println(mapDirection.previous());
     System.out.println(mapDirection.toUnitVector());
+
+    var animal = new Animal();
+    System.out.println(animal);
   }
 
-  private static void run(MoveDirection[] directions) {
+  private static void run(List<MoveDirection> directions) {
     StringBuilder message = new StringBuilder();
     for (MoveDirection direction : directions) {
       switch (direction) {
