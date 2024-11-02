@@ -21,20 +21,18 @@ public class Animal {
   }
 
   public void move(MoveDirection moveDirection) {
-    changeDirection(moveDirection);
-    var newPosition = position.add(orientation.toUnitVector());
-    if (isNewPositionAllowed(newPosition)) {
-      position = newPosition;
+    switch (moveDirection) {
+      case FORWARD -> updatePosition(position.add(orientation.toUnitVector()));
+      case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()));
+      case LEFT -> orientation = orientation.previous();
+      case RIGHT -> orientation = orientation.next();
     }
   }
 
-  private void changeDirection(MoveDirection moveDirection) {
-    orientation = switch (moveDirection) {
-      case FORWARD -> MapDirection.NORTH;
-      case BACKWARD -> MapDirection.SOUTH;
-      case LEFT -> MapDirection.WEST;
-      case RIGHT -> MapDirection.EAST;
-    };
+  private void updatePosition(Vector2d newPosition) {
+    if (isNewPositionAllowed(newPosition)) {
+      position = newPosition;
+    }
   }
 
   private boolean isNewPositionAllowed(Vector2d newPosition) {
