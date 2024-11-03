@@ -8,10 +8,66 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class SimulationIntegrationTest {
+class AnimalMovementIntegrationTest {
 
   @Test
-  void simulateAnimalsXDecreasing() {
+  void shouldNotChangeXWhenTryingMoveOutsideMap() {
+    //given
+    String[] args = new String[] { "l", "r", "f", "f", "f", "f" };
+    var animalPositions = List.of(new Vector2d(0, 0), new Vector2d(4, 4));
+    var moveDirections = OptionsParser.parse(args);
+
+    //when
+    var simulation = new Simulation(animalPositions, moveDirections);
+    simulation.run();
+
+    //then
+    Assertions.assertEquals(6, moveDirections.size());
+    Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(0));
+    Assertions.assertEquals(MoveDirection.RIGHT, moveDirections.get(1));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(2));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(3));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(4));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(5));
+
+    var firstAnimal = simulation.getAnimals().getFirst();
+    Assertions.assertEquals(MapDirection.WEST, firstAnimal.getOrientation());
+    Assertions.assertEquals(new Vector2d(0, 0), firstAnimal.getPosition());
+
+    var secondAnimal = simulation.getAnimals().getLast();
+    Assertions.assertEquals(MapDirection.EAST, secondAnimal.getOrientation());
+    Assertions.assertEquals(new Vector2d(4, 4), secondAnimal.getPosition());
+  }
+
+  @Test
+  void shouldNotChangeYWhenTryingMoveOutsideMap() {
+    //given
+    String[] args = new String[] { "f", "b", "f", "b" };
+    var animalPositions = List.of(new Vector2d(4, 4), new Vector2d(0, 0));
+    var moveDirections = OptionsParser.parse(args);
+
+    //when
+    var simulation = new Simulation(animalPositions, moveDirections);
+    simulation.run();
+
+    //then
+    Assertions.assertEquals(4, moveDirections.size());
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(0));
+    Assertions.assertEquals(MoveDirection.BACKWARD, moveDirections.get(1));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(2));
+    Assertions.assertEquals(MoveDirection.BACKWARD, moveDirections.get(3));
+
+    var firstAnimal = simulation.getAnimals().getFirst();
+    Assertions.assertEquals(MapDirection.NORTH, firstAnimal.getOrientation());
+    Assertions.assertEquals(new Vector2d(4, 4), firstAnimal.getPosition());
+
+    var secondAnimal = simulation.getAnimals().getLast();
+    Assertions.assertEquals(MapDirection.NORTH, secondAnimal.getOrientation());
+    Assertions.assertEquals(new Vector2d(0, 0), secondAnimal.getPosition());
+  }
+
+  @Test
+  void shouldDecreaseAnimalsX() {
     //given
     String[] args = new String[] { "l", "r", "f", "b", "f", "b" };
     var animalPositions = List.of(new Vector2d(2, 2), new Vector2d(2, 2));
@@ -40,7 +96,7 @@ class SimulationIntegrationTest {
   }
 
   @Test
-  void simulateAnimalsXIncreasing() {
+  void shouldIncreaseAnimalsX() {
     //given
     String[] args = new String[] { "r", "l", "f", "b", "f", "b" };
     var animalPositions = List.of(new Vector2d(2, 2), new Vector2d(2, 2));
@@ -69,7 +125,7 @@ class SimulationIntegrationTest {
   }
 
   @Test
-  void simulateAnimalsYIncreasing() {
+  void shouldIncreaseAnimalsY() {
     //given
     String[] args = new String[] { "f", "r", "f", "r", "f", "b" };
     var animalPositions = List.of(new Vector2d(2, 2), new Vector2d(2, 2));
@@ -98,7 +154,7 @@ class SimulationIntegrationTest {
   }
 
   @Test
-  void simulateAnimalsYDecreasing() {
+  void shouldDecreaseAnimalsY() {
     //given
     String[] args = new String[] { "b", "l", "b", "l", "b", "f" };
     var animalPositions = List.of(new Vector2d(2, 2), new Vector2d(2, 2));
@@ -127,9 +183,9 @@ class SimulationIntegrationTest {
   }
 
   @Test
-  void simulateTryToGoOutMap() {
+  void shouldReturnToTheSamePosition() {
     //given
-    String[] args = new String[] { "f", "f", "f", "f", "f", "f" };
+    String[] args = new String[] { "f", "r", "f", "l", "f", "l", "f", "f", "l", "f", "f", "f", "l", "f", "l", "f" };
     var animalPositions = List.of(new Vector2d(2, 2));
     var moveDirections = OptionsParser.parse(args);
 
@@ -138,21 +194,27 @@ class SimulationIntegrationTest {
     simulation.run();
 
     //then
-    Assertions.assertEquals(6, moveDirections.size());
-    Assertions.assertEquals(MoveDirection.BACKWARD, moveDirections.get(0));
-    Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(1));
-    Assertions.assertEquals(MoveDirection.BACKWARD, moveDirections.get(2));
+    Assertions.assertEquals(16, moveDirections.size());
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(0));
+    Assertions.assertEquals(MoveDirection.RIGHT, moveDirections.get(1));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(2));
     Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(3));
-    Assertions.assertEquals(MoveDirection.BACKWARD, moveDirections.get(4));
-    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(5));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(4));
+    Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(5));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(6));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(7));
+    Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(8));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(9));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(10));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(11));
+    Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(12));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(13));
+    Assertions.assertEquals(MoveDirection.LEFT, moveDirections.get(14));
+    Assertions.assertEquals(MoveDirection.FORWARD, moveDirections.get(15));
 
-    var firstAnimal = simulation.getAnimals().getFirst();
-    Assertions.assertEquals(MapDirection.NORTH, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 0), firstAnimal.getPosition());
-
-    var secondAnimal = simulation.getAnimals().getLast();
-    Assertions.assertEquals(MapDirection.SOUTH, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 1), secondAnimal.getPosition());
+    var animal = simulation.getAnimals().getFirst();
+    Assertions.assertEquals(MapDirection.NORTH, animal.getOrientation());
+    Assertions.assertEquals(new Vector2d(2, 2), animal.getPosition());
   }
 
 }
