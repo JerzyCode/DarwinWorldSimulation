@@ -140,11 +140,11 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.WEST, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(0, 0), firstAnimal.getPosition());
+    Assertions.assertTrue(firstAnimal.isAt(new Vector2d(0, 0)));
 
     var secondAnimal = simulation.getAnimals().getLast();
     Assertions.assertEquals(MapDirection.EAST, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(4, 4), secondAnimal.getPosition());
+    Assertions.assertTrue(secondAnimal.isAt(new Vector2d(4, 4)));
   }
 
   @Test
@@ -167,11 +167,11 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.NORTH, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(4, 4), firstAnimal.getPosition());
+    Assertions.assertTrue(firstAnimal.isAt(new Vector2d(4, 4)));
 
     var secondAnimal = simulation.getAnimals().getLast();
     Assertions.assertEquals(MapDirection.NORTH, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(0, 0), secondAnimal.getPosition());
+    Assertions.assertTrue(secondAnimal.isAt(new Vector2d(0, 0)));
   }
 
   @Test
@@ -196,11 +196,11 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.WEST, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(0, 2), firstAnimal.getPosition());
+    Assertions.assertTrue(firstAnimal.isAt(new Vector2d(0, 2)));
 
     var secondAnimal = simulation.getAnimals().getLast();
     Assertions.assertEquals(MapDirection.EAST, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(0, 2), secondAnimal.getPosition());
+    Assertions.assertTrue(secondAnimal.isAt(new Vector2d(0, 2)));
   }
 
   @Test
@@ -225,11 +225,11 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.EAST, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(4, 2), firstAnimal.getPosition());
+    Assertions.assertTrue(firstAnimal.isAt(new Vector2d(4, 2)));
 
     var secondAnimal = simulation.getAnimals().getLast();
     Assertions.assertEquals(MapDirection.WEST, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(4, 2), secondAnimal.getPosition());
+    Assertions.assertTrue(secondAnimal.isAt(new Vector2d(4, 2)));
   }
 
   @Test
@@ -254,11 +254,11 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.NORTH, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 4), firstAnimal.getPosition());
+    Assertions.assertTrue(firstAnimal.isAt(new Vector2d(2, 4)));
 
     var secondAnimal = simulation.getAnimals().getLast();
     Assertions.assertEquals(MapDirection.SOUTH, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 3), secondAnimal.getPosition());
+    Assertions.assertTrue(secondAnimal.isAt(new Vector2d(2, 3)));
   }
 
   @Test
@@ -283,11 +283,11 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.NORTH, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 0), firstAnimal.getPosition());
+    Assertions.assertTrue(firstAnimal.isAt(new Vector2d(2, 0)));
 
     var secondAnimal = simulation.getAnimals().getLast();
     Assertions.assertEquals(MapDirection.SOUTH, secondAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 1), secondAnimal.getPosition());
+    Assertions.assertTrue(secondAnimal.isAt(new Vector2d(2, 1)));
   }
 
   @Test
@@ -322,7 +322,7 @@ class AnimalMovementIntegrationTest {
 
     var animal = simulation.getAnimals().getFirst();
     Assertions.assertEquals(MapDirection.NORTH, animal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 2), animal.getPosition());
+    Assertions.assertTrue(animal.isAt(new Vector2d(2, 2)));
   }
 
 }

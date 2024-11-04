@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 
@@ -20,6 +21,9 @@ public class World {
 
     var simulation = new Simulation(positions, directions);
     simulation.run();
+
+    var animal = new Animal();
+    System.out.println(animal);
 
     System.out.println("Stop");
   }
