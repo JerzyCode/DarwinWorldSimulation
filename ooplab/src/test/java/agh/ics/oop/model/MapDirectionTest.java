@@ -2,70 +2,71 @@ package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 class MapDirectionTest {
 
   @ParameterizedTest
-  @EnumSource(MapDirection.class)
-  void shouldReturnNextMapDirection(MapDirection direction) {
+  @MethodSource("provideNextMapDirectionTestCases")
+  void shouldReturnNextMapDirection(MapDirection direction, MapDirection expected) {
     //given
     //when
     var result = direction.next();
 
     //then
-    var expected = calculateExpectedNext(direction);
     Assertions.assertEquals(expected, result);
   }
 
   @ParameterizedTest
-  @EnumSource(MapDirection.class)
-  void shouldReturnPreviousMapDirection(MapDirection direction) {
+  @MethodSource("providePreviousMapDirectionTestCases")
+  void shouldReturnPreviousMapDirection(MapDirection direction, MapDirection expected) {
     //given
     //when
     var result = direction.previous();
 
     //then
-    var expected = calculateExpectedPrevious(direction);
     Assertions.assertEquals(expected, result);
   }
 
   @ParameterizedTest
-  @EnumSource(MapDirection.class)
-  void shouldReturnUnitVector(MapDirection direction) {
+  @MethodSource("provideToUnitVectorTestCases")
+  void shouldReturnUnitVector(MapDirection direction, Vector2d expected) {
     //given
     //when
     var result = direction.toUnitVector();
 
     //then
-    var expected = calculateUnitVector(direction);
     Assertions.assertEquals(expected, result);
   }
 
-  private static MapDirection calculateExpectedNext(MapDirection direction) {
-    return switch (direction) {
-      case MapDirection.NORTH -> MapDirection.EAST;
-      case MapDirection.SOUTH -> MapDirection.WEST;
-      case MapDirection.WEST -> MapDirection.NORTH;
-      case MapDirection.EAST -> MapDirection.SOUTH;
-    };
+  private static Stream<Arguments> provideNextMapDirectionTestCases() {
+    return Stream.of(
+        Arguments.of(MapDirection.NORTH, MapDirection.EAST),
+        Arguments.of(MapDirection.SOUTH, MapDirection.WEST),
+        Arguments.of(MapDirection.WEST, MapDirection.NORTH),
+        Arguments.of(MapDirection.EAST, MapDirection.SOUTH)
+    );
   }
 
-  private static MapDirection calculateExpectedPrevious(MapDirection direction) {
-    return switch (direction) {
-      case MapDirection.NORTH -> MapDirection.WEST;
-      case MapDirection.SOUTH -> MapDirection.EAST;
-      case MapDirection.WEST -> MapDirection.SOUTH;
-      case MapDirection.EAST -> MapDirection.NORTH;
-    };
+  private static Stream<Arguments> providePreviousMapDirectionTestCases() {
+    return Stream.of(
+        Arguments.of(MapDirection.NORTH, MapDirection.WEST),
+        Arguments.of(MapDirection.SOUTH, MapDirection.EAST),
+        Arguments.of(MapDirection.WEST, MapDirection.SOUTH),
+        Arguments.of(MapDirection.EAST, MapDirection.NORTH)
+    );
   }
 
-  private static Vector2d calculateUnitVector(MapDirection direction) {
-    return switch (direction) {
-      case MapDirection.NORTH -> new Vector2d(0, 1);
-      case MapDirection.SOUTH -> new Vector2d(0, -1);
-      case MapDirection.WEST -> new Vector2d(-1, 0);
-      case MapDirection.EAST -> new Vector2d(1, 0);
-    };
+  private static Stream<Arguments> provideToUnitVectorTestCases() {
+    return Stream.of(
+        Arguments.of(MapDirection.NORTH, new Vector2d(0, 1)),
+        Arguments.of(MapDirection.SOUTH, new Vector2d(0, -1)),
+        Arguments.of(MapDirection.WEST, new Vector2d(-1, 0)),
+        Arguments.of(MapDirection.EAST, new Vector2d(1, 0))
+    );
   }
+
 }
