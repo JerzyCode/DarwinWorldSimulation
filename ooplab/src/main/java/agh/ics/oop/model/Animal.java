@@ -21,7 +21,7 @@ public class Animal {
   }
 
   public void move(MoveDirection moveDirection) {
-    switch (moveDirection) {
+    switch (moveDirection) { //TODO move ma sie ruszać, validator waliduje
       case FORWARD -> updatePosition(position.add(orientation.toUnitVector()));
       case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()));
       case LEFT -> orientation = orientation.previous();
@@ -49,5 +49,9 @@ public class Animal {
 
   public MapDirection getOrientation() {
     return orientation;
+  }
+
+  public Vector2d getPosition() {
+    return position;
   }
 }
