@@ -19,7 +19,7 @@ public class RectangularMap implements WorldMap {
   @Override
   public boolean place(Animal animal) {
     var position = animal.getPosition();
-    if (canMoveTo(position)) {
+    if (!canMoveTo(position)) {
       return false;
     }
 
@@ -30,7 +30,9 @@ public class RectangularMap implements WorldMap {
   @Override
   public void move(Animal animal, MoveDirection direction) {
     if (animals.containsValue(animal)) {
+      animals.remove(animal.getPosition());
       animal.move(direction, this);
+      animals.put(animal.getPosition(), animal);
     }
   }
 

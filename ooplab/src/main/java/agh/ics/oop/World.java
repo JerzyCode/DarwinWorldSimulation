@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.RectangularMap;
 import agh.ics.oop.model.Vector2d;
 
 import java.util.List;
@@ -15,16 +16,13 @@ public class World {
   public static void main(String[] args) {
     System.out.println("Start");
 
-    //    f b r l f f r r f f f f f f f f
+    // f f r f f r r f f f f r f f f f
     var directions = OptionsParser.parse(args);
-    var positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
+    var positions = List.of(new Vector2d(2, 2), new Vector2d(0, 0));
+    var worldMap = new RectangularMap(4, 4);
 
-    var simulation = new Simulation(positions, directions);
+    var simulation = new Simulation(positions, directions, worldMap);
     simulation.run();
-
-    var animal = new Animal();
-    System.out.println(animal);
-
     System.out.println("Stop");
   }
 
