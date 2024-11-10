@@ -39,10 +39,7 @@ public class Animal {
 
   @Override
   public String toString() {
-    return "Animal(" +
-        "position=" + position +
-        ", direction=" + orientation +
-        ')';
+    return orientation.getSymbol();
   }
 
   public MapDirection getOrientation() {
