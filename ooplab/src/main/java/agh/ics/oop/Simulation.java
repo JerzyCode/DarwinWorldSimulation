@@ -44,7 +44,7 @@ public class Simulation {
     return animals;
   }
 
-  public List<Animal> getAnimals() {
+  List<Animal> getAnimals() {
     return animals;
   }
 }
