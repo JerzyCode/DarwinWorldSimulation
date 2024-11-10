@@ -2,16 +2,21 @@ package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
 
 class AnimalTest {
+  private final MoveValidator validator = Mockito.mock(MoveValidator.class);
 
   @Test
   void animalShouldHaveNorthDirectionAfterTurnLeft() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.EAST);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.LEFT);
+    animal.move(MoveDirection.LEFT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.NORTH, animal.getOrientation());
@@ -21,9 +26,10 @@ class AnimalTest {
   void animalShouldHaveNorthDirectionAfterTurnRight() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.WEST);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.RIGHT);
+    animal.move(MoveDirection.RIGHT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.NORTH, animal.getOrientation());
@@ -33,9 +39,10 @@ class AnimalTest {
   void animalShouldHaveSouthDirectionAfterTurnLeft() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.WEST);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.LEFT);
+    animal.move(MoveDirection.LEFT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.SOUTH, animal.getOrientation());
@@ -45,9 +52,10 @@ class AnimalTest {
   void animalShouldHaveSouthDirectionAfterTurnRight() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.EAST);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.RIGHT);
+    animal.move(MoveDirection.RIGHT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.SOUTH, animal.getOrientation());
@@ -57,9 +65,10 @@ class AnimalTest {
   void animalShouldHaveEastDirectionAfterTurnLeft() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.SOUTH);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.LEFT);
+    animal.move(MoveDirection.LEFT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.EAST, animal.getOrientation());
@@ -69,9 +78,10 @@ class AnimalTest {
   void animalShouldHaveEastDirectionAfterTurnRight() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.NORTH);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.RIGHT);
+    animal.move(MoveDirection.RIGHT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.EAST, animal.getOrientation());
@@ -81,9 +91,10 @@ class AnimalTest {
   void animalShouldHaveWestDirectionAfterTurnLeft() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.NORTH);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.LEFT);
+    animal.move(MoveDirection.LEFT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.WEST, animal.getOrientation());
@@ -93,9 +104,10 @@ class AnimalTest {
   void animalShouldHaveWestDirectionAfterTurnRight() {
     //given
     var animal = new Animal(new Vector2d(2, 2), MapDirection.SOUTH);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal.move(MoveDirection.RIGHT);
+    animal.move(MoveDirection.RIGHT, validator);
 
     //then
     Assertions.assertEquals(MapDirection.WEST, animal.getOrientation());
@@ -106,10 +118,11 @@ class AnimalTest {
     //given
     var animal1 = new Animal(new Vector2d(2, 2), MapDirection.EAST);
     var animal2 = new Animal(new Vector2d(2, 2), MapDirection.WEST);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal1.move(MoveDirection.FORWARD);
-    animal2.move(MoveDirection.BACKWARD);
+    animal1.move(MoveDirection.FORWARD, validator);
+    animal2.move(MoveDirection.BACKWARD, validator);
 
     //then
     Assertions.assertEquals(MapDirection.EAST, animal1.getOrientation());
@@ -124,10 +137,11 @@ class AnimalTest {
     //given
     var animal1 = new Animal(new Vector2d(2, 2), MapDirection.EAST);
     var animal2 = new Animal(new Vector2d(2, 2), MapDirection.WEST);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal1.move(MoveDirection.BACKWARD);
-    animal2.move(MoveDirection.FORWARD);
+    animal1.move(MoveDirection.BACKWARD, validator);
+    animal2.move(MoveDirection.FORWARD, validator);
 
     //then
     Assertions.assertEquals(MapDirection.EAST, animal1.getOrientation());
@@ -142,10 +156,11 @@ class AnimalTest {
     //given
     var animal1 = new Animal(new Vector2d(2, 2), MapDirection.NORTH);
     var animal2 = new Animal(new Vector2d(2, 2), MapDirection.SOUTH);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal1.move(MoveDirection.FORWARD);
-    animal2.move(MoveDirection.BACKWARD);
+    animal1.move(MoveDirection.FORWARD, validator);
+    animal2.move(MoveDirection.BACKWARD, validator);
 
     //then
     Assertions.assertEquals(MapDirection.NORTH, animal1.getOrientation());
@@ -160,10 +175,11 @@ class AnimalTest {
     //given
     var animal1 = new Animal(new Vector2d(2, 2), MapDirection.NORTH);
     var animal2 = new Animal(new Vector2d(2, 2), MapDirection.SOUTH);
+    Mockito.when(validator.canMoveTo(any())).thenReturn(true);
 
     //when
-    animal1.move(MoveDirection.BACKWARD);
-    animal2.move(MoveDirection.FORWARD);
+    animal1.move(MoveDirection.BACKWARD, validator);
+    animal2.move(MoveDirection.FORWARD, validator);
 
     //then
     Assertions.assertEquals(MapDirection.NORTH, animal1.getOrientation());
@@ -171,6 +187,34 @@ class AnimalTest {
 
     Assertions.assertEquals(MapDirection.SOUTH, animal2.getOrientation());
     Assertions.assertEquals(new Vector2d(2, 1), animal2.getPosition());
+  }
+
+  @Test
+  void animalShouldNotMoveForwardWhenValidatorReturnFalse() {
+    //given
+    var animal = new Animal(new Vector2d(2, 2));
+    Mockito.when(validator.canMoveTo(any())).thenReturn(false);
+
+    //when
+    animal.move(MoveDirection.FORWARD, validator);
+
+    //then
+    Assertions.assertEquals(MapDirection.NORTH, animal.getOrientation());
+    Assertions.assertEquals(new Vector2d(2, 2), animal.getPosition());
+  }
+
+  @Test
+  void animalShouldNotMoveBackwardWhenValidatorReturnFalse() {
+    //given
+    var animal = new Animal(new Vector2d(2, 2));
+    Mockito.when(validator.canMoveTo(any())).thenReturn(false);
+
+    //when
+    animal.move(MoveDirection.BACKWARD, validator);
+
+    //then
+    Assertions.assertEquals(MapDirection.NORTH, animal.getOrientation());
+    Assertions.assertEquals(new Vector2d(2, 2), animal.getPosition());
   }
 
 }

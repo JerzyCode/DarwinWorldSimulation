@@ -22,12 +22,18 @@ public class Animal {
     return this.position.equals(position);
   }
 
-  public void move(MoveDirection moveDirection) {
+  public void move(MoveDirection moveDirection, MoveValidator validator) {
     switch (moveDirection) {
-      case FORWARD -> position = position.add(orientation.toUnitVector());
-      case BACKWARD -> position = position.subtract(orientation.toUnitVector());
+      case FORWARD -> updatePosition(position.add(orientation.toUnitVector()), validator);
+      case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()), validator);
       case LEFT -> orientation = orientation.previous();
       case RIGHT -> orientation = orientation.next();
+    }
+  }
+
+  private void updatePosition(Vector2d newPosition, MoveValidator validator) {
+    if (validator.canMoveTo(newPosition)) {
+      position = newPosition;
     }
   }
 

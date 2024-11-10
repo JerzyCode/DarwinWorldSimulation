@@ -1,23 +1,25 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.MapVisualizer;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class RectangularMap implements WorldMap {
   private final Map<Vector2d, Animal> animals;
-  private final Vector2d leftCorner;
-  private final Vector2d rightCorner;
+  private final Vector2d leftBotCorner;
+  private final Vector2d rightTopCorner;
 
   public RectangularMap(int width, int height) {
     this.animals = new HashMap<>();
-    this.leftCorner = new Vector2d(0, 0);
-    this.rightCorner = new Vector2d(width - 1, height - 1);
+    this.leftBotCorner = new Vector2d(0, 0);
+    this.rightTopCorner = new Vector2d(width - 1, height - 1);
   }
 
   @Override
   public boolean place(Animal animal) {
     var position = animal.getPosition();
-    if (isOccupied(position) || !isAllowedPosition(position)) {
+    if (canMoveTo(position)) {
       return false;
     }
 
@@ -27,8 +29,8 @@ public class RectangularMap implements WorldMap {
 
   @Override
   public void move(Animal animal, MoveDirection direction) {
-    if (animals.containsValue(animal)) { //TODO validate move
-      animal.move(direction);
+    if (animals.containsValue(animal)) {
+      animal.move(direction, this);
     }
   }
 
@@ -44,11 +46,13 @@ public class RectangularMap implements WorldMap {
 
   @Override
   public boolean canMoveTo(Vector2d position) {
-    return !isOccupied(position);
+    return !isOccupied(position) && position.follows(leftBotCorner) && position.precedes(rightTopCorner);
   }
 
-  private boolean isAllowedPosition(Vector2d position) {
-    return position.follows(leftCorner) && position.precedes(rightCorner);
+  @Override
+  public String toString() {
+    var mapVisualizer = new MapVisualizer(this);
+    return mapVisualizer.draw(leftBotCorner, rightTopCorner);
   }
 
 }
