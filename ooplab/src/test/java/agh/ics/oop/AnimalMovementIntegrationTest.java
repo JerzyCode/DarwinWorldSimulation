@@ -387,7 +387,7 @@ class AnimalMovementIntegrationTest {
 
     //then
     var animals = simulation.getAnimals();
-    Assertions.assertEquals(2, animals.size());
+    Assertions.assertEquals(1, animals.size());
 
     var animal = animals.getFirst();
     Assertions.assertEquals(animal, map.objectAt(animal.getPosition()));

@@ -38,8 +38,10 @@ public class Simulation {
     List<Animal> animals = new ArrayList<>();
     animalsPositions.forEach(position -> {
       var animal = new Animal(position);
-      animals.add(animal);
-      worldMap.place(animal);
+      if (worldMap.place(animal)) {
+        animals.add(animal);
+      }
+
     });
     return animals;
   }

@@ -18,8 +18,8 @@ public class World {
 
     // f f r f f r r f f f f r f f f f
     var directions = OptionsParser.parse(args);
-    var positions = List.of(new Vector2d(2, 2), new Vector2d(0, 0));
-    var worldMap = new RectangularMap(4, 4);
+    var positions = List.of(new Vector2d(2, 2), new Vector2d(2,2));
+    var worldMap = new RectangularMap(5, 5);
 
     var simulation = new Simulation(positions, directions, worldMap);
     simulation.run();
