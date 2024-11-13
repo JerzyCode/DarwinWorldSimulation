@@ -1,52 +1,48 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
+public class Simulation<T, P> {
 
-  private final List<Animal> animals;
+  private final List<T> objects;
   private final List<MoveDirection> moveDirections;
-  private final WorldMap worldMap;
+  private final WorldMap<T, P> worldMap;
 
-  public Simulation(List<Vector2d> animalsPositions, List<MoveDirection> moveDirections, WorldMap worldMap) {
+  public Simulation(List<T> objects, List<MoveDirection> moveDirections, WorldMap<T, P> worldMap) {
     this.worldMap = worldMap;
-    this.animals = createAndPlaceAnimals(animalsPositions);
+    this.objects = placeObjectsOnMap(objects);
     this.moveDirections = moveDirections;
   }
 
   public void run() {
     System.out.println(worldMap);
-    int animalCount = animals.size();
+    int objectsSize = objects.size();
     int directionsSize = moveDirections.size();
 
     for (int i = 0; i < directionsSize; i++) {
-      var index = i % animalCount;
-      var animal = animals.get(index);
-      worldMap.move(animal, moveDirections.get(i));
+      var index = i % objectsSize;
+      var object = objects.get(index);
+      worldMap.move(object, moveDirections.get(i));
       System.out.println(worldMap);
     }
 
   }
 
-  private List<Animal> createAndPlaceAnimals(List<Vector2d> animalsPositions) {
-    List<Animal> animals = new ArrayList<>();
-    animalsPositions.forEach(position -> {
-      var animal = new Animal(position);
-      if (worldMap.place(animal)) {
-        animals.add(animal);
+  private List<T> placeObjectsOnMap(List<T> objects) {
+    List<T> result = new ArrayList<>();
+    objects.forEach(object -> {
+      if (worldMap.place(object)) {
+        result.add(object);
       }
-
     });
-    return animals;
+    return result;
   }
 
-  List<Animal> getAnimals() {
-    return animals;
+  List<T> getObjects() {
+    return objects;
   }
 }

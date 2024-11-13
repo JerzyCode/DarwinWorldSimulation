@@ -1,43 +1,36 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;
+import agh.ics.oop.model.TextMap;
 import agh.ics.oop.model.Vector2d;
 
 import java.util.List;
 
 public class World {
-  private static final String GO_FORWARD_MESSAGE = "Zwierzak idzie do przodu";
-  private static final String GO_BACKWARD_MESSAGE = "Zwierzak idzie do tyłu";
-  private static final String GO_LEFT_MESSAGE = "Zwierzak idzie w lewo";
-  private static final String GO_RIGHT_MESSAGE = "Zwierzak idzie w prawo";
 
   public static void main(String[] args) {
     System.out.println("Start");
 
-    // f f r f f r r f f f f r f f f f
-    var directions = OptionsParser.parse(args);
-    var positions = List.of(new Vector2d(2, 2), new Vector2d(2,2));
-    var worldMap = new RectangularMap(5, 5);
-
-    var simulation = new Simulation(positions, directions, worldMap);
-    simulation.run();
-    System.out.println("Stop");
+    // f b r l f f r r f f f b b f f f
+    stringMapSimulation(args);
+    animalsMapSimulation(args);
   }
 
-  private static void printDirections(MoveDirection[] directions) {
-    StringBuilder message = new StringBuilder();
-    for (MoveDirection direction : directions) {
-      switch (direction) {
-        case FORWARD -> message.append(GO_FORWARD_MESSAGE).append(", ");
-        case BACKWARD -> message.append(GO_BACKWARD_MESSAGE).append(", ");
-        case RIGHT -> message.append(GO_RIGHT_MESSAGE).append(", ");
-        case LEFT -> message.append(GO_LEFT_MESSAGE).append(", ");
-      }
-    }
-    message.deleteCharAt(message.length() - 2);
-    System.out.println(message);
+  private static void stringMapSimulation(String[] args) {
+    var moves = OptionsParser.parse(args);
+    var strings = List.of("el1", "el2", "el3", "el4", "el5", "el6");
+    var worldMap = new TextMap();
+    var simulation = new Simulation<>(strings, moves, worldMap);
+    simulation.run();
+  }
+
+  private static void animalsMapSimulation(String[] args) {
+    var directions = OptionsParser.parse(args);
+    var animals = List.of(new Animal(new Vector2d(2, 2)), new Animal(new Vector2d(3, 4)));
+    var worldMap = new RectangularMap(5, 5);
+    var simulation = new Simulation<>(animals, directions, worldMap);
+    simulation.run();
   }
 
 }
