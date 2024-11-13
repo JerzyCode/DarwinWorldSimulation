@@ -384,6 +384,7 @@ class AnimalMovementIntegrationTest {
 
     //when
     var simulation = new Simulation(animalPositions, moveDirections, map);
+    simulation.run();
 
     //then
     var animals = simulation.getAnimals();
@@ -399,10 +400,11 @@ class AnimalMovementIntegrationTest {
     //given
     String[] args = new String[] { "b" };
     var moveDirections = OptionsParser.parse(args);
-    var animalPositions = List.of(new Vector2d(2, 2), new Vector2d(1, 2));
+    var animalPositions = List.of(new Vector2d(2, 3), new Vector2d(2, 2));
 
     //when
     var simulation = new Simulation(animalPositions, moveDirections, map);
+    simulation.run();
 
     //then
     Assertions.assertEquals(MoveDirection.BACKWARD, moveDirections.getFirst());
@@ -412,13 +414,13 @@ class AnimalMovementIntegrationTest {
 
     var firstAnimal = animals.getFirst();
     Assertions.assertEquals(MapDirection.NORTH, firstAnimal.getOrientation());
-    Assertions.assertEquals(new Vector2d(2, 2), firstAnimal.getPosition());
+    Assertions.assertEquals(new Vector2d(2, 3), firstAnimal.getPosition());
     Assertions.assertEquals(firstAnimal, map.objectAt(firstAnimal.getPosition()));
     Assertions.assertTrue(map.isOccupied(firstAnimal.getPosition()));
 
     var second = animals.getLast();
     Assertions.assertEquals(MapDirection.NORTH, second.getOrientation());
-    Assertions.assertEquals(new Vector2d(1, 2), second.getPosition());
+    Assertions.assertEquals(new Vector2d(2, 2), second.getPosition());
     Assertions.assertEquals(second, map.objectAt(second.getPosition()));
     Assertions.assertTrue(map.isOccupied(second.getPosition()));
 
