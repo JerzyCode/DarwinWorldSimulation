@@ -1,42 +1,48 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
+public class Simulation<T, P> {
 
-  private final List<Animal> animals;
+  private final List<T> objects;
   private final List<MoveDirection> moveDirections;
+  private final WorldMap<T, P> worldMap;
 
-  public Simulation(List<Vector2d> animalsPositions, List<MoveDirection> moveDirections) {
-    this.animals = createAnimals(animalsPositions);
+  public Simulation(List<T> objects, List<MoveDirection> moveDirections, WorldMap<T, P> worldMap) {
+    this.worldMap = worldMap;
+    this.objects = placeObjectsOnMap(objects);
     this.moveDirections = moveDirections;
   }
 
   public void run() {
-    int animalCount = animals.size();
+    System.out.println(worldMap);
+    int objectsSize = objects.size();
     int directionsSize = moveDirections.size();
 
     for (int i = 0; i < directionsSize; i++) {
-      var index = i % animalCount;
-      var animal = animals.get(index);
-      animal.move(moveDirections.get(i));
-      System.out.printf("Zwierzę: %d, %s%n", index, animal);
+      var index = i % objectsSize;
+      var object = objects.get(index);
+      worldMap.move(object, moveDirections.get(i));
+      System.out.println(worldMap);
     }
 
   }
 
-  private List<Animal> createAnimals(List<Vector2d> animalsPositions) {
-    List<Animal> animals = new ArrayList<>();
-    animalsPositions.forEach(position -> animals.add(new Animal(position)));
-    return animals;
+  private List<T> placeObjectsOnMap(List<T> objects) {
+    List<T> result = new ArrayList<>();
+    objects.forEach(object -> {
+      if (worldMap.place(object)) {
+        result.add(object);
+      }
+    });
+    return result;
   }
 
-  public List<Animal> getAnimals() {
-    return animals;
+  List<T> getObjects() {
+    return objects;
   }
 }
