@@ -40,7 +40,7 @@ public class TextMap implements WorldNumberPositionMap<String, Integer> {
 
   @Override
   public boolean isOccupied(Integer position) {
-    return objects.get(position) != null;
+    return objects.containsKey(position);
   }
 
   @Override
