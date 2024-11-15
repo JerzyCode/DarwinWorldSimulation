@@ -1,8 +1,6 @@
 package agh.ics.oop.model;
 
 public class Animal {
-  private static final Vector2d RIGHT_CORNER = new Vector2d(4, 4);
-  private static final Vector2d LEFT_CORNER = new Vector2d(0, 0);
 
   private Vector2d position;
   private MapDirection orientation;
@@ -12,7 +10,11 @@ public class Animal {
   }
 
   public Animal(Vector2d position) {
-    this.orientation = MapDirection.NORTH;
+    this(position, MapDirection.NORTH);
+  }
+
+  Animal(Vector2d position, MapDirection orientation) { // for test purpose
+    this.orientation = orientation;
     this.position = position;
   }
 
@@ -20,34 +22,31 @@ public class Animal {
     return this.position.equals(position);
   }
 
-  public void move(MoveDirection moveDirection) {
+  public void move(MoveDirection moveDirection, MoveValidator validator) {
     switch (moveDirection) {
-      case FORWARD -> updatePosition(position.add(orientation.toUnitVector()));
-      case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()));
+      case FORWARD -> updatePosition(position.add(orientation.toUnitVector()), validator);
+      case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()), validator);
       case LEFT -> orientation = orientation.previous();
       case RIGHT -> orientation = orientation.next();
     }
   }
 
-  private void updatePosition(Vector2d newPosition) {
-    if (isNewPositionAllowed(newPosition)) {
+  private void updatePosition(Vector2d newPosition, MoveValidator validator) {
+    if (validator.canMoveTo(newPosition)) {
       position = newPosition;
     }
   }
 
-  private boolean isNewPositionAllowed(Vector2d newPosition) {
-    return newPosition.precedes(RIGHT_CORNER) && newPosition.follows(LEFT_CORNER);
-  }
-
   @Override
   public String toString() {
-    return "Animal(" +
-        "position=" + position +
-        ", direction=" + orientation +
-        ')';
+    return orientation.getSymbol();
   }
 
   public MapDirection getOrientation() {
     return orientation;
+  }
+
+  public Vector2d getPosition() {
+    return position;
   }
 }
