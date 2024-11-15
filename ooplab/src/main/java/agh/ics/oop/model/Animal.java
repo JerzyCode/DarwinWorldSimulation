@@ -13,7 +13,7 @@ public class Animal {
     this(position, MapDirection.NORTH);
   }
 
-  Animal(Vector2d position, MapDirection orientation) {
+  Animal(Vector2d position, MapDirection orientation) { // for test purpose
     this.orientation = orientation;
     this.position = position;
   }
