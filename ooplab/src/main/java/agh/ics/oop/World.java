@@ -1,8 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.RectangularMap;
+import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.Vector2d;
 
 import java.util.List;
@@ -18,26 +16,12 @@ public class World {
 
     // f f r f f r r f f f f r f f f f
     var directions = OptionsParser.parse(args);
-    var positions = List.of(new Vector2d(2, 2), new Vector2d(2,2));
-    var worldMap = new RectangularMap(5, 5);
+    var positions = List.of(new Vector2d(2, 2), new Vector2d(2, 2));
+    var worldMap = new GrassField(10);
 
     var simulation = new Simulation(positions, directions, worldMap);
     simulation.run();
     System.out.println("Stop");
-  }
-
-  private static void printDirections(MoveDirection[] directions) {
-    StringBuilder message = new StringBuilder();
-    for (MoveDirection direction : directions) {
-      switch (direction) {
-        case FORWARD -> message.append(GO_FORWARD_MESSAGE).append(", ");
-        case BACKWARD -> message.append(GO_BACKWARD_MESSAGE).append(", ");
-        case RIGHT -> message.append(GO_RIGHT_MESSAGE).append(", ");
-        case LEFT -> message.append(GO_LEFT_MESSAGE).append(", ");
-      }
-    }
-    message.deleteCharAt(message.length() - 2);
-    System.out.println(message);
   }
 
 }
