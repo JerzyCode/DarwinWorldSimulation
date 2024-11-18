@@ -2,8 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RectangularMap implements WorldMap {
   private final Map<Vector2d, Animal> animals;
@@ -49,6 +48,11 @@ public class RectangularMap implements WorldMap {
   }
 
   @Override
+  public Collection<WorldElement> getElements() {
+    return Collections.unmodifiableCollection(new ArrayList<>(animals.values()));
+  }
+
+  @Override
   public boolean canMoveTo(Vector2d position) {
     return !isOccupied(position) && position.follows(leftBotCorner) && position.precedes(rightTopCorner);
   }
@@ -58,4 +62,8 @@ public class RectangularMap implements WorldMap {
     return mapVisualizer.draw(leftBotCorner, rightTopCorner);
   }
 
+  //for testing purposes
+  Vector2d getRightTopCorner() {
+    return rightTopCorner;
+  }
 }

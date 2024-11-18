@@ -1,33 +1,35 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
+import agh.ics.oop.model.util.RandomVectorGenerator;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class GrassField implements WorldMap {
-  private Random randomizer;
+  private final RandomVectorGenerator randomizer;
   private final Map<Vector2d, Grass> grasses;
   private final Map<Vector2d, Animal> animals;
   private final MapVisualizer mapVisualizer;
   private final Vector2d leftBotCorner;
   private Vector2d rightTopCorner;
 
-  GrassField(int grassCount, Random randomizer) { //constructor for testing purposes
-    this(grassCount);
-    this.randomizer = randomizer;
+  public GrassField(int grassCount) {
+    this(grassCount, new RandomVectorGenerator());
   }
 
-  public GrassField(int grassCount) {
+  GrassField(int grassCount, RandomVectorGenerator randomizer) { //constructor for testing purposes
+    this(grassCount, randomizer, new HashMap<>(), new HashMap<>());
+  }
+
+  GrassField(int grassCount, RandomVectorGenerator randomizer, Map<Vector2d, Grass> grasses, Map<Vector2d, Animal> animals) { //constructor for testing purposes
     this.mapVisualizer = new MapVisualizer(this);
-    this.grasses = new HashMap<>();
-    this.animals = new HashMap<>();
+    this.grasses = grasses;
+    this.animals = animals;
     this.leftBotCorner = new Vector2d(0, 0);
-    this.randomizer = new Random();
+    this.rightTopCorner = new Vector2d(0, 0);
+    this.randomizer = randomizer;
 
     placeGrass(grassCount);
-    this.rightTopCorner = initializeRightTopCorner();
   }
 
   @Override
@@ -63,6 +65,15 @@ public class GrassField implements WorldMap {
   }
 
   @Override
+  public Collection<WorldElement> getElements() {
+    var elements = new ArrayList<WorldElement>();
+    elements.addAll(animals.values());
+    elements.addAll(grasses.values());
+
+    return Collections.unmodifiableCollection(elements);
+  }
+
+  @Override
   public boolean canMoveTo(Vector2d position) {
     var objectAt = objectAt(position);
     return position.follows(leftBotCorner) && !(objectAt instanceof Animal);
@@ -75,8 +86,14 @@ public class GrassField implements WorldMap {
 
   private void placeGrass(int grassCount) {
     int count = 0;
-    while (count <= grassCount) {
-      var grass = new Grass(generateRandomVector(grassCount));
+    while (count < grassCount) {
+      var randomVector = randomizer.generateRandomVector(leftBotCorner.getY(), leftBotCorner.getY(),
+          (int)Math.sqrt(grassCount * 10) + 1,
+          (int)Math.sqrt(grassCount * 10) + 1);
+
+      rightTopCorner = rightTopCorner.upperRight(randomVector);
+
+      var grass = new Grass(randomVector);
       if (!isOccupied(grass.getPosition())) {
         grasses.put(grass.getPosition(), grass);
         count += 1;
@@ -84,24 +101,7 @@ public class GrassField implements WorldMap {
     }
   }
 
-  private Vector2d initializeRightTopCorner() {
-    return grasses.keySet().stream().max((v1, v2) -> {
-      if (v2.precedes(v1)) {
-        return 1;
-      }
-      else if (v1.equals(v2)) {
-        return 0;
-      }
-      else {
-        return -1;
-      }
-    }).orElse(new Vector2d(4, 4)); // map size if grass count is 0
+  Vector2d getRightTopCorner() { //testing purposes
+    return rightTopCorner;
   }
-
-  private Vector2d generateRandomVector(int grassCount) {
-    var randomX = randomizer.nextInt(0, (int)Math.sqrt(grassCount * 10) + 1);
-    var randomY = randomizer.nextInt(leftBotCorner.getY(), (int)Math.sqrt(grassCount * 10) + 1);
-    return new Vector2d(randomX, randomY);
-  }
-
 }
