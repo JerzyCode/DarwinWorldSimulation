@@ -6,10 +6,6 @@ import agh.ics.oop.model.Vector2d;
 import java.util.List;
 
 public class World {
-  private static final String GO_FORWARD_MESSAGE = "Zwierzak idzie do przodu";
-  private static final String GO_BACKWARD_MESSAGE = "Zwierzak idzie do tyłu";
-  private static final String GO_LEFT_MESSAGE = "Zwierzak idzie w lewo";
-  private static final String GO_RIGHT_MESSAGE = "Zwierzak idzie w prawo";
 
   public static void main(String[] args) {
     System.out.println("Start");
