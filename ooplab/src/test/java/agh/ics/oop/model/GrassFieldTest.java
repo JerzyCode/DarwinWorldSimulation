@@ -1,27 +1,26 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.RandomVectorGenerator;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 class GrassFieldTest {
-  private final RandomVectorGenerator randomizer = Mockito.mock(RandomVectorGenerator.class);
 
   @Test
   void shouldInitializeGrassField() {
     //given
-    var grassCount = 1;
-    var sqrt = (int)Math.sqrt(grassCount * 10) + 1;
-    when(randomizer.generateRandomVector(0, 0, sqrt, sqrt)).thenReturn(new Vector2d(8, 10));
+    var position = new Vector2d(8, 10);
+    var randomizer = spyRandomizerWithOnePosition(position);
 
     //when
-    var result = new GrassField(grassCount, randomizer);
+    var result = new GrassField(randomizer);
 
     //then
-    verify(randomizer, times(grassCount)).generateRandomVector(0, 0, sqrt, sqrt);
     assertEquals(new Vector2d(8, 10), result.getRightTopCorner());
     assertEquals(1, result.getElements().size());
   }
@@ -32,12 +31,11 @@ class GrassFieldTest {
     var grassCount = 0;
 
     //when
-    var result = new GrassField(grassCount, randomizer);
+    var result = new GrassField(grassCount);
 
     //then
     assertEquals(new Vector2d(0, 0), result.getRightTopCorner());
     assertEquals(0, result.getElements().size());
-
   }
 
   @Test
@@ -94,13 +92,9 @@ class GrassFieldTest {
   @Test
   void shouldPlaceAnimalOverGrass() {
     //given
-    var grassCount = 1;
-    var sqrt = (int)Math.sqrt(grassCount * 10) + 1;
     var animal = new Animal(new Vector2d(1, 1));
-
-    when(randomizer.generateRandomVector(0, 0, sqrt, sqrt)).thenReturn(new Vector2d(1, 1));
-
-    var grassField = new GrassField(grassCount, randomizer);
+    var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
+    var grassField = new GrassField(randomizer);
 
     //when
     var result = grassField.place(animal);
@@ -118,12 +112,9 @@ class GrassFieldTest {
   @Test
   void shouldMoveAnimalOverGrass() {
     //given
-    var grassCount = 1;
     var animal = new Animal(new Vector2d(1, 0), MapDirection.NORTH);
-    var sqrt = (int)Math.sqrt(grassCount * 10) + 1;
-    when(randomizer.generateRandomVector(0, 0, sqrt, sqrt)).thenReturn(new Vector2d(1, 1));
-
-    var grassField = new GrassField(grassCount);
+    var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
+    var grassField = new GrassField(randomizer);
     grassField.place(animal);
 
     //when
@@ -140,12 +131,10 @@ class GrassFieldTest {
   @Test
   void shouldIncreaseRightTopCornerWhenMovingAnimal() {
     //given
-    var grassCount = 1;
     var animal = new Animal(new Vector2d(1, 1), MapDirection.NORTH);
-    var sqrt = (int)Math.sqrt(grassCount * 10) + 1;
-    when(randomizer.generateRandomVector(0, 0, sqrt, sqrt)).thenReturn(new Vector2d(1, 1));
+    var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
 
-    var grassField = new GrassField(grassCount, randomizer);
+    var grassField = new GrassField(randomizer);
     grassField.place(animal);
 
     //when
@@ -177,11 +166,9 @@ class GrassFieldTest {
   @Test
   void shouldBeGrassObjectAtPosition() {
     //given
-    var grassCount = 1;
-    var sqrt = (int)Math.sqrt(grassCount * 10) + 1;
-    when(randomizer.generateRandomVector(0, 0, sqrt, sqrt)).thenReturn(new Vector2d(1, 1));
+    var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
 
-    var grassField = new GrassField(grassCount, randomizer);
+    var grassField = new GrassField(randomizer);
 
     //when
     var result = grassField.objectAt(new Vector2d(1, 1));
@@ -194,11 +181,9 @@ class GrassFieldTest {
   @Test
   void shouldBeOccupiedByGrass() {
     //given
-    var grassCount = 1;
-    var sqrt = (int)Math.sqrt(grassCount * 10) + 1;
-    when(randomizer.generateRandomVector(0, 0, sqrt, sqrt)).thenReturn(new Vector2d(1, 1));
+    var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
 
-    var grassField = new GrassField(grassCount, randomizer);
+    var grassField = new GrassField(randomizer);
 
     //when
     var result = grassField.isOccupied(new Vector2d(1, 1));
@@ -254,5 +239,15 @@ class GrassFieldTest {
 
     //when && then
     assertTrue(grassField.canMoveTo(new Vector2d(0, 0)));
+  }
+
+  private RandomPositionGenerator spyRandomizerWithOnePosition(Vector2d position) {
+    var sqrt = (int)Math.sqrt(10) + 1;
+    var randomizer = Mockito.spy(new RandomPositionGenerator(1, sqrt, sqrt));
+    Iterator<Vector2d> mockedIterator = Mockito.mock(Iterator.class);
+    when(mockedIterator.hasNext()).thenReturn(true, false);
+    when(mockedIterator.next()).thenReturn(position);
+    when(randomizer.iterator()).thenReturn(mockedIterator);
+    return randomizer;
   }
 }

@@ -1,23 +1,23 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.RandomVectorGenerator;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
-  private final RandomVectorGenerator randomizer;
+  private final RandomPositionGenerator randomizer;
   private final Map<Vector2d, Grass> grasses;
 
   public GrassField(int grassCount) {
-    this(grassCount, new RandomVectorGenerator());
+    this(new RandomPositionGenerator(grassCount, (int)Math.sqrt(grassCount * 10) + 1, (int)Math.sqrt(grassCount * 10) + 1));
   }
 
-  GrassField(int grassCount, RandomVectorGenerator randomizer) { //constructor for testing purposes
+  GrassField(RandomPositionGenerator randomizer) { //constructor for testing purposes
     super();
     super.rightTopCorner = new Vector2d(0, 0);
     this.grasses = new HashMap<>();
     this.randomizer = randomizer;
-    placeGrass(grassCount);
+    placeGrass();
   }
 
   @Override
@@ -52,21 +52,12 @@ public class GrassField extends AbstractWorldMap {
     return position.follows(leftBotCorner) && !(objectAt instanceof Animal);
   }
 
-  private void placeGrass(int grassCount) {
-    int count = 0;
-    while (count < grassCount) {
-      var randomVector = randomizer.generateRandomVector(leftBotCorner.getY(), leftBotCorner.getY(),
-          (int)Math.sqrt(grassCount * 10) + 1,
-          (int)Math.sqrt(grassCount * 10) + 1);
-
-      rightTopCorner = rightTopCorner.upperRight(randomVector);
-
-      var grass = new Grass(randomVector);
-      if (!isOccupied(grass.getPosition())) {
-        grasses.put(grass.getPosition(), grass);
-        count += 1;
-      }
-    }
+  private void placeGrass() {
+    randomizer.forEach(position -> {
+      rightTopCorner = rightTopCorner.upperRight(position);
+      var grass = new Grass(position);
+      grasses.put(grass.getPosition(), grass);
+    });
   }
 
   Vector2d getRightTopCorner() { //testing purposes
