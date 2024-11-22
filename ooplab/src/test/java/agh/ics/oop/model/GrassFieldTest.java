@@ -22,7 +22,7 @@ class GrassFieldTest {
     var result = new GrassField(randomizer);
 
     //then
-    assertEquals(new Vector2d(8, 10), result.getRightTopCorner());
+    assertEquals(new Vector2d(8, 10), result.getDisplayRightTopCorner());
     assertEquals(new Vector2d(8, 10), result.getDisplayRightTopCorner());
     assertEquals(1, result.getElements().size());
   }

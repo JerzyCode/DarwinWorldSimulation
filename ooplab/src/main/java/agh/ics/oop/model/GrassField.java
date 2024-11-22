@@ -57,8 +57,8 @@ public class GrassField extends AbstractWorldMap {
 
   private void placeGrass() {
     randomizer.forEach(position -> {
-      displayRightTopCorner = displayRightTopCorner.upperRight(randomVector);
-      displayLeftBotCorner = displayLeftBotCorner.lowerLeft(randomVector);
+      displayRightTopCorner = displayRightTopCorner.upperRight(position);
+      displayLeftBotCorner = displayLeftBotCorner.lowerLeft(position);
       var grass = new Grass(position);
       grasses.put(grass.getPosition(), grass);
     });
