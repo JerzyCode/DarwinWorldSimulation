@@ -4,6 +4,7 @@ import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.WorldMap;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,12 @@ public class Simulation {
     List<Animal> animals = new ArrayList<>();
     animalsPositions.forEach(position -> {
       var animal = new Animal(position);
-      if (worldMap.place(animal)) {
+      try {
+        worldMap.place(animal);
         animals.add(animal);
+      }
+      catch (IncorrectPositionException e) {
+        System.out.println("createAndPlaceAnimals(), animal not placed: message=" + e.getMessage());
       }
 
     });

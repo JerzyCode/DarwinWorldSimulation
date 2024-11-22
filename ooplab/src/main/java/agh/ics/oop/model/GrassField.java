@@ -7,6 +7,8 @@ import java.util.*;
 public class GrassField extends AbstractWorldMap {
   private final RandomVectorGenerator randomizer;
   private final Map<Vector2d, Grass> grasses;
+  private Vector2d displayLeftBotCorner;
+  private Vector2d displayRightTopCorner;
 
   public GrassField(int grassCount) {
     this(grassCount, new RandomVectorGenerator());
@@ -14,7 +16,8 @@ public class GrassField extends AbstractWorldMap {
 
   GrassField(int grassCount, RandomVectorGenerator randomizer) { //constructor for testing purposes
     super();
-    super.rightTopCorner = new Vector2d(0, 0);
+    displayRightTopCorner = new Vector2d(0, 0);
+    displayLeftBotCorner = new Vector2d(0, 0);
     this.grasses = new HashMap<>();
     this.randomizer = randomizer;
     placeGrass(grassCount);
@@ -23,7 +26,7 @@ public class GrassField extends AbstractWorldMap {
   @Override
   public void move(Animal animal, MoveDirection direction) {
     super.move(animal, direction);
-    rightTopCorner = rightTopCorner.upperRight(animal.getPosition());
+    adjustDisplayCorners();
   }
 
   @Override
@@ -49,17 +52,18 @@ public class GrassField extends AbstractWorldMap {
   @Override
   public boolean canMoveTo(Vector2d position) {
     var objectAt = objectAt(position);
-    return position.follows(leftBotCorner) && !(objectAt instanceof Animal);
+    return !(objectAt instanceof Animal);
   }
 
   private void placeGrass(int grassCount) {
     int count = 0;
     while (count < grassCount) {
-      var randomVector = randomizer.generateRandomVector(leftBotCorner.getY(), leftBotCorner.getY(),
+      var randomVector = randomizer.generateRandomVector(displayLeftBotCorner.getY(), displayLeftBotCorner.getY(),
           (int)Math.sqrt(grassCount * 10) + 1,
           (int)Math.sqrt(grassCount * 10) + 1);
 
-      rightTopCorner = rightTopCorner.upperRight(randomVector);
+      displayRightTopCorner = displayRightTopCorner.upperRight(randomVector);
+      displayLeftBotCorner = displayLeftBotCorner.lowerLeft(randomVector);
 
       var grass = new Grass(randomVector);
       if (!isOccupied(grass.getPosition())) {
@@ -69,7 +73,25 @@ public class GrassField extends AbstractWorldMap {
     }
   }
 
-  Vector2d getRightTopCorner() { //testing purposes
-    return rightTopCorner;
+  Vector2d getDisplayRightTopCorner() { //testing purposes
+    return displayRightTopCorner;
+  }
+
+  void adjustDisplayCorners() {
+    var botLeft = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    var rightTop = new Vector2d(-Integer.MAX_VALUE, -Integer.MAX_VALUE);
+
+    for (var el : getElements()) {
+      botLeft = botLeft.lowerLeft(el.getPosition());
+      rightTop = rightTop.upperRight(el.getPosition());
+    }
+    displayLeftBotCorner = botLeft;
+    displayRightTopCorner = rightTop;
+
+  }
+
+  @Override
+  public String toString() {
+    return mapVisualizer.draw(displayLeftBotCorner, displayRightTopCorner);
   }
 }
