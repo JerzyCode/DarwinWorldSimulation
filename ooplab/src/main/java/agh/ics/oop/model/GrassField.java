@@ -1,26 +1,26 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.RandomVectorGenerator;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
-  private final RandomVectorGenerator randomizer;
+  private final RandomPositionGenerator randomizer;
   private final Map<Vector2d, Grass> grasses;
   private Vector2d displayLeftBotCorner;
   private Vector2d displayRightTopCorner;
 
   public GrassField(int grassCount) {
-    this(grassCount, new RandomVectorGenerator());
+    this(new RandomPositionGenerator(grassCount, (int)Math.sqrt(grassCount * 10) + 1, (int)Math.sqrt(grassCount * 10) + 1));
   }
 
-  GrassField(int grassCount, RandomVectorGenerator randomizer) { //constructor for testing purposes
+  GrassField(RandomPositionGenerator randomizer) { //constructor for testing purposes
     super();
     displayRightTopCorner = new Vector2d(0, 0);
     displayLeftBotCorner = new Vector2d(0, 0);
     this.grasses = new HashMap<>();
     this.randomizer = randomizer;
-    placeGrass(grassCount);
+    placeGrass();
   }
 
   @Override
@@ -55,22 +55,13 @@ public class GrassField extends AbstractWorldMap {
     return !(objectAt instanceof Animal);
   }
 
-  private void placeGrass(int grassCount) {
-    int count = 0;
-    while (count < grassCount) {
-      var randomVector = randomizer.generateRandomVector(displayLeftBotCorner.getY(), displayLeftBotCorner.getY(),
-          (int)Math.sqrt(grassCount * 10) + 1,
-          (int)Math.sqrt(grassCount * 10) + 1);
-
+  private void placeGrass() {
+    randomizer.forEach(position -> {
       displayRightTopCorner = displayRightTopCorner.upperRight(randomVector);
       displayLeftBotCorner = displayLeftBotCorner.lowerLeft(randomVector);
-
-      var grass = new Grass(randomVector);
-      if (!isOccupied(grass.getPosition())) {
-        grasses.put(grass.getPosition(), grass);
-        count += 1;
-      }
-    }
+      var grass = new Grass(position);
+      grasses.put(grass.getPosition(), grass);
+    });
   }
 
   Vector2d getDisplayRightTopCorner() { //testing purposes
