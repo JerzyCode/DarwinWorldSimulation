@@ -7,10 +7,12 @@ import java.util.*;
 
 abstract class AbstractWorldMap implements WorldMap {
   private final MapVisualizer mapVisualizer;
+  private final List<MapChangeListener> mapChangeListeners;
   protected final Map<Vector2d, Animal> animals;
 
   protected AbstractWorldMap() {
     this.mapVisualizer = new MapVisualizer(this);
+    this.mapChangeListeners = new ArrayList<>();
     this.animals = new HashMap<>();
   }
 
@@ -22,6 +24,7 @@ abstract class AbstractWorldMap implements WorldMap {
     }
 
     animals.put(position, animal);
+    notifyListeners("Animal was placed at position: " + position);
   }
 
   @Override
@@ -30,6 +33,7 @@ abstract class AbstractWorldMap implements WorldMap {
       animals.remove(animal.getPosition());
       animal.move(direction, this);
       animals.put(animal.getPosition(), animal);
+      notifyListeners("Animal moved to position: " + animal.getPosition());
     }
   }
 
@@ -59,5 +63,17 @@ abstract class AbstractWorldMap implements WorldMap {
   public final String toString() {
     var bounds = getCurrentBounds();
     return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
+  }
+
+  public void addListener(MapChangeListener listener) {
+    mapChangeListeners.add(listener);
+  }
+
+  public void removeListener(MapChangeListener listener) {
+    mapChangeListeners.remove(listener);
+  }
+
+  private void notifyListeners(String message) {
+    mapChangeListeners.forEach(listener -> listener.mapChanged(this, message));
   }
 }

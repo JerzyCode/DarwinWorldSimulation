@@ -22,7 +22,6 @@ public class Simulation {
   }
 
   public void run() {
-    System.out.println(worldMap);
     int animalCount = animals.size();
     int directionsSize = moveDirections.size();
 
@@ -30,7 +29,6 @@ public class Simulation {
       var index = i % animalCount;
       var animal = animals.get(index);
       worldMap.move(animal, moveDirections.get(i));
-      System.out.println(worldMap);
     }
 
   }

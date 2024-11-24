@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.ConsoleMapDisplay;
 import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.Vector2d;
 
@@ -14,6 +15,9 @@ public class World {
     var directions = OptionsParser.parse(args);
     var positions = List.of(new Vector2d(2, 2), new Vector2d(2, 3));
     var worldMap = new GrassField(10);
+
+    var consoleMapDisplay = new ConsoleMapDisplay();
+    worldMap.addListener(consoleMapDisplay);
 
     var simulation = new Simulation(positions, directions, worldMap);
     simulation.run();
