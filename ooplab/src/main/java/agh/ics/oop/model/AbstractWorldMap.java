@@ -6,7 +6,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 
 abstract class AbstractWorldMap implements WorldMap {
-  protected final MapVisualizer mapVisualizer;
+  private final MapVisualizer mapVisualizer;
   protected final Map<Vector2d, Animal> animals;
 
   protected AbstractWorldMap() {
@@ -51,5 +51,13 @@ abstract class AbstractWorldMap implements WorldMap {
   @Override
   public boolean canMoveTo(Vector2d position) {
     return !isOccupied(position);
+  }
+
+  public abstract Boundary getCurrentBounds();
+
+  @Override
+  public final String toString() {
+    var bounds = getCurrentBounds();
+    return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
   }
 }

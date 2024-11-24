@@ -78,11 +78,10 @@ public class GrassField extends AbstractWorldMap {
     }
     displayLeftBotCorner = botLeft;
     displayRightTopCorner = rightTop;
-
   }
 
   @Override
-  public String toString() {
-    return mapVisualizer.draw(displayLeftBotCorner, displayRightTopCorner);
+  public Boundary getCurrentBounds() {
+    return new Boundary(displayLeftBotCorner, displayRightTopCorner);
   }
 }

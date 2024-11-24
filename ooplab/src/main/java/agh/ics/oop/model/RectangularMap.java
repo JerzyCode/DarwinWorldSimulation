@@ -22,7 +22,7 @@ public class RectangularMap extends AbstractWorldMap {
   }
 
   @Override
-  public String toString() {
-    return mapVisualizer.draw(leftBotCorner, rightTopCorner);
+  public Boundary getCurrentBounds() {
+    return new Boundary(leftBotCorner, rightTopCorner);
   }
 }
