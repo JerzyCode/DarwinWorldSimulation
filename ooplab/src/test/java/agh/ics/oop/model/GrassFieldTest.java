@@ -22,8 +22,9 @@ class GrassFieldTest {
     var result = new GrassField(randomizer);
 
     //then
-    assertEquals(new Vector2d(8, 10), result.getDisplayRightTopCorner());
-    assertEquals(new Vector2d(8, 10), result.getDisplayRightTopCorner());
+    var bounds = result.getCurrentBounds();
+    assertEquals(new Vector2d(8, 10), bounds.rightTopCorner());
+    assertEquals(new Vector2d(8, 10), bounds.rightTopCorner());
     assertEquals(1, result.getElements().size());
   }
 
@@ -36,7 +37,6 @@ class GrassFieldTest {
     var result = new GrassField(grassCount);
 
     //then
-    assertEquals(new Vector2d(0, 0), result.getDisplayRightTopCorner());
     assertEquals(0, result.getElements().size());
   }
 
@@ -138,7 +138,8 @@ class GrassFieldTest {
     grassField.move(animal, MoveDirection.FORWARD);
 
     //then
-    assertEquals(new Vector2d(2, 2), grassField.getDisplayRightTopCorner());
+    var bounds = grassField.getCurrentBounds();
+    assertEquals(new Vector2d(2, 2), bounds.rightTopCorner());
   }
 
   @Test

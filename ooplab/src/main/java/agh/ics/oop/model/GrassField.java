@@ -26,7 +26,6 @@ public class GrassField extends AbstractWorldMap {
   @Override
   public void move(Animal animal, MoveDirection direction) {
     super.move(animal, direction);
-    adjustDisplayCorners();
   }
 
   @Override
@@ -64,8 +63,10 @@ public class GrassField extends AbstractWorldMap {
     });
   }
 
-  Vector2d getDisplayRightTopCorner() { //testing purposes
-    return displayRightTopCorner;
+  @Override
+  public Boundary getCurrentBounds() {
+    adjustDisplayCorners();
+    return new Boundary(displayLeftBotCorner, displayRightTopCorner);
   }
 
   void adjustDisplayCorners() {
@@ -78,10 +79,5 @@ public class GrassField extends AbstractWorldMap {
     }
     displayLeftBotCorner = botLeft;
     displayRightTopCorner = rightTop;
-  }
-
-  @Override
-  public Boundary getCurrentBounds() {
-    return new Boundary(displayLeftBotCorner, displayRightTopCorner);
   }
 }
