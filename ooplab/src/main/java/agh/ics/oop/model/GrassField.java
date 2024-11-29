@@ -7,6 +7,8 @@ import java.util.*;
 public class GrassField extends AbstractWorldMap {
   private final RandomPositionGenerator randomizer;
   private final Map<Vector2d, Grass> grasses;
+  private Vector2d displayLeftBotCorner;
+  private Vector2d displayRightTopCorner;
 
   public GrassField(int grassCount) {
     this(new RandomPositionGenerator(grassCount, (int)Math.sqrt(grassCount * 10) + 1, (int)Math.sqrt(grassCount * 10) + 1));
@@ -14,7 +16,8 @@ public class GrassField extends AbstractWorldMap {
 
   GrassField(RandomPositionGenerator randomizer) { //constructor for testing purposes
     super();
-    super.rightTopCorner = new Vector2d(0, 0);
+    displayRightTopCorner = new Vector2d(0, 0);
+    displayLeftBotCorner = new Vector2d(0, 0);
     this.grasses = new HashMap<>();
     this.randomizer = randomizer;
     placeGrass();
@@ -23,7 +26,6 @@ public class GrassField extends AbstractWorldMap {
   @Override
   public void move(Animal animal, MoveDirection direction) {
     super.move(animal, direction);
-    rightTopCorner = rightTopCorner.upperRight(animal.getPosition());
   }
 
   @Override
@@ -49,18 +51,31 @@ public class GrassField extends AbstractWorldMap {
   @Override
   public boolean canMoveTo(Vector2d position) {
     var objectAt = objectAt(position);
-    return position.follows(leftBotCorner) && !(objectAt instanceof Animal);
+    return !(objectAt instanceof Animal);
   }
 
   private void placeGrass() {
     randomizer.forEach(position -> {
-      rightTopCorner = rightTopCorner.upperRight(position);
       var grass = new Grass(position);
       grasses.put(grass.getPosition(), grass);
     });
   }
 
-  Vector2d getRightTopCorner() { //testing purposes
-    return rightTopCorner;
+  @Override
+  public Boundary getCurrentBounds() {
+    adjustDisplayCorners();
+    return new Boundary(displayLeftBotCorner, displayRightTopCorner);
+  }
+
+  void adjustDisplayCorners() {
+    var botLeft = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    var rightTop = new Vector2d(-Integer.MAX_VALUE, -Integer.MAX_VALUE);
+
+    for (var el : getElements()) {
+      botLeft = botLeft.lowerLeft(el.getPosition());
+      rightTop = rightTop.upperRight(el.getPosition());
+    }
+    displayLeftBotCorner = botLeft;
+    displayRightTopCorner = rightTop;
   }
 }

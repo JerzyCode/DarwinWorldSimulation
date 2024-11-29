@@ -1,30 +1,30 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
 
 abstract class AbstractWorldMap implements WorldMap {
-  protected final MapVisualizer mapVisualizer;
+  private final MapVisualizer mapVisualizer;
+  private final List<MapChangeListener> mapChangeListeners;
   protected final Map<Vector2d, Animal> animals;
-  protected final Vector2d leftBotCorner;
-  protected Vector2d rightTopCorner;
 
   protected AbstractWorldMap() {
     this.mapVisualizer = new MapVisualizer(this);
+    this.mapChangeListeners = new ArrayList<>();
     this.animals = new HashMap<>();
-    this.leftBotCorner = new Vector2d(0, 0);
   }
 
   @Override
-  public boolean place(Animal animal) {
+  public void place(Animal animal) throws IncorrectPositionException {
     var position = animal.getPosition();
     if (!canMoveTo(position)) {
-      return false;
+      throw new IncorrectPositionException(position);
     }
 
     animals.put(position, animal);
-    return true;
+    notifyListeners("Animal was placed at position: " + position);
   }
 
   @Override
@@ -33,6 +33,7 @@ abstract class AbstractWorldMap implements WorldMap {
       animals.remove(animal.getPosition());
       animal.move(direction, this);
       animals.put(animal.getPosition(), animal);
+      notifyListeners("Animal moved to position: " + animal.getPosition());
     }
   }
 
@@ -53,11 +54,26 @@ abstract class AbstractWorldMap implements WorldMap {
 
   @Override
   public boolean canMoveTo(Vector2d position) {
-    return !isOccupied(position) && position.follows(leftBotCorner) && position.precedes(rightTopCorner);
+    return !isOccupied(position);
   }
 
+  public abstract Boundary getCurrentBounds();
+
   @Override
-  public String toString() {
-    return mapVisualizer.draw(leftBotCorner, rightTopCorner);
+  public final String toString() {
+    var bounds = getCurrentBounds();
+    return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
+  }
+
+  public void addListener(MapChangeListener listener) {
+    mapChangeListeners.add(listener);
+  }
+
+  public void removeListener(MapChangeListener listener) {
+    mapChangeListeners.remove(listener);
+  }
+
+  private void notifyListeners(String message) {
+    mapChangeListeners.forEach(listener -> listener.mapChanged(this, message));
   }
 }

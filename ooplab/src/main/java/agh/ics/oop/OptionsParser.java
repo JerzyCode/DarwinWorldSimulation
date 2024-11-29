@@ -22,7 +22,7 @@ public class OptionsParser {
       case "r" -> MoveDirection.RIGHT;
       case "f" -> MoveDirection.FORWARD;
       case "b" -> MoveDirection.BACKWARD;
-      default -> null;
+      default -> throw new IllegalArgumentException(direction + " is not valid move specification.");
     };
   }
 }

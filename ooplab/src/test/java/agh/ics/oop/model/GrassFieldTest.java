@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +22,9 @@ class GrassFieldTest {
     var result = new GrassField(randomizer);
 
     //then
-    assertEquals(new Vector2d(8, 10), result.getRightTopCorner());
+    var bounds = result.getCurrentBounds();
+    assertEquals(new Vector2d(8, 10), bounds.rightTopCorner());
+    assertEquals(new Vector2d(8, 10), bounds.rightTopCorner());
     assertEquals(1, result.getElements().size());
   }
 
@@ -34,7 +37,6 @@ class GrassFieldTest {
     var result = new GrassField(grassCount);
 
     //then
-    assertEquals(new Vector2d(0, 0), result.getRightTopCorner());
     assertEquals(0, result.getElements().size());
   }
 
@@ -54,24 +56,22 @@ class GrassFieldTest {
   }
 
   @Test
-  void shouldPlaceAnimal() {
+  void shouldPlaceAnimal() throws IncorrectPositionException {
     //given
     var grassCount = 0;
     var animal = new Animal(new Vector2d(0, 0));
     var grassField = new GrassField(grassCount);
 
     //when
-    var result = grassField.place(animal);
+    grassField.place(animal);
 
     //then
-    assertTrue(result);
-
     var elements = grassField.getElements();
     assertEquals(1, elements.size());
   }
 
   @Test
-  void shouldNotPlaceAnimalPositionOccupied() {
+  void shouldThrowExceptionWhenAnimalPositionOccupied() throws IncorrectPositionException {
     //given
     var grassCount = 0;
     var animal1 = new Animal(new Vector2d(0, 0));
@@ -79,29 +79,24 @@ class GrassFieldTest {
     var grassField = new GrassField(grassCount);
     grassField.place(animal1);
 
-    //when
-    var result = grassField.place(animal2);
-
-    //then
-    assertFalse(result);
+    //when && then
+    assertThrows(IncorrectPositionException.class, () -> grassField.place(animal2));
 
     var elements = grassField.getElements();
     assertEquals(1, elements.size());
   }
 
   @Test
-  void shouldPlaceAnimalOverGrass() {
+  void shouldPlaceAnimalOverGrass() throws IncorrectPositionException {
     //given
     var animal = new Animal(new Vector2d(1, 1));
     var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
     var grassField = new GrassField(randomizer);
 
     //when
-    var result = grassField.place(animal);
+    grassField.place(animal);
 
     //then
-    assertTrue(result);
-
     var elements = grassField.getElements();
     assertEquals(2, elements.size());
     var iterator = elements.iterator();
@@ -110,7 +105,7 @@ class GrassFieldTest {
   }
 
   @Test
-  void shouldMoveAnimalOverGrass() {
+  void shouldMoveAnimalOverGrass() throws IncorrectPositionException {
     //given
     var animal = new Animal(new Vector2d(1, 0), MapDirection.NORTH);
     var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
@@ -129,7 +124,7 @@ class GrassFieldTest {
   }
 
   @Test
-  void shouldIncreaseRightTopCornerWhenMovingAnimal() {
+  void shouldIncreaseRightTopCornerWhenMovingAnimal() throws IncorrectPositionException {
     //given
     var animal = new Animal(new Vector2d(1, 1), MapDirection.NORTH);
     var randomizer = spyRandomizerWithOnePosition(new Vector2d(1, 1));
@@ -143,11 +138,12 @@ class GrassFieldTest {
     grassField.move(animal, MoveDirection.FORWARD);
 
     //then
-    assertEquals(new Vector2d(2, 2), grassField.getRightTopCorner());
+    var bounds = grassField.getCurrentBounds();
+    assertEquals(new Vector2d(2, 2), bounds.rightTopCorner());
   }
 
   @Test
-  void shouldBeAnimalObjectAtPosition() {
+  void shouldBeAnimalObjectAtPosition() throws IncorrectPositionException {
     //given
     var grassCount = 50;
     var animal = new Animal(new Vector2d(0, 0));
@@ -193,7 +189,7 @@ class GrassFieldTest {
   }
 
   @Test
-  void shouldBeOccupiedByAnimal() {
+  void shouldBeOccupiedByAnimal() throws IncorrectPositionException {
     //given
     var grassCount = 100;
     var animal = new Animal((new Vector2d(0, 0)));
@@ -209,18 +205,18 @@ class GrassFieldTest {
   }
 
   @Test
-  void shouldNotBeAbleToMoveWhenGoOutsideMapWestSouth() {
+  void shouldBeAbleToMoveWhenGoOutsideMapWestSouth() {
     //given
     var grassCount = 100;
     var grassField = new GrassField(grassCount);
 
     //when && then
-    assertFalse(grassField.canMoveTo(new Vector2d(-1, 0)));
-    assertFalse(grassField.canMoveTo(new Vector2d(0, -1)));
+    assertTrue(grassField.canMoveTo(new Vector2d(-1, 0)));
+    assertTrue(grassField.canMoveTo(new Vector2d(0, -1)));
   }
 
   @Test
-  void shouldNotBeAbleToMoveWhenPositionIsOccupiedByAnimal() {
+  void shouldNotBeAbleToMoveWhenPositionIsOccupiedByAnimal() throws IncorrectPositionException {
     //given
     var grassCount = 100;
     var grassField = new GrassField(grassCount);
