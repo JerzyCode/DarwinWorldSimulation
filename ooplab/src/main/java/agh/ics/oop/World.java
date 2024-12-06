@@ -1,27 +1,27 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.ConsoleMapDisplay;
-import agh.ics.oop.model.GrassField;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class World {
+  private static final List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(2, 3));
+  private static final ConsoleMapDisplay consoleMapDisplay = new ConsoleMapDisplay();
+  private static final Random random = new Random();
 
   public static void main(String[] args) {
     System.out.println("Start");
 
-    // f f r f f r r f f f f r f f f f
+    // f f r f b r r f f b f r f f f f
     try {
       var directions = OptionsParser.parse(args);
-      var positions = List.of(new Vector2d(2, 2), new Vector2d(2, 3));
-      var worldMap = new GrassField(10);
+      var simulations = createSimulations(directions);
+      var simulationEngine = new SimulationEngine(simulations);
 
-      var consoleMapDisplay = new ConsoleMapDisplay();
-      worldMap.addListener(consoleMapDisplay);
-
-      var simulation = new Simulation(positions, directions, worldMap);
-      simulation.run();
+      simulationEngine.runAsyncInThreadPool();
+      simulationEngine.awaitSimulationEnds();
     }
     catch (IllegalArgumentException e) {
       System.out.println("Wrong arguments were passed!");
@@ -29,6 +29,31 @@ public class World {
     }
 
     System.out.println("Stop");
+  }
+
+  private static List<Simulation> createSimulations(List<MoveDirection> directions) {
+    var simulations = new ArrayList<Simulation>();
+    for (int i = 0; i < 11; i++) {
+      if (i % 2 == 0) {
+        simulations.add(createGrassFieldSimulation(random.nextInt(4, 10), directions));
+      }
+      else {
+        simulations.add(createRectangularMapSimulation(random.nextInt(4, 10), random.nextInt(4, 10), directions));
+      }
+    }
+    return simulations;
+  }
+
+  private static Simulation createGrassFieldSimulation(int count, List<MoveDirection> directions) {
+    var grassField = new GrassField(count);
+    grassField.addListener(consoleMapDisplay);
+    return new Simulation(positions, directions, grassField);
+  }
+
+  private static Simulation createRectangularMapSimulation(int width, int height, List<MoveDirection> directions) {
+    var grassField = new RectangularMap(width, height);
+    grassField.addListener(consoleMapDisplay);
+    return new Simulation(positions, directions, grassField);
   }
 
 }

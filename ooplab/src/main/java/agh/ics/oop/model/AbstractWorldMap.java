@@ -8,12 +8,19 @@ import java.util.*;
 abstract class AbstractWorldMap implements WorldMap {
   private final MapVisualizer mapVisualizer;
   private final List<MapChangeListener> mapChangeListeners;
+  private final UUID id;
   protected final Map<Vector2d, Animal> animals;
 
   protected AbstractWorldMap() {
     this.mapVisualizer = new MapVisualizer(this);
     this.mapChangeListeners = new ArrayList<>();
     this.animals = new HashMap<>();
+    this.id = UUID.randomUUID();
+  }
+
+  @Override
+  public UUID getId() {
+    return id;
   }
 
   @Override
