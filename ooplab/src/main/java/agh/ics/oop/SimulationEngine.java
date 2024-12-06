@@ -30,14 +30,14 @@ public class SimulationEngine {
   }
 
   public void awaitSimulationEnds() {
-    if (!executor.isTerminated()) {
+    if (!executor.isShutdown()) {
       shutDownThreadPool();
     }
-    blockThreads();
+    joinAllThreads();
   }
 
   private void shutDownThreadPool() {
-    executor.shutdown();
+    executor.shutdown(); //TODO poprawić to zamykanie
     try {
       if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
         System.out.println("Executor did not terminate in time, force shut down");
@@ -50,14 +50,14 @@ public class SimulationEngine {
     }
   }
 
-  private void blockThreads() {
+  private void joinAllThreads() {
     try {
       for (Thread thread : threads) {
         thread.join();
       }
     }
     catch (InterruptedException e) {
-      System.out.println("Simulation was interrupted");
+      System.out.println("Thread was interrupted");
     }
   }
 
