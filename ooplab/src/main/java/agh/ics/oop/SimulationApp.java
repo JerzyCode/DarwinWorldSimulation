@@ -1,30 +1,19 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.GrassField;
-import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class SimulationApp extends Application {
   @Override
   public void start(Stage stage) throws IOException {
-
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
-    BorderPane viewRoot = loader.load();
-
-    var map = new GrassField(10);
-    SimulationPresenter presenter = loader.getController();
-    map.addListener(presenter);
-    presenter.setWorldMap(map);
-    presenter.drawMap();
-
+    loader.setLocation(getClass().getClassLoader().getResource("main_panel.fxml"));
+    Pane viewRoot = loader.load();
     configureStage(stage, viewRoot);
     stage.show();
   }
@@ -34,12 +23,9 @@ public class SimulationApp extends Application {
     super.stop();
   }
 
-  private void configureStage(Stage primaryStage, BorderPane viewRoot) {
+  private void configureStage(Stage primaryStage, Pane viewRoot) {
     var scene = new Scene(viewRoot);
-    scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
     primaryStage.setScene(scene);
     primaryStage.setTitle("Simulation app");
-    primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
-    primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
   }
 }

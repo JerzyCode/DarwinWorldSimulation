@@ -4,8 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane minHeight = "550.0" minWidth = "850.0" maxWidth = "1200" maxHeight = "800"
-            xmlns = "http://javafx.com/javafx/17.0.12"
-            xmlns:fx = "http://javafx.com/fxml/1" fx:controller = "agh.ics.oop.presenter.SimulationPresenter">
+            xmlns:fx = "http://javafx.com/fxml/1"
+            fx:controller = "agh.ics.oop.presenter.SimulationPresenter">
 
     <center>
         <ScrollPane fitToHeight = "true" fitToWidth = "true">
