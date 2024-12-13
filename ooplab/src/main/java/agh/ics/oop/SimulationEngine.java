@@ -26,7 +26,7 @@ public class SimulationEngine {
   }
 
   public void runAsyncInThreadPool() {
-    executor.execute(this::runAsync);
+    executor.submit(this::runAsync);
   }
 
   public void awaitSimulationEnds() {

@@ -31,8 +31,8 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
 
   private Queue<Vector2d> getAvailablePositions(int elementsCount, int maxWidth, int maxHeight) {
     LinkedList<Vector2d> availablePositions = new LinkedList<>();
-    for (int i = 0; i <= maxWidth; i++) {
-      for (int j = 0; j <= maxHeight; j++) {
+    for (int i = -maxWidth; i <= maxWidth; i++) {
+      for (int j = -maxHeight; j <= maxHeight; j++) {
         availablePositions.add(new Vector2d(i, j));
       }
     }

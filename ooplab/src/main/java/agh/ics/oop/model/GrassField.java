@@ -16,8 +16,6 @@ public class GrassField extends AbstractWorldMap {
 
   GrassField(RandomPositionGenerator randomizer) { //constructor for testing purposes
     super();
-    displayRightTopCorner = new Vector2d(0, 0);
-    displayLeftBotCorner = new Vector2d(0, 0);
     this.grasses = new HashMap<>();
     this.randomizer = randomizer;
     placeGrass();
@@ -42,8 +40,8 @@ public class GrassField extends AbstractWorldMap {
   @Override
   public Collection<WorldElement> getElements() {
     var elements = new ArrayList<WorldElement>();
-    elements.addAll(super.getElements());
     elements.addAll(grasses.values());
+    elements.addAll(super.getElements());
 
     return Collections.unmodifiableCollection(elements);
   }
