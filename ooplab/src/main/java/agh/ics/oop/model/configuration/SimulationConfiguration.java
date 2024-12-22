@@ -6,6 +6,8 @@ public record SimulationConfiguration(
     PlantVariant plantVariant,
     int wellFedEnergy,
     int lossCopulateEnergy,
-    int fireFrequency
+    int fireFrequency,
+    int startPlantCount,
+    int startAnimalCount
 ) {
 }
