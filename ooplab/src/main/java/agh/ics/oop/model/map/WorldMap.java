@@ -1,6 +1,9 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.map;
 
+import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.map.elements.WorldElement;
 
 import java.util.Collection;
 import java.util.UUID;

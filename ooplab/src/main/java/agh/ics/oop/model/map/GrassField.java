@@ -1,5 +1,9 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.map;
 
+import agh.ics.oop.model.*;
+import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.map.elements.Grass;
+import agh.ics.oop.model.map.elements.WorldElement;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;

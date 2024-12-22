@@ -1,9 +1,9 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.map.elements.Animal;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.WorldMap;
+import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
       var animal = animals.get(index);
       try {
         worldMap.move(animal, moveDirections.get(i));
-        Thread.sleep(500);
+        Thread.sleep(0);
       }
       catch (InterruptedException e) {
         System.out.println("Simulation was interrupted!!");

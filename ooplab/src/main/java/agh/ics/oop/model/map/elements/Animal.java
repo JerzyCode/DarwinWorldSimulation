@@ -1,4 +1,9 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.map.elements;
+
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.MoveValidator;
+import agh.ics.oop.model.Vector2d;
 
 public class Animal implements WorldElement {
 
@@ -13,7 +18,7 @@ public class Animal implements WorldElement {
     this(position, MapDirection.NORTH);
   }
 
-  Animal(Vector2d position, MapDirection orientation) { // for test purpose
+  public Animal(Vector2d position, MapDirection orientation) {
     this.orientation = orientation;
     this.position = position;
   }

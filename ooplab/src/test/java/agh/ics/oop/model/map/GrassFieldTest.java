@@ -1,6 +1,11 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.map;
 
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.map.elements.Grass;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -100,8 +105,8 @@ class GrassFieldTest {
     var elements = grassField.getElements();
     assertEquals(2, elements.size());
     var iterator = elements.iterator();
-    assertInstanceOf(Animal.class, iterator.next());
     assertInstanceOf(Grass.class, iterator.next());
+    assertInstanceOf(Animal.class, iterator.next());
   }
 
   @Test
@@ -120,6 +125,7 @@ class GrassFieldTest {
     assertEquals(2, elements.size());
     var iterator = elements.iterator();
 
+    assertNotEquals(animal, iterator.next());
     assertEquals(animal, iterator.next());
   }
 
