@@ -27,6 +27,10 @@ public class World {
       System.out.println("Wrong arguments were passed!");
       e.printStackTrace();
     }
+    catch (InterruptedException e) {
+      System.out.println("Thread has been discontinued.");
+      e.printStackTrace();
+    }
 
     System.out.println("Stop");
   }

@@ -28,9 +28,15 @@ public class Simulation implements Runnable {
     for (int i = 0; i < directionsSize; i++) {
       var index = i % animalCount;
       var animal = animals.get(index);
-      worldMap.move(animal, moveDirections.get(i));
+      try {
+        worldMap.move(animal, moveDirections.get(i));
+        Thread.sleep(500);
+      }
+      catch (InterruptedException e) {
+        System.out.println("Simulation was interrupted!!");
+        return;
+      }
     }
-
   }
 
   private List<Animal> createAndPlaceAnimals(List<Vector2d> animalsPositions) {

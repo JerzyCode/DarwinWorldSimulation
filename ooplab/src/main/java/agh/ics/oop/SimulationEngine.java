@@ -13,7 +13,7 @@ public class SimulationEngine {
 
   public SimulationEngine(List<Simulation> simulations) {
     this.simulations = simulations;
-    this.threads = createThreads(simulations);
+    this.threads = new ArrayList<>();
     this.executor = Executors.newFixedThreadPool(4);
   }
 
@@ -22,52 +22,27 @@ public class SimulationEngine {
   }
 
   public void runAsync() {
-    threads.forEach(Thread::start);
+    simulations.forEach(simulation -> {
+      var thread = new Thread(simulation);
+      threads.add(thread);
+      thread.start();
+    });
   }
 
   public void runAsyncInThreadPool() {
-    executor.execute(this::runAsync);
-  }
-
-  public void awaitSimulationEnds() {
-    if (!executor.isTerminated()) {
-      shutDownThreadPool();
-    }
-    blockThreads();
-  }
-
-  private void shutDownThreadPool() {
+    simulations.forEach(executor::submit);
     executor.shutdown();
-    try {
-      if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-        System.out.println("Executor did not terminate in time, force shut down");
-        executor.shutdownNow();
-      }
+  }
+
+  public void awaitSimulationEnds() throws InterruptedException {
+    for (Thread thread : threads) {
+      thread.join();
     }
-    catch (InterruptedException e) {
-      System.out.println("Shutting down ThreadPool interrupted, Force closing");
+
+    if (executor.isShutdown() && !executor.awaitTermination(10, TimeUnit.SECONDS)) {
+      System.err.println("Some simulations still work. I'm interrupting...");
       executor.shutdownNow();
     }
   }
 
-  private void blockThreads() {
-    try {
-      for (Thread thread : threads) {
-        thread.join();
-      }
-    }
-    catch (InterruptedException e) {
-      System.out.println("Simulation was interrupted");
-    }
-  }
-
-  private List<Thread> createThreads(List<Simulation> simulations) {
-    List<Thread> threads = new ArrayList<>();
-    simulations.forEach(simulation -> {
-      Thread thread = new Thread(simulation);
-      threads.add(thread);
-    });
-
-    return threads;
-  }
 }
