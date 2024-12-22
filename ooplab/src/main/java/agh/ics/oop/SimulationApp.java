@@ -18,11 +18,6 @@ public class SimulationApp extends Application {
     stage.show();
   }
 
-  @Override
-  public void stop() throws Exception {
-    super.stop();
-  }
-
   private void configureStage(Stage primaryStage, Pane viewRoot) {
     var scene = new Scene(viewRoot);
     primaryStage.setScene(scene);

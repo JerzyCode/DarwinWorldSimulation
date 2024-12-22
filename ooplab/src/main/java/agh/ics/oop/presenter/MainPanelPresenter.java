@@ -22,6 +22,7 @@ public class MainPanelPresenter {
     BorderPane viewRoot = loader.load();
 
     var map = new GrassField(10);
+//    var map = new RectangularMap(20,20);
     SimulationPresenter presenter = loader.getController();
     map.addListener(presenter);
     presenter.setWorldMap(map);

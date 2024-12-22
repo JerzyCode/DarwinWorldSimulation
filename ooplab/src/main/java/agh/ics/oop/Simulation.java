@@ -34,7 +34,6 @@ public class Simulation implements Runnable {
       }
       catch (InterruptedException e) {
         System.out.println("Simulation was interrupted!!");
-        Thread.currentThread().interrupt();
         return;
       }
     }

@@ -27,11 +27,11 @@ import java.util.List;
 public class SimulationPresenter implements MapChangeListener {
 
   @FXML
-  public GridPane mapGrid;
+  private GridPane mapGrid;
   @FXML
-  public GridPane leftCoordinates;
+  private GridPane leftCoordinates;
   @FXML
-  public GridPane topCoordinates;
+  private GridPane topCoordinates;
   @FXML
   private TextArea historyTextArea;
   @FXML
@@ -45,11 +45,11 @@ public class SimulationPresenter implements MapChangeListener {
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
   public void drawMap() {
-
+    var mapBoundary = worldMap.getCurrentBounds();
     clearGrid();
-    fillCoordinates();
-    fillGrid();
-    drawElements();
+    fillCoordinates(mapBoundary);
+    fillGrid(mapBoundary);
+    drawElements(mapBoundary);
   }
 
   @Override
@@ -65,11 +65,12 @@ public class SimulationPresenter implements MapChangeListener {
 
     var args = movesTextField.getText().split(" ");
     var directions = OptionsParser.parse(args);
-    var animalPositions = List.of(new Vector2d(-5, -5), new Vector2d(5, 5));
+    var animalPositions = List.of(new Vector2d(-2, -2), new Vector2d(2, 2));
     var simulation = new Simulation(animalPositions, directions, worldMap);
     var simulationEngine = new SimulationEngine(List.of(simulation));
 
     simulationEngine.runAsyncInThreadPool();
+    startButton.setDisable(true);
   }
 
   public void setWorldMap(WorldMap worldMap) {
@@ -95,23 +96,27 @@ public class SimulationPresenter implements MapChangeListener {
     mapGrid.getRowConstraints().clear();
   }
 
-  private void fillCoordinates() {
+  private void fillCoordinates(Boundary mapBoundary) {
+    var maxRightX = mapBoundary.rightTopCorner().getX();
+    var maxLeftX = mapBoundary.leftBottomCorner().getX();
+    var maxTopY = mapBoundary.rightTopCorner().getY();
+    var maxBottomY = mapBoundary.leftBottomCorner().getY();
 
-    for (int i = 1; i <= maxRightX() + calculateOffsetX() + 1; i++) {
+    for (int i = 1; i <= maxRightX + calculateOffsetX(maxLeftX) + 1; i++) {
       topCoordinates.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
-      topCoordinates.add(createCoordinateLabel(Integer.toString(maxLeftX() + i - 1)), i, 0);
+      topCoordinates.add(createCoordinateLabel(Integer.toString(maxLeftX + i - 1)), i, 0);
     }
 
-    for (int i = 0; i <= maxTopY() + calculateOffsetY(); i++) {
+    for (int i = 0; i <= maxTopY + calculateOffsetY(maxBottomY); i++) {
       leftCoordinates.getRowConstraints().add(new RowConstraints(GRID_WIDTH));
-      leftCoordinates.add(createCoordinateLabel(Integer.toString(maxBotY() + i)), 0, i);
+      leftCoordinates.add(createCoordinateLabel(Integer.toString(maxBottomY + i)), 0, i);
     }
 
   }
 
-  private void fillGrid() {
-    int width = calculateGridWidth(worldMap.getCurrentBounds().leftBottomCorner(), worldMap.getCurrentBounds().rightTopCorner());
-    int height = calculateGridHeight(worldMap.getCurrentBounds().leftBottomCorner(), worldMap.getCurrentBounds().rightTopCorner());
+  private void fillGrid(Boundary mapBoundary) {
+    int width = calculateGridWidth(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
+    int height = calculateGridHeight(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
 
     for (int i = 0; i <= width; i++) {
       mapGrid.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
@@ -123,10 +128,13 @@ public class SimulationPresenter implements MapChangeListener {
 
   }
 
-  private void drawElements() {
+  private void drawElements(Boundary mapBoundary) {
+    var maxLeftX = mapBoundary.leftBottomCorner().getX();
+    var maxBottomY = mapBoundary.leftBottomCorner().getY();
+
     worldMap.getElements().forEach(element -> {
-      int x = element.getPosition().getX() + calculateOffsetX();
-      int y = element.getPosition().getY() + calculateOffsetY();
+      int x = element.getPosition().getX() + calculateOffsetX(maxLeftX);
+      int y = element.getPosition().getY() + calculateOffsetY(maxBottomY);
 
       Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
 
@@ -183,33 +191,18 @@ public class SimulationPresenter implements MapChangeListener {
     return Math.abs(leftBot.subtract(rightTop).getY());
   }
 
-  private int calculateOffsetX() {
-    if (maxLeftX() < 0) {
-      return Math.abs(maxLeftX());
+  private int calculateOffsetX(int maxLeftX) {
+    if (maxLeftX < 0) {
+      return Math.abs(maxLeftX);
     }
     return 0;
   }
 
-  private int calculateOffsetY() {
-    if (maxBotY() < 0) {
-      return Math.abs(maxBotY());
+  private int calculateOffsetY(int maxBottomY) {
+    if (maxBottomY < 0) {
+      return Math.abs(maxBottomY);
     }
     return 0;
   }
 
-  private int maxLeftX() {
-    return worldMap.getCurrentBounds().leftBottomCorner().getX();
-  }
-
-  private int maxRightX() {
-    return worldMap.getCurrentBounds().rightTopCorner().getX();
-  }
-
-  private int maxTopY() {
-    return worldMap.getCurrentBounds().rightTopCorner().getY();
-  }
-
-  private int maxBotY() {
-    return worldMap.getCurrentBounds().leftBottomCorner().getY();
-  }
 }
