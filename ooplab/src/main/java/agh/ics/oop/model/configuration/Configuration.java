@@ -22,4 +22,13 @@ public class Configuration {
   public SimulationConfiguration getSimulationConfiguration() {
     return simulationConfiguration;
   }
+
+  @Override
+  public String toString() {
+    return "Configuration{" +
+        "worldMapConfiguration=" + worldMapConfiguration +
+        ", animalConfiguration=" + animalConfiguration +
+        ", simulationConfiguration=" + simulationConfiguration +
+        '}';
+  }
 }
