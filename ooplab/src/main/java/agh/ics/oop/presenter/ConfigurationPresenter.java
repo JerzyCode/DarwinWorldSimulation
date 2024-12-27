@@ -62,7 +62,7 @@ public class ConfigurationPresenter {
   private TextField startPlantCountInput;
 
   public void initialize() {
-    setTextFormatters();
+    setTextFieldValidation();
     littleCorrectionVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.LITTLE_CORRECTION));
     fullRandomVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.FULL_RANDOM));
     forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
@@ -132,11 +132,20 @@ public class ConfigurationPresenter {
     textField.setDisable(false);
   }
 
-  private void setTextFormatters() {
+  private void setTextFieldValidation() {
     mainGridPane.getChildren().stream()
         .filter(node -> node instanceof TextField)
         .map(node -> (TextField)node)
-        .forEach(textField -> textField.setTextFormatter(createTextFormatter()));
+        .forEach(textField -> {
+          textField.setTextFormatter(createTextFormatter());
+          textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+              if (textField.getText().isEmpty()) {
+                textField.setText("0");
+              }
+            }
+          });
+        });
   }
 
   private TextFormatter<String> createTextFormatter() {
@@ -149,6 +158,7 @@ public class ConfigurationPresenter {
           return change;
         }
       }
+
       return null;
     };
 
