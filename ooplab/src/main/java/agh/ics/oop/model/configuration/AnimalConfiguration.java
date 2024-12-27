@@ -68,4 +68,15 @@ public class AnimalConfiguration {
   public void setGenomeLength(int genomeLength) {
     this.genomeLength = genomeLength;
   }
+
+  @Override
+  public String toString() {
+    return "AnimalConfiguration{" +
+        "startEnergy=" + startEnergy +
+        ", minimumMutationCount=" + minimumMutationCount +
+        ", maximumMutationCount=" + maximumMutationCount +
+        ", mutationVariant=" + mutationVariant +
+        ", genomeLength=" + genomeLength +
+        '}';
+  }
 }

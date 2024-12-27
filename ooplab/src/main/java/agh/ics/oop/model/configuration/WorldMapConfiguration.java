@@ -46,4 +46,13 @@ public class WorldMapConfiguration {
   public void setMapVariant(WorldMapVariant mapVariant) {
     this.mapVariant = mapVariant;
   }
+
+  @Override
+  public String toString() {
+    return "WorldMapConfiguration{" +
+        "height=" + height +
+        ", width=" + width +
+        ", mapVariant=" + mapVariant +
+        '}';
+  }
 }

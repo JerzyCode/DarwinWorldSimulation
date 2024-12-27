@@ -104,4 +104,18 @@ public class SimulationConfiguration {
   public void setStartAnimalCount(int startAnimalCount) {
     this.startAnimalCount = startAnimalCount;
   }
+
+  @Override
+  public String toString() {
+    return "SimulationConfiguration{" +
+        "energyGain=" + energyGain +
+        ", plantGrowth=" + plantGrowth +
+        ", plantVariant=" + plantVariant +
+        ", wellFedEnergy=" + wellFedEnergy +
+        ", lossCopulateEnergy=" + lossCopulateEnergy +
+        ", fireFrequency=" + fireFrequency +
+        ", startPlantCount=" + startPlantCount +
+        ", startAnimalCount=" + startAnimalCount +
+        '}';
+  }
 }
