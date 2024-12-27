@@ -1,6 +1,6 @@
 package agh.ics.oop.model.configuration;
 
-public class Configuration {
+public class Configuration { //TODO moze singleton?
   private final WorldMapConfiguration worldMapConfiguration;
   private final AnimalConfiguration animalConfiguration;
   private final SimulationConfiguration simulationConfiguration;

@@ -1,5 +1,7 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.factory.WorldMapFactory;
+import agh.ics.oop.model.configuration.MockConfiguration;
 import agh.ics.oop.model.map.GrassField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,12 +23,18 @@ public class MainPanelPresenter {
     loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
     BorderPane viewRoot = loader.load();
 
-    var map = new GrassField(10);
+//    var map = new GrassField(10);
 //    var map = new RectangularMap(20,20);
-    SimulationPresenter presenter = loader.getController();
+//    SimulationPresenter presenter = loader.getController();
+    var config = MockConfiguration.get();
+    var mapFactory = new WorldMapFactory(config.getWorldMapConfiguration());
+    var map = (GrassField) mapFactory.createWorldMap();
+
+    SimulationPresenterWithConfig presenter = loader.getController();
     map.addListener(presenter);
+    presenter.setConfiguration(config);
     presenter.setWorldMap(map);
-    presenter.drawMap();
+//    presenter.drawMap();
 
     configureStage(stage, viewRoot);
     stage.show();
