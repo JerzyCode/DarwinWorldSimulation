@@ -11,7 +11,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
   private final Queue<Vector2d> availablePositions;
 
   public RandomPositionGenerator(int elementsCount, int maxWidth, int maxHeight) {
-    availablePositions = getAvailablePositions(elementsCount, maxWidth, maxHeight);
+    availablePositions = getAvailablePositionsPositive(elementsCount, maxWidth, maxHeight);
   }
 
   @Override
@@ -42,4 +42,16 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
     return availablePositions;
   }
 
+  private Queue<Vector2d> getAvailablePositionsPositive(int elementsCount, int maxWidth, int maxHeight) {
+    LinkedList<Vector2d> availablePositions = new LinkedList<>();
+    for (int i = 0; i <= maxWidth; i++) {
+      for (int j = 0; j <= maxHeight; j++) {
+        availablePositions.add(new Vector2d(i, j));
+      }
+    }
+
+    Collections.shuffle(availablePositions);
+    availablePositions = new LinkedList<>(availablePositions.subList(0, Math.min(elementsCount, availablePositions.size())));
+    return availablePositions;
+  }
 }

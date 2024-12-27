@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+//TODO ogólny refactor tej klasy + testy integracyjne
 public class SimulationWithConfig implements Runnable {
   private final SimulationConfiguration simulationConfiguration;
   private final WorldMapConfiguration worldMapConfiguration;
@@ -31,7 +32,7 @@ public class SimulationWithConfig implements Runnable {
     this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
     this.worldMap = worldMap;
     animals = createAnimals();
-//    plants = createPlants(); TODO początkowe planty powinny być tworzone w mapie
+    //    plants = createPlants(); TODO początkowe planty powinny być tworzone w mapie
   }
 
   @Override
@@ -74,13 +75,17 @@ public class SimulationWithConfig implements Runnable {
   }
 
   private List<Animal> createAnimals() {
+    var boundary = worldMap.getCurrentBounds();
+    var maxWidth = Math.max(boundary.rightTopCorner().getX(), worldMapConfiguration.getWidth());
+    var maxHeight = Math.max(boundary.rightTopCorner().getY(), worldMapConfiguration.getHeight());
     List<Animal> animals = new ArrayList<>();
     var randomizer = new RandomPositionGenerator(
         simulationConfiguration.getStartAnimalCount(),
-        worldMapConfiguration.getWidth(),
-        worldMapConfiguration.getHeight());
+        maxWidth,
+        maxHeight);
 
     for (Vector2d position : randomizer) {
+      System.out.println("position=" + position);
       var animal = animalFactory.createAnimal(position);
       try {
         worldMap.place(animal);

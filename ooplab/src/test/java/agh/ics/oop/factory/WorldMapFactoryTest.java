@@ -17,6 +17,7 @@ class WorldMapFactoryTest {
     var configuration = new WorldMapConfiguration(
         100,
         100,
+        10,
         WorldMapVariant.GRASS_FIELD);
     var factory = new WorldMapFactory(configuration);
 
@@ -34,6 +35,7 @@ class WorldMapFactoryTest {
     var configuration = new WorldMapConfiguration(
         100,
         100,
+        10,
         WorldMapVariant.EARTH);
     var factory = new WorldMapFactory(configuration);
 
@@ -52,6 +54,7 @@ class WorldMapFactoryTest {
     var configuration = new WorldMapConfiguration(
         100,
         100,
+        10,
         WorldMapVariant.FIRE);
     var factory = new WorldMapFactory(configuration);
 

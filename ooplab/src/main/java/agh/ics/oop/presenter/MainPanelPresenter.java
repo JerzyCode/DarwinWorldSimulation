@@ -72,7 +72,7 @@ public class MainPanelPresenter {
     var mapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
     var map = mapFactory.createWorldMap();
 
-    SimulationPresenterWithConfig presenter = loader.getController();
+    SimulationPresenter presenter = loader.getController();
     map.addListener(presenter);
     presenter.setConfiguration(configuration);
     presenter.setWorldMap(map);
