@@ -14,7 +14,7 @@ public class WorldMapFactory {
   }
 
   public WorldMap createWorldMap() {
-    return switch (worldMapConfiguration.mapVariant()) {
+    return switch (worldMapConfiguration.getMapVariant()) {
       case EARTH -> createEarth();
       case FIRE -> createFireEarth();
       case GRASS_FIELD -> createGrassField();

@@ -5,6 +5,12 @@ public class Configuration { //TODO moze singleton?
   private final AnimalConfiguration animalConfiguration;
   private final SimulationConfiguration simulationConfiguration;
 
+  public Configuration() {
+    this.worldMapConfiguration = new WorldMapConfiguration();
+    this.animalConfiguration = new AnimalConfiguration();
+    this.simulationConfiguration = new SimulationConfiguration();
+  }
+
   public Configuration(WorldMapConfiguration worldMapConfiguration, AnimalConfiguration animalConfiguration, SimulationConfiguration simulationConfiguration) {
     this.worldMapConfiguration = worldMapConfiguration;
     this.animalConfiguration = animalConfiguration;

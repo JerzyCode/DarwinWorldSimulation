@@ -61,9 +61,9 @@ public class SimulationWithConfig implements Runnable {
 
   private void createRandomPlants() {
     var randomizer = new RandomPositionGenerator(
-        simulationConfiguration.plantGrowth(),
-        worldMapConfiguration.width(),
-        worldMapConfiguration.height());
+        simulationConfiguration.getPlantGrowth(),
+        worldMapConfiguration.getWidth(),
+        worldMapConfiguration.getHeight());
 
     for (Vector2d pos : randomizer) {
       var grass = new Grass(pos);
@@ -76,9 +76,9 @@ public class SimulationWithConfig implements Runnable {
   private List<Animal> createAnimals() {
     List<Animal> animals = new ArrayList<>();
     var randomizer = new RandomPositionGenerator(
-        simulationConfiguration.startAnimalCount(),
-        worldMapConfiguration.width(),
-        worldMapConfiguration.height());
+        simulationConfiguration.getStartAnimalCount(),
+        worldMapConfiguration.getWidth(),
+        worldMapConfiguration.getHeight());
 
     for (Vector2d position : randomizer) {
       var animal = animalFactory.createAnimal(position);
@@ -96,9 +96,9 @@ public class SimulationWithConfig implements Runnable {
   private List<Grass> createPlants() {
     List<Grass> plants = new ArrayList<>();
     var randomizer = new RandomPositionGenerator(
-        simulationConfiguration.startPlantCount(),
-        worldMapConfiguration.width(),
-        worldMapConfiguration.height());
+        simulationConfiguration.getStartAnimalCount(),
+        worldMapConfiguration.getWidth(),
+        worldMapConfiguration.getHeight());
 
     for (Vector2d position : randomizer) {
       var plant = new Grass(position);
