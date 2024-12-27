@@ -23,8 +23,22 @@ public class SimulationConfiguration {
     this.startAnimalCount = startAnimalCount;
   }
 
-  public SimulationConfiguration() {
+  private SimulationConfiguration() {
 
+  }
+
+  static SimulationConfiguration getDefault() {
+    var defaultConfiguration = new SimulationConfiguration();
+    defaultConfiguration.energyGain = 2;
+    defaultConfiguration.plantGrowth = 0;
+    defaultConfiguration.plantVariant = PlantVariant.FORESTED_EQUATORS;
+    defaultConfiguration.wellFedEnergy = 5;
+    defaultConfiguration.lossCopulateEnergy = 2;
+    defaultConfiguration.fireFrequency = 0;
+    defaultConfiguration.startPlantCount = 10;
+    defaultConfiguration.startAnimalCount = 3;
+
+    return defaultConfiguration;
   }
 
   public int getEnergyGain() {

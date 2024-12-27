@@ -6,9 +6,9 @@ public class Configuration { //TODO moze singleton?
   private final SimulationConfiguration simulationConfiguration;
 
   public Configuration() {
-    this.worldMapConfiguration = new WorldMapConfiguration();
-    this.animalConfiguration = new AnimalConfiguration();
-    this.simulationConfiguration = new SimulationConfiguration();
+    this.worldMapConfiguration = WorldMapConfiguration.getDefault();
+    this.animalConfiguration = AnimalConfiguration.getDefault();
+    this.simulationConfiguration = SimulationConfiguration.getDefault();
   }
 
   public Configuration(WorldMapConfiguration worldMapConfiguration, AnimalConfiguration animalConfiguration, SimulationConfiguration simulationConfiguration) {
@@ -37,4 +37,5 @@ public class Configuration { //TODO moze singleton?
         ", simulationConfiguration=" + simulationConfiguration +
         '}';
   }
+
 }

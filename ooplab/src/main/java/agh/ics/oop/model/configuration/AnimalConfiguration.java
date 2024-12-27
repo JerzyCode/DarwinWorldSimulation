@@ -15,7 +15,18 @@ public class AnimalConfiguration {
     this.genomeLength = genomeLength;
   }
 
-  public AnimalConfiguration() {
+  private AnimalConfiguration() {
+  }
+
+  static AnimalConfiguration getDefault() {
+    var defaultConfig = new AnimalConfiguration();
+
+    defaultConfig.startEnergy = 5;
+    defaultConfig.minimumMutationCount = 2;
+    defaultConfig.maximumMutationCount = 5;
+    defaultConfig.mutationVariant = MutationVariant.FULL_RANDOM;
+    defaultConfig.genomeLength = 5;
+    return defaultConfig;
   }
 
   public int getStartEnergy() {

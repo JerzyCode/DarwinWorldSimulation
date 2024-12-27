@@ -11,8 +11,16 @@ public class WorldMapConfiguration {
     this.mapVariant = mapVariant;
   }
 
-  public WorldMapConfiguration() {
+  private WorldMapConfiguration() {
 
+  }
+
+  static WorldMapConfiguration getDefault() {
+    var defaultConfig = new WorldMapConfiguration();
+    defaultConfig.height = 5;
+    defaultConfig.width = 5;
+    defaultConfig.mapVariant = WorldMapVariant.GRASS_FIELD;
+    return defaultConfig;
   }
 
   public int getHeight() {
