@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns = "http://javafx.com/javafx"
-            xmlns:fx = "http://javafx.com/fxml"
-            fx:controller = "agh.ics.oop.presenter.MainPanelPresenter"
-            prefHeight = "400.0" prefWidth = "600.0">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight = "500.0" prefWidth = "750.0" xmlns = "http://javafx.com/javafx/17.0.12"
+            xmlns:fx = "http://javafx.com/fxml/1" fx:controller = "agh.ics.oop.presenter.MainPanelPresenter">
 
-    <Button fx:id = "startSimulationButton"
+    <Button fx:id = "startSimulationButton" layoutX = "325.0" layoutY = "460.0" onAction = "#startSimulation"
             text = "Start Simulation"
             AnchorPane.leftAnchor = "250.0"
-            AnchorPane.topAnchor = "175.0"
-            onAction = "#startSimulation"/>
+            AnchorPane.topAnchor = "460.0"
+            AnchorPane.bottomAnchor = "20"
+            AnchorPane.rightAnchor = "250.0"/>
+    <StackPane fx:id = "contentContainer"
+               layoutX = "20.0"
+               layoutY = "78.0"
+               prefHeight = "272.0"
+               AnchorPane.topAnchor = "50"
+               AnchorPane.bottomAnchor = "50"
+               AnchorPane.leftAnchor = "20.0"
+               AnchorPane.rightAnchor = "20.0"/>
+    <MenuButton fx:id = "menuButton" layoutX = "94.0" layoutY = "23.0" mnemonicParsing = "false" text = "Grass Field">
+        <items>
+            <MenuItem fx:id = "grassFieldItem" mnemonicParsing = "false" text = "Grass Field"/>
+            <MenuItem fx:id = "earthItem" mnemonicParsing = "false" text = "Earth"/>
+            <MenuItem fx:id = "fireEarthItem" mnemonicParsing = "false" text = "Fire Earth"/>
+        </items>
+    </MenuButton>
+    <Label layoutX = "36.0" layoutY = "26.0" prefHeight = "18.0" prefWidth = "57.0" text = "Map:">
+        <font>
+            <Font name = "System Bold" size = "14.0"/>
+        </font>
+    </Label>
 </AnchorPane>

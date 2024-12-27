@@ -1,21 +1,65 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.factory.WorldMapFactory;
-import agh.ics.oop.model.configuration.MockConfiguration;
+import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.configuration.WorldMapVariant;
 import agh.ics.oop.model.map.GrassField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class MainPanelPresenter {
+  private static final String CONFIGURATION_VIEW_RESOURCE = "/configuration_view.fxml";
+  @FXML
+  private StackPane contentContainer;
   @FXML
   private Button startSimulationButton;
+  @FXML
+  private MenuButton menuButton;
+  @FXML
+  private MenuItem grassFieldItem;
+  @FXML
+  private MenuItem earthItem;
+  @FXML
+  private MenuItem fireEarthItem;
+
+  private ConfigurationPresenter configurationPresenter;
+
+  private final Configuration configuration = new Configuration();
+
+  public void initialize() throws IOException {
+    loadConfigurationViews();
+    chooseMap(WorldMapVariant.GRASS_FIELD);
+    grassFieldItem.setOnAction(event -> chooseMap(WorldMapVariant.GRASS_FIELD));
+    earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
+    fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
+
+  }
+
+  private void loadConfigurationViews() throws IOException {
+    var configurationViewLoader = new FXMLLoader(getClass().getResource(CONFIGURATION_VIEW_RESOURCE));
+    AnchorPane configurationView = configurationViewLoader.load();
+    configurationPresenter = configurationViewLoader.getController();
+    configurationPresenter.setConfiguration(configuration);
+
+    contentContainer.getChildren().add(configurationView);
+  }
+
+  private void chooseMap(WorldMapVariant mapVariant) {
+    menuButton.setText(mapVariant.getDisplayText());
+    configuration.getWorldMapConfiguration().setMapVariant(mapVariant);
+    configurationPresenter.switchWorldMapVariant(mapVariant);
+  }
 
   public void startSimulation() throws IOException {
     Stage stage = new Stage();
@@ -23,18 +67,18 @@ public class MainPanelPresenter {
     loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
     BorderPane viewRoot = loader.load();
 
-//    var map = new GrassField(10);
-//    var map = new RectangularMap(20,20);
-//    SimulationPresenter presenter = loader.getController();
-    var config = MockConfiguration.get();
-    var mapFactory = new WorldMapFactory(config.getWorldMapConfiguration());
-    var map = (GrassField) mapFactory.createWorldMap();
+    //    var map = new GrassField(10);
+    //    var map = new RectangularMap(20,20);
+    //    SimulationPresenter presenter = loader.getController();
+    //    var config = MockConfiguration.get();
+    var mapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
+    var map = (GrassField)mapFactory.createWorldMap();
 
     SimulationPresenterWithConfig presenter = loader.getController();
     map.addListener(presenter);
-    presenter.setConfiguration(config);
+    presenter.setConfiguration(configuration);
     presenter.setWorldMap(map);
-//    presenter.drawMap();
+    //    presenter.drawMap();
 
     configureStage(stage, viewRoot);
     stage.show();
