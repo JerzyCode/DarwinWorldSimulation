@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -7,101 +6,90 @@
             fx:controller = "agh.ics.oop.presenter.ConfigurationPresenter">
 
     <GridPane fx:id = "mainGridPane" hgap = "25" vgap = "10" AnchorPane.leftAnchor = "10" AnchorPane.topAnchor = "10">
+
+        <columnConstraints>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+        </columnConstraints>
+
         <Label text = "Map Configuration" GridPane.columnIndex = "0" GridPane.rowIndex = "0">
             <font>
                 <Font name = "System Bold" size = "12.0"/>
             </font>
         </Label>
+
         <Label text = "Height:" GridPane.columnIndex = "0" GridPane.rowIndex = "1"/>
         <TextField fx:id = "heightInput" GridPane.columnIndex = "1" GridPane.rowIndex = "1"/>
 
         <Label text = "Width:" GridPane.columnIndex = "0" GridPane.rowIndex = "2"/>
         <TextField fx:id = "widthInput" GridPane.columnIndex = "1" GridPane.rowIndex = "2"/>
 
-        <!--        ANIMAL CONFIGURATION-->
-        <Label text = "Animal Configuration" GridPane.columnIndex = "2" GridPane.rowIndex = "0">
+        <Label text = "Animal Configuration" GridPane.columnIndex = "0" GridPane.rowIndex = "3">
             <font>
                 <Font name = "System Bold" size = "12.0"/>
             </font>
         </Label>
 
-
-        <Label text = "Mutation Variant:" GridPane.columnIndex = "2" GridPane.rowIndex = "1"/>
-        <MenuButton fx:id = "mutationVariantMenuButton" text = "Full Random" GridPane.columnIndex = "3"
-                    GridPane.rowIndex = "1">
+        <Label text = "Mutation Variant:" GridPane.columnIndex = "0" GridPane.rowIndex = "4"/>
+        <MenuButton fx:id = "mutationVariantMenuButton" text = "Full Random" GridPane.columnIndex = "1"
+                    GridPane.rowIndex = "4">
             <items>
                 <MenuItem fx:id = "fullRandomVariant" mnemonicParsing = "false" text = "Full Random"/>
                 <MenuItem fx:id = "littleCorrectionVariant" mnemonicParsing = "false" text = "Little Correction"/>
             </items>
         </MenuButton>
 
-        <Label text = "Start Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "2"/>
-        <TextField fx:id = "startEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "2"/>
+        <Label text = "Start Energy:" GridPane.columnIndex = "0" GridPane.rowIndex = "5"/>
+        <TextField fx:id = "startEnergyInput" GridPane.columnIndex = "1" GridPane.rowIndex = "5"/>
 
-        <Label text = "Minimum Mutation Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "3"/>
-        <TextField fx:id = "minMutationCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "3"/>
+        <Label text = "Minimum Mutation Count:" GridPane.columnIndex = "0" GridPane.rowIndex = "6"/>
+        <TextField fx:id = "minMutationCountInput" GridPane.columnIndex = "1" GridPane.rowIndex = "6"/>
 
-        <Label text = "Maximum Mutation Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "4"/>
-        <TextField fx:id = "maxMutationCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "4"/>
+        <Label text = "Maximum Mutation Count:" GridPane.columnIndex = "0" GridPane.rowIndex = "7"/>
+        <TextField fx:id = "maxMutationCountInput" GridPane.columnIndex = "1" GridPane.rowIndex = "7"/>
 
-        <Label text = "Genome Length:" GridPane.columnIndex = "2" GridPane.rowIndex = "5"/>
-        <TextField fx:id = "genomeLengthInput" GridPane.columnIndex = "3" GridPane.rowIndex = "5"/>
+        <Label text = "Genome Length:" GridPane.columnIndex = "0" GridPane.rowIndex = "8"/>
+        <TextField fx:id = "genomeLengthInput" GridPane.columnIndex = "1" GridPane.rowIndex = "8"/>
 
-        <!--        SIMULATION CONFIGURATION-->
-        <Label text = "Simulation Configuration" GridPane.columnIndex = "4" GridPane.rowIndex = "0">
+        <columnConstraints>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+        </columnConstraints>
+
+        <Label text = "Simulation Configuration" GridPane.columnIndex = "2" GridPane.rowIndex = "0">
             <font>
                 <Font name = "System Bold" size = "12.0"/>
             </font>
         </Label>
 
-
-        <Label text = "Plant Variant:" GridPane.columnIndex = "4" GridPane.rowIndex = "1"/>
-        <MenuButton fx:id = "plantVariantMenuButton" text = "Forest Equators" GridPane.columnIndex = "5"
+        <Label text = "Plant Variant:" GridPane.columnIndex = "2" GridPane.rowIndex = "1"/>
+        <MenuButton fx:id = "plantVariantMenuButton" text = "Forest Equators" GridPane.columnIndex = "3"
                     GridPane.rowIndex = "1">
             <items>
                 <MenuItem fx:id = "forestEquatorsVariant" mnemonicParsing = "false" text = "Forest Equators"/>
             </items>
         </MenuButton>
 
-        <Label text = "Energy Gain:" GridPane.columnIndex = "4" GridPane.rowIndex = "2"/>
-        <TextField fx:id = "energyGainInput" GridPane.columnIndex = "5" GridPane.rowIndex = "2"/>
+        <Label text = "Energy Gain:" GridPane.columnIndex = "2" GridPane.rowIndex = "2"/>
+        <TextField fx:id = "energyGainInput" GridPane.columnIndex = "3" GridPane.rowIndex = "2"/>
 
-        <Label text = "Plant Growth:" GridPane.columnIndex = "4" GridPane.rowIndex = "3"/>
-        <TextField fx:id = "plantGrowthInput" GridPane.columnIndex = "5" GridPane.rowIndex = "3"/>
+        <Label text = "Plant Growth:" GridPane.columnIndex = "2" GridPane.rowIndex = "3"/>
+        <TextField fx:id = "plantGrowthInput" GridPane.columnIndex = "3" GridPane.rowIndex = "3"/>
 
-        <Label text = "Well Fed Energy:" GridPane.columnIndex = "4" GridPane.rowIndex = "4"/>
-        <TextField fx:id = "wellFedEnergyInput" GridPane.columnIndex = "5" GridPane.rowIndex = "4"/>
+        <Label text = "Well Fed Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "4"/>
+        <TextField fx:id = "wellFedEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "4"/>
 
-        <Label text = "Loss Copulate Energy:" GridPane.columnIndex = "4" GridPane.rowIndex = "5"/>
-        <TextField fx:id = "lossCopulateEnergyInput" GridPane.columnIndex = "5" GridPane.rowIndex = "5"/>
+        <Label text = "Loss Copulate Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "5"/>
+        <TextField fx:id = "lossCopulateEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "5"/>
 
-        <Label text = "Fire Frequency:" GridPane.columnIndex = "4" GridPane.rowIndex = "6"/>
-        <TextField fx:id = "fireFrequencyInput" GridPane.columnIndex = "5" GridPane.rowIndex = "6"/>
+        <Label text = "Fire Frequency:" GridPane.columnIndex = "2" GridPane.rowIndex = "6"/>
+        <TextField fx:id = "fireFrequencyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "6"/>
 
-        <Label text = "Start Plant Count:" GridPane.columnIndex = "4" GridPane.rowIndex = "7"/>
-        <TextField fx:id = "startPlantCountInput" GridPane.columnIndex = "5" GridPane.rowIndex = "7"/>
+        <Label text = "Start Plant Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "7"/>
+        <TextField fx:id = "startPlantCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "7"/>
 
-        <Label text = "Start Animal Count:" GridPane.columnIndex = "4" GridPane.rowIndex = "8"/>
-        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "5" GridPane.rowIndex = "8"/>
-        <columnConstraints>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-        </rowConstraints>
+        <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "8"/>
+        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "8"/>
+
     </GridPane>
 
 </AnchorPane>
