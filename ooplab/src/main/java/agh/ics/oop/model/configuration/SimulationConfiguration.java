@@ -7,19 +7,16 @@ public class SimulationConfiguration {
   private int wellFedEnergy;
   private int lossCopulateEnergy;
   private int fireFrequency;
-  private int startPlantCount;
   private int startAnimalCount;
 
   public SimulationConfiguration(int energyGain, int plantGrowth, PlantVariant plantVariant,
-      int wellFedEnergy, int lossCopulateEnergy, int fireFrequency,
-      int startPlantCount, int startAnimalCount) {
+      int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int startAnimalCount) {
     this.energyGain = energyGain;
     this.plantGrowth = plantGrowth;
     this.plantVariant = plantVariant;
     this.wellFedEnergy = wellFedEnergy;
     this.lossCopulateEnergy = lossCopulateEnergy;
     this.fireFrequency = fireFrequency;
-    this.startPlantCount = startPlantCount;
     this.startAnimalCount = startAnimalCount;
   }
 
@@ -35,7 +32,6 @@ public class SimulationConfiguration {
     defaultConfiguration.wellFedEnergy = 5;
     defaultConfiguration.lossCopulateEnergy = 2;
     defaultConfiguration.fireFrequency = 0;
-    defaultConfiguration.startPlantCount = 10;
     defaultConfiguration.startAnimalCount = 3;
 
     return defaultConfiguration;
@@ -63,10 +59,6 @@ public class SimulationConfiguration {
 
   public int getFireFrequency() {
     return fireFrequency;
-  }
-
-  public int getStartPlantCount() {
-    return startPlantCount;
   }
 
   public int getStartAnimalCount() {
@@ -97,10 +89,6 @@ public class SimulationConfiguration {
     this.fireFrequency = fireFrequency;
   }
 
-  public void setStartPlantCount(int startPlantCount) {
-    this.startPlantCount = startPlantCount;
-  }
-
   public void setStartAnimalCount(int startAnimalCount) {
     this.startAnimalCount = startAnimalCount;
   }
@@ -114,7 +102,6 @@ public class SimulationConfiguration {
         ", wellFedEnergy=" + wellFedEnergy +
         ", lossCopulateEnergy=" + lossCopulateEnergy +
         ", fireFrequency=" + fireFrequency +
-        ", startPlantCount=" + startPlantCount +
         ", startAnimalCount=" + startAnimalCount +
         '}';
   }

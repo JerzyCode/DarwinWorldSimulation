@@ -3,11 +3,13 @@ package agh.ics.oop.model.configuration;
 public class WorldMapConfiguration {
   private int height;
   private int width;
+  private int startPlantCount;
   private WorldMapVariant mapVariant;
 
-  public WorldMapConfiguration(int height, int width, WorldMapVariant mapVariant) {
+  public WorldMapConfiguration(int height, int width, int startPlantCount, WorldMapVariant mapVariant) {
     this.height = height;
     this.width = width;
+    this.startPlantCount = startPlantCount;
     this.mapVariant = mapVariant;
   }
 
@@ -16,11 +18,13 @@ public class WorldMapConfiguration {
   }
 
   static WorldMapConfiguration getDefault() {
-    var defaultConfig = new WorldMapConfiguration();
-    defaultConfig.height = 5;
-    defaultConfig.width = 5;
-    defaultConfig.mapVariant = WorldMapVariant.GRASS_FIELD;
-    return defaultConfig;
+    var defaultConfiguration = new WorldMapConfiguration();
+    defaultConfiguration.height = 5;
+    defaultConfiguration.width = 5;
+    defaultConfiguration.mapVariant = WorldMapVariant.GRASS_FIELD;
+    defaultConfiguration.startPlantCount = 3;
+
+    return defaultConfiguration;
   }
 
   public int getHeight() {
@@ -39,6 +43,14 @@ public class WorldMapConfiguration {
     this.width = width;
   }
 
+  public int getStartPlantCount() {
+    return startPlantCount;
+  }
+
+  public void setStartPlantCount(int startPlantCount) {
+    this.startPlantCount = startPlantCount;
+  }
+
   public WorldMapVariant getMapVariant() {
     return mapVariant;
   }
@@ -52,6 +64,7 @@ public class WorldMapConfiguration {
     return "WorldMapConfiguration{" +
         "height=" + height +
         ", width=" + width +
+        ", startPlantCount=" + startPlantCount +
         ", mapVariant=" + mapVariant +
         '}';
   }

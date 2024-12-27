@@ -24,6 +24,8 @@ public class ConfigurationPresenter {
   private TextField heightInput;
   @FXML
   private TextField widthInput;
+  @FXML
+  private TextField startAnimalCountInput;
 
   //  Animal configuration elements
   @FXML
@@ -58,8 +60,6 @@ public class ConfigurationPresenter {
   private TextField fireFrequencyInput;
   @FXML
   private TextField startPlantCountInput;
-  @FXML
-  private TextField startAnimalCountInput;
 
   public void initialize() {
     setTextFormatters();
@@ -158,10 +158,13 @@ public class ConfigurationPresenter {
   private void updateMapConfiguration() {
     var height = Integer.parseInt(heightInput.getText());
     var width = Integer.parseInt(widthInput.getText());
+    var startPlantCount = Integer.parseInt(startPlantCountInput.getText());
 
     var mapConfiguration = configuration.getWorldMapConfiguration();
     mapConfiguration.setHeight(height);
     mapConfiguration.setWidth(width);
+    mapConfiguration.setStartPlantCount(startPlantCount);
+
   }
 
   private void updateAnimalConfiguration() {
@@ -183,7 +186,6 @@ public class ConfigurationPresenter {
     var plantGrowth = Integer.parseInt(plantGrowthInput.getText());
     var wellFedEnergy = Integer.parseInt(wellFedEnergyInput.getText());
     var lossCopulateEnergy = Integer.parseInt(lossCopulateEnergyInput.getText());
-    var startPlantCount = Integer.parseInt(startPlantCountInput.getText());
     var startAnimalCount = Integer.parseInt(startAnimalCountInput.getText());
     var fireFrequency = Integer.parseInt(fireFrequencyInput.getText());
 
@@ -193,7 +195,6 @@ public class ConfigurationPresenter {
     simulationConfiguration.setWellFedEnergy(wellFedEnergy);
     simulationConfiguration.setLossCopulateEnergy(lossCopulateEnergy);
     simulationConfiguration.setFireFrequency(fireFrequency);
-    simulationConfiguration.setStartPlantCount(startPlantCount);
     simulationConfiguration.setStartAnimalCount(startAnimalCount);
   }
 
@@ -201,6 +202,7 @@ public class ConfigurationPresenter {
     var mapConfiguration = configuration.getWorldMapConfiguration();
     heightInput.setText(String.valueOf(mapConfiguration.getHeight()));
     widthInput.setText(String.valueOf(mapConfiguration.getWidth()));
+    startPlantCountInput.setText(String.valueOf(mapConfiguration.getStartPlantCount()));
 
     var animalConfiguration = configuration.getAnimalConfiguration();
     startEnergyInput.setText(String.valueOf(animalConfiguration.getStartEnergy()));
@@ -214,7 +216,6 @@ public class ConfigurationPresenter {
     wellFedEnergyInput.setText(String.valueOf(simulationConfiguration.getWellFedEnergy()));
     lossCopulateEnergyInput.setText(String.valueOf(simulationConfiguration.getLossCopulateEnergy()));
     fireFrequencyInput.setText(String.valueOf(simulationConfiguration.getFireFrequency()));
-    startPlantCountInput.setText(String.valueOf(simulationConfiguration.getStartPlantCount()));
     startAnimalCountInput.setText(String.valueOf(simulationConfiguration.getStartAnimalCount()));
   }
 }

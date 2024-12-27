@@ -22,7 +22,7 @@ public class WorldMapFactory {
   }
 
   private GrassField createGrassField() {
-    return new GrassField(0);
+    return new GrassField(worldMapConfiguration.getStartPlantCount());
   }
 
   private Earth createEarth() {

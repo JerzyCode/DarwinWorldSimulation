@@ -22,7 +22,7 @@ public class SimulationWithConfig implements Runnable {
   private final WorldMapConfiguration worldMapConfiguration;
   private final AnimalFactory animalFactory;
   private final List<Animal> animals;
-  private final List<Grass> plants;
+  private final List<Grass> plants = new ArrayList<>();
   private final WorldMap worldMap;
 
   public SimulationWithConfig(Configuration configuration, WorldMap worldMap) {
@@ -31,13 +31,13 @@ public class SimulationWithConfig implements Runnable {
     this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
     this.worldMap = worldMap;
     animals = createAnimals();
-    plants = createPlants();
+//    plants = createPlants(); TODO początkowe planty powinny być tworzone w mapie
   }
 
   @Override
   public void run() {
     int animalCount = animals.size();
-    int maxDays = 1000;
+    int maxDays = 50;
 
     for (int i = 0; i < maxDays; i++) {
       var index = i % animalCount;
@@ -93,28 +93,10 @@ public class SimulationWithConfig implements Runnable {
     return animals;
   }
 
-  private List<Grass> createPlants() {
-    List<Grass> plants = new ArrayList<>();
-    var randomizer = new RandomPositionGenerator(
-        simulationConfiguration.getStartAnimalCount(),
-        worldMapConfiguration.getWidth(),
-        worldMapConfiguration.getHeight());
-
-    for (Vector2d position : randomizer) {
-      var plant = new Grass(position);
-      plants.add(plant);
-      addPlantOnMap(plant);
-      //TODO dodawanie plantów do mapy
-    }
-    return plants;
-  }
-
   private void addPlantOnMap(Grass grass) { //TODO do wywalenia
     if (worldMap instanceof GrassField) {
       ((GrassField)worldMap).placeGrass(grass);
     }
   }
-
-
 
 }
