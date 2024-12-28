@@ -1,6 +1,7 @@
 package agh.ics.oop.model.configuration;
 
 public class SimulationConfiguration {
+  private int daysCount;
   private int energyGain;
   private int plantGrowth;
   private PlantVariant plantVariant;
@@ -9,8 +10,9 @@ public class SimulationConfiguration {
   private int fireFrequency;
   private int startAnimalCount;
 
-  public SimulationConfiguration(int energyGain, int plantGrowth, PlantVariant plantVariant,
+  public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
       int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int startAnimalCount) {
+    this.daysCount = daysCount;
     this.energyGain = energyGain;
     this.plantGrowth = plantGrowth;
     this.plantVariant = plantVariant;
@@ -26,6 +28,7 @@ public class SimulationConfiguration {
 
   static SimulationConfiguration getDefault() {
     var defaultConfiguration = new SimulationConfiguration();
+    defaultConfiguration.daysCount = 50;
     defaultConfiguration.energyGain = 2;
     defaultConfiguration.plantGrowth = 0;
     defaultConfiguration.plantVariant = PlantVariant.FORESTED_EQUATORS;
@@ -63,6 +66,14 @@ public class SimulationConfiguration {
 
   public int getStartAnimalCount() {
     return startAnimalCount;
+  }
+
+  public int getDaysCount() {
+    return daysCount;
+  }
+
+  public void setDaysCount(int daysCount) {
+    this.daysCount = daysCount;
   }
 
   public void setEnergyGain(int energyGain) {

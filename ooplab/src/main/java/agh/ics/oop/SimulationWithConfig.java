@@ -5,7 +5,6 @@ import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.configuration.SimulationConfiguration;
-import agh.ics.oop.model.configuration.WorldMapConfiguration;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.GrassField;
 import agh.ics.oop.model.map.WorldMap;
@@ -20,7 +19,7 @@ import java.util.Random;
 //TODO ogólny refactor tej klasy + testy integracyjne
 public class SimulationWithConfig implements Runnable {
   private final SimulationConfiguration simulationConfiguration;
-  private final WorldMapConfiguration worldMapConfiguration;
+  private final Random random = new Random();
   private final AnimalFactory animalFactory;
   private final List<Animal> animals;
   private final List<Grass> plants = new ArrayList<>();
@@ -28,23 +27,17 @@ public class SimulationWithConfig implements Runnable {
 
   public SimulationWithConfig(Configuration configuration, WorldMap worldMap) {
     this.simulationConfiguration = configuration.getSimulationConfiguration();
-    this.worldMapConfiguration = configuration.getWorldMapConfiguration();
     this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
     this.worldMap = worldMap;
     animals = createAnimals();
-    //    plants = createPlants(); TODO początkowe planty powinny być tworzone w mapie
   }
 
   @Override
   public void run() {
-    int animalCount = animals.size();
-    int maxDays = 50;
 
-    for (int i = 0; i < maxDays; i++) {
-      var index = i % animalCount;
-      var animal = animals.get(index);
+    for (int i = 0; i < simulationConfiguration.getDaysCount(); i++) {
       try {
-        worldMap.move(animal, getRandomMoveDirection());
+        animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
         createRandomPlants();
         Thread.sleep(500);
       }
@@ -56,15 +49,16 @@ public class SimulationWithConfig implements Runnable {
   }
 
   private MoveDirection getRandomMoveDirection() { //TODO do wydzielenia do genów
-    var random = new Random();
     return MoveDirection.values()[random.nextInt(4)];
   }
 
-  private void createRandomPlants() {
+  private void createRandomPlants() { //TODO refactor
+    var boundary = worldMap.getCurrentBounds();
+
     var randomizer = new RandomPositionGenerator(
         simulationConfiguration.getPlantGrowth(),
-        worldMapConfiguration.getWidth(),
-        worldMapConfiguration.getHeight());
+        boundary.rightTopCorner().getX(),
+        boundary.rightTopCorner().getY());
 
     for (Vector2d pos : randomizer) {
       var grass = new Grass(pos);
@@ -76,13 +70,11 @@ public class SimulationWithConfig implements Runnable {
 
   private List<Animal> createAnimals() {
     var boundary = worldMap.getCurrentBounds();
-    var maxWidth = Math.max(boundary.rightTopCorner().getX(), worldMapConfiguration.getWidth());
-    var maxHeight = Math.max(boundary.rightTopCorner().getY(), worldMapConfiguration.getHeight());
     List<Animal> animals = new ArrayList<>();
     var randomizer = new RandomPositionGenerator(
         simulationConfiguration.getStartAnimalCount(),
-        maxWidth,
-        maxHeight);
+        boundary.rightTopCorner().getX(),
+        boundary.rightTopCorner().getY());
 
     for (Vector2d position : randomizer) {
       System.out.println("position=" + position);

@@ -49,11 +49,13 @@ public class SimulationPresenter implements MapChangeListener {
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
   public void drawMap() {
-    var mapBoundary = worldMap.getCurrentBounds();
-    clearGrid();
-    fillCoordinates(mapBoundary);
-    fillGrid(mapBoundary);
-    drawElements(mapBoundary);
+    synchronized (worldMap.getElements()) {
+      var mapBoundary = worldMap.getCurrentBounds();
+      clearGrid();
+      fillCoordinates(mapBoundary);
+      fillGrid(mapBoundary);
+      drawElements(mapBoundary);
+    }
   }
 
   @Override

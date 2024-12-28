@@ -49,6 +49,10 @@ public class ConfigurationPresenter {
   @FXML
   private MenuItem forestEquatorsVariant;
   @FXML
+  private MenuItem noneVariant;
+  @FXML
+  private TextField daysCountInput;
+  @FXML
   private TextField energyGainInput;
   @FXML
   private TextField plantGrowthInput;
@@ -66,6 +70,7 @@ public class ConfigurationPresenter {
     littleCorrectionVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.LITTLE_CORRECTION));
     fullRandomVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.FULL_RANDOM));
     forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
+    noneVariant.setOnAction(event -> choosePlantVariant(PlantVariant.NONE));
   }
 
   public void setConfiguration(Configuration configuration) {
@@ -192,6 +197,7 @@ public class ConfigurationPresenter {
 
   private void updateSimulationConfiguration() {
     System.out.println("updateSimulationConfiguration()");
+    var daysCount = Integer.parseInt(daysCountInput.getText());
     var energyGain = Integer.parseInt(energyGainInput.getText());
     var plantGrowth = Integer.parseInt(plantGrowthInput.getText());
     var wellFedEnergy = Integer.parseInt(wellFedEnergyInput.getText());
@@ -200,6 +206,7 @@ public class ConfigurationPresenter {
     var fireFrequency = Integer.parseInt(fireFrequencyInput.getText());
 
     var simulationConfiguration = configuration.getSimulationConfiguration();
+    simulationConfiguration.setDaysCount(daysCount);
     simulationConfiguration.setEnergyGain(energyGain);
     simulationConfiguration.setPlantGrowth(plantGrowth);
     simulationConfiguration.setWellFedEnergy(wellFedEnergy);
@@ -221,6 +228,7 @@ public class ConfigurationPresenter {
     genomeLengthInput.setText(String.valueOf(animalConfiguration.getGenomeLength()));
 
     var simulationConfiguration = configuration.getSimulationConfiguration();
+    daysCountInput.setText(String.valueOf(simulationConfiguration.getDaysCount()));
     energyGainInput.setText(String.valueOf(simulationConfiguration.getEnergyGain()));
     plantGrowthInput.setText(String.valueOf(simulationConfiguration.getPlantGrowth()));
     wellFedEnergyInput.setText(String.valueOf(simulationConfiguration.getWellFedEnergy()));

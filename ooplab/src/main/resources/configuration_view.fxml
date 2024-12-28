@@ -70,26 +70,30 @@
                     GridPane.rowIndex = "1">
             <items>
                 <MenuItem fx:id = "forestEquatorsVariant" mnemonicParsing = "false" text = "Forest Equators"/>
+                <MenuItem fx:id = "noneVariant" mnemonicParsing = "false" text = "None"/>
             </items>
         </MenuButton>
 
-        <Label text = "Energy Gain:" GridPane.columnIndex = "2" GridPane.rowIndex = "2"/>
-        <TextField fx:id = "energyGainInput" GridPane.columnIndex = "3" GridPane.rowIndex = "2"/>
+        <Label text = "Days Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "2"/>
+        <TextField fx:id = "daysCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "2"/>
 
-        <Label text = "Plant Growth:" GridPane.columnIndex = "2" GridPane.rowIndex = "3"/>
-        <TextField fx:id = "plantGrowthInput" GridPane.columnIndex = "3" GridPane.rowIndex = "3"/>
+        <Label text = "Energy Gain:" GridPane.columnIndex = "2" GridPane.rowIndex = "3"/>
+        <TextField fx:id = "energyGainInput" GridPane.columnIndex = "3" GridPane.rowIndex = "3"/>
 
-        <Label text = "Well Fed Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "4"/>
-        <TextField fx:id = "wellFedEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "4"/>
+        <Label text = "Plant Growth:" GridPane.columnIndex = "2" GridPane.rowIndex = "4"/>
+        <TextField fx:id = "plantGrowthInput" GridPane.columnIndex = "3" GridPane.rowIndex = "4"/>
 
-        <Label text = "Loss Copulate Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "5"/>
-        <TextField fx:id = "lossCopulateEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "5"/>
+        <Label text = "Well Fed Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "5"/>
+        <TextField fx:id = "wellFedEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "5"/>
 
-        <Label text = "Fire Frequency:" GridPane.columnIndex = "2" GridPane.rowIndex = "6"/>
-        <TextField fx:id = "fireFrequencyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "6"/>
+        <Label text = "Loss Copulate Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "6"/>
+        <TextField fx:id = "lossCopulateEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "6"/>
 
-        <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "7"/>
-        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "7"/>
+        <Label text = "Fire Frequency:" GridPane.columnIndex = "2" GridPane.rowIndex = "7"/>
+        <TextField fx:id = "fireFrequencyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "7"/>
+
+        <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "8"/>
+        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "8"/>
 
     </GridPane>
 
