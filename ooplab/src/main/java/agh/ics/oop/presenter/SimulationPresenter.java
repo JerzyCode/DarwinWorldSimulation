@@ -1,11 +1,13 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
-import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.exceptions.PresenterNoMapToPresentException;
+import agh.ics.oop.SimulationWithConfig;
 import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.exceptions.PresenterNoMapToPresentException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.elements.Animal;
 import javafx.application.Platform;
@@ -25,8 +27,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
-import java.util.List;
-
 public class SimulationPresenter implements MapChangeListener {
 
   @FXML
@@ -43,16 +43,19 @@ public class SimulationPresenter implements MapChangeListener {
   private TextField movesTextField;
 
   private WorldMap worldMap;
+  private Configuration configuration;
 
   private static final int GRID_WIDTH = 40;
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
   public void drawMap() {
-    var mapBoundary = worldMap.getCurrentBounds();
-    clearGrid();
-    fillCoordinates(mapBoundary);
-    fillGrid(mapBoundary);
-    drawElements(mapBoundary);
+    synchronized (worldMap.getElements()) {
+      var mapBoundary = worldMap.getCurrentBounds();
+      clearGrid();
+      fillCoordinates(mapBoundary);
+      fillGrid(mapBoundary);
+      drawElements(mapBoundary);
+    }
   }
 
   @Override
@@ -66,11 +69,8 @@ public class SimulationPresenter implements MapChangeListener {
       throw new PresenterNoMapToPresentException("Presenter has no map to present!");
     }
 
-    var args = movesTextField.getText().split(" ");
-    var directions = OptionsParser.parse(args);
-    var animalPositions = List.of(new Vector2d(-2, -2), new Vector2d(2, 2));
-    var simulation = new Simulation(animalPositions, directions, worldMap);
-    var simulationEngine = new SimulationEngine(List.of(simulation));
+    var simulation = new SimulationWithConfig(configuration, worldMap);
+    var simulationEngine = new SimulationEngine(simulation);
 
     simulationEngine.runAsyncInThreadPool();
     startButton.setDisable(true);
@@ -78,6 +78,10 @@ public class SimulationPresenter implements MapChangeListener {
 
   public void setWorldMap(WorldMap worldMap) {
     this.worldMap = worldMap;
+  }
+
+  public void setConfiguration(Configuration configuration) {
+    this.configuration = configuration;
   }
 
   private void clearGrid() {
