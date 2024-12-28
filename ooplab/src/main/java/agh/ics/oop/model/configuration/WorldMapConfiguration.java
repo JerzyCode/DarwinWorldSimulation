@@ -6,25 +6,15 @@ public class WorldMapConfiguration {
   private int startPlantCount;
   private WorldMapVariant mapVariant;
 
+  WorldMapConfiguration() {
+    this(5, 5, 3, WorldMapVariant.GRASS_FIELD);
+  }
+
   public WorldMapConfiguration(int height, int width, int startPlantCount, WorldMapVariant mapVariant) {
     this.height = height;
     this.width = width;
     this.startPlantCount = startPlantCount;
     this.mapVariant = mapVariant;
-  }
-
-  private WorldMapConfiguration() {
-
-  }
-
-  static WorldMapConfiguration getDefault() {
-    var defaultConfiguration = new WorldMapConfiguration();
-    defaultConfiguration.height = 5;
-    defaultConfiguration.width = 5;
-    defaultConfiguration.mapVariant = WorldMapVariant.GRASS_FIELD;
-    defaultConfiguration.startPlantCount = 3;
-
-    return defaultConfiguration;
   }
 
   public int getHeight() {

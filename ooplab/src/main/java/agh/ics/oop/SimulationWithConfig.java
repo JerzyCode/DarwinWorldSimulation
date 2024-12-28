@@ -34,7 +34,6 @@ public class SimulationWithConfig implements Runnable {
 
   @Override
   public void run() {
-
     for (int i = 0; i < simulationConfiguration.getDaysCount(); i++) {
       try {
         animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));

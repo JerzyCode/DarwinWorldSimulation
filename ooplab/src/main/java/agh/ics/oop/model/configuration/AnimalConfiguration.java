@@ -7,26 +7,16 @@ public class AnimalConfiguration {
   private MutationVariant mutationVariant;
   private int genomeLength;
 
+  AnimalConfiguration() {
+    this(5, 2, 5, MutationVariant.FULL_RANDOM, 5);
+  }
+
   public AnimalConfiguration(int startEnergy, int minimumMutationCount, int maximumMutationCount, MutationVariant mutationVariant, int genomeLength) {
     this.startEnergy = startEnergy;
     this.minimumMutationCount = minimumMutationCount;
     this.maximumMutationCount = maximumMutationCount;
     this.mutationVariant = mutationVariant;
     this.genomeLength = genomeLength;
-  }
-
-  private AnimalConfiguration() {
-  }
-
-  static AnimalConfiguration getDefault() {
-    var defaultConfig = new AnimalConfiguration();
-
-    defaultConfig.startEnergy = 5;
-    defaultConfig.minimumMutationCount = 2;
-    defaultConfig.maximumMutationCount = 5;
-    defaultConfig.mutationVariant = MutationVariant.FULL_RANDOM;
-    defaultConfig.genomeLength = 5;
-    return defaultConfig;
   }
 
   public int getStartEnergy() {

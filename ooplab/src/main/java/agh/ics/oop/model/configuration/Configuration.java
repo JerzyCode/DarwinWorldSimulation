@@ -6,9 +6,9 @@ public class Configuration {
   private final SimulationConfiguration simulationConfiguration;
 
   public Configuration() {
-    this.worldMapConfiguration = WorldMapConfiguration.getDefault();
-    this.animalConfiguration = AnimalConfiguration.getDefault();
-    this.simulationConfiguration = SimulationConfiguration.getDefault();
+    this.worldMapConfiguration = new WorldMapConfiguration();
+    this.animalConfiguration = new AnimalConfiguration();
+    this.simulationConfiguration = new SimulationConfiguration();
   }
 
   public Configuration(WorldMapConfiguration worldMapConfiguration, AnimalConfiguration animalConfiguration, SimulationConfiguration simulationConfiguration) {

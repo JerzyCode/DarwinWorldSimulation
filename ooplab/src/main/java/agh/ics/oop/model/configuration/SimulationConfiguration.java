@@ -10,6 +10,10 @@ public class SimulationConfiguration {
   private int fireFrequency;
   private int startAnimalCount;
 
+  SimulationConfiguration() {
+    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 3);
+  }
+
   public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
       int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int startAnimalCount) {
     this.daysCount = daysCount;
@@ -20,24 +24,6 @@ public class SimulationConfiguration {
     this.lossCopulateEnergy = lossCopulateEnergy;
     this.fireFrequency = fireFrequency;
     this.startAnimalCount = startAnimalCount;
-  }
-
-  private SimulationConfiguration() {
-
-  }
-
-  static SimulationConfiguration getDefault() {
-    var defaultConfiguration = new SimulationConfiguration();
-    defaultConfiguration.daysCount = 50;
-    defaultConfiguration.energyGain = 2;
-    defaultConfiguration.plantGrowth = 0;
-    defaultConfiguration.plantVariant = PlantVariant.FORESTED_EQUATORS;
-    defaultConfiguration.wellFedEnergy = 5;
-    defaultConfiguration.lossCopulateEnergy = 2;
-    defaultConfiguration.fireFrequency = 0;
-    defaultConfiguration.startAnimalCount = 3;
-
-    return defaultConfiguration;
   }
 
   public int getEnergyGain() {
