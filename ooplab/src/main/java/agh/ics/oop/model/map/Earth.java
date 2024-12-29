@@ -6,23 +6,25 @@ import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.map.elements.Grass;
 import agh.ics.oop.model.map.elements.WorldElement;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Earth extends AbstractWorldMap {
   private final Boundary boundary;
+  private final Map<Vector2d, Grass> grasses;
 
-  public Earth(int width, int height) {
+  public Earth(int width, int height, int startPlantCount) {
     super();
     boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
+    grasses = new HashMap<>();
+    placePlants(height, width, startPlantCount);
   }
 
-  // TODO: remove unused constructor
+  // TODO: removed unused constructor
   public Earth() {
-    this(5, 5);
+    this(1, 1,1);
   }
 
   @Override
@@ -44,6 +46,15 @@ public class Earth extends AbstractWorldMap {
       animals.put(animal.getPosition(), animal);
       super.notifyListeners("Animal moved to position: " + animal.getPosition());
     }
+  }
+
+  @Override
+  public Collection<WorldElement> getElements() {
+    var elements = new ArrayList<WorldElement>();
+    elements.addAll(grasses.values());
+    elements.addAll(super.getElements());
+
+    return Collections.unmodifiableCollection(elements);
   }
 
   private void fixAnimalPositionAfterMove(Animal animal){
@@ -70,4 +81,32 @@ public class Earth extends AbstractWorldMap {
     animal.setPosition(newPosition);
 
   }
+
+  private void placePlants(int countOfRows, int countOfColumns, int plantCount) {
+    int countOfPreferableRows = Math.max(1, (int) (countOfRows * 0.2));
+    int notPreferableRows = countOfRows - countOfPreferableRows;
+    int minIndexOfPreferableRow = notPreferableRows / 2;
+//    int maxIndexOfPreferableRow = minIndexOfPreferableRow + countOfPreferableRows - 1;
+
+    int CountOfPlacedPlants = 0;
+    while(CountOfPlacedPlants < plantCount) {
+      int row;
+      if (Math.random() < 0.8) {
+        row = minIndexOfPreferableRow + (int) (Math.random() * countOfPreferableRows);
+      } else {
+        row = (int) (Math.random() * notPreferableRows);
+        if (row >= minIndexOfPreferableRow) {
+          row += countOfPreferableRows;
+        }
+      }
+      int col = (int) (Math.random() * countOfColumns);
+      // TODO: z jakiejś przyczny tutaj col i row musi być tutaj odwrotnie żeby działało
+      Vector2d position = new Vector2d(col, row);
+      if (!grasses.containsKey(position)) {
+        grasses.put(position, new Grass(position));
+        CountOfPlacedPlants++;
+      }
+    }
+  }
+
 }
