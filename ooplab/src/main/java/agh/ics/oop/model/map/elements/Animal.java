@@ -1,9 +1,6 @@
 package agh.ics.oop.model.map.elements;
 
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.MoveValidator;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 
 public class Animal implements WorldElement {
 
@@ -43,6 +40,8 @@ public class Animal implements WorldElement {
       case LEFT -> orientation = orientation.previous();
       case RIGHT -> orientation = orientation.next();
     }
+
+    validator.adjustAnimalAfterMove(this);
   }
 
   private void updatePosition(Vector2d newPosition, MoveValidator validator) {

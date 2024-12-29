@@ -86,4 +86,6 @@ public class GrassField extends AbstractWorldMap {
     displayLeftBotCorner = botLeft;
     displayRightTopCorner = rightTop;
   }
+
+
 }

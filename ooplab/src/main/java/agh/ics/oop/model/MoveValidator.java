@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.map.elements.Animal;
+
 public interface MoveValidator {
 
   /**
@@ -10,4 +12,5 @@ public interface MoveValidator {
    * @return True if the object can move to that position.
    */
   boolean canMoveTo(Vector2d position);
+  void adjustAnimalAfterMove(Animal animal);
 }

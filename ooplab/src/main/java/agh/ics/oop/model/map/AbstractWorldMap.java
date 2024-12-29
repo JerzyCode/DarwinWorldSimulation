@@ -67,6 +67,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     return !isOccupied(position);
   }
 
+  @Override
+  public void adjustAnimalAfterMove(Animal animal) {}
+
   public abstract Boundary getCurrentBounds();
 
   @Override
