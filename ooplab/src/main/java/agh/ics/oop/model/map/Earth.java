@@ -57,29 +57,14 @@ public class Earth extends AbstractWorldMap {
     return Collections.unmodifiableCollection(elements);
   }
 
-  private void fixAnimalPositionAfterMove(Animal animal){
-    var position = animal.getPosition();
+  public void placePlants(int plantCount){
+      var height = this.boundary.rightTopCorner().getY() - this.boundary.leftBottomCorner().getY();
+      var width = this.boundary.rightTopCorner().getX() - this.boundary.leftBottomCorner().getX();
+      placePlants(height, width, plantCount);
+  }
 
-    Vector2d newPosition = animal.getPosition();
-    MapDirection orientation = animal.getOrientation();
-    if (position.getX() > boundary.rightTopCorner().getX()) {
-      newPosition = new Vector2d(boundary.leftBottomCorner().getX(), position.getY());
-    }
-    else if (position.getX() < boundary.leftBottomCorner().getX()) {
-      newPosition = new Vector2d(boundary.rightTopCorner().getX(), position.getY());
-    }
-    else if (position.getY() > boundary.rightTopCorner().getY()) {
-      newPosition = new Vector2d(position.getX(), boundary.rightTopCorner().getY());
-      orientation = MapDirection.SOUTH;
-    }
-    else if (position.getY() < boundary.leftBottomCorner().getY()) {
-      newPosition = new Vector2d(position.getX(), boundary.leftBottomCorner().getY());
-      orientation = MapDirection.NORTH;
-    }
-
-    animal.setOrientation(orientation);
-    animal.setPosition(newPosition);
-
+  public void eatGrass(){
+    animals.values().forEach(this::eatGrass);
   }
 
   private void placePlants(int countOfRows, int countOfColumns, int plantCount) {
@@ -106,6 +91,39 @@ public class Earth extends AbstractWorldMap {
         grasses.put(position, new Grass(position));
         CountOfPlacedPlants++;
       }
+    }
+  }
+
+  private void fixAnimalPositionAfterMove(Animal animal){
+    var position = animal.getPosition();
+
+    Vector2d newPosition = animal.getPosition();
+    MapDirection orientation = animal.getOrientation();
+    if (position.getX() > boundary.rightTopCorner().getX()) {
+      newPosition = new Vector2d(boundary.leftBottomCorner().getX(), position.getY());
+    }
+    else if (position.getX() < boundary.leftBottomCorner().getX()) {
+      newPosition = new Vector2d(boundary.rightTopCorner().getX(), position.getY());
+    }
+    else if (position.getY() > boundary.rightTopCorner().getY()) {
+      newPosition = new Vector2d(position.getX(), boundary.rightTopCorner().getY());
+      orientation = MapDirection.SOUTH;
+    }
+    else if (position.getY() < boundary.leftBottomCorner().getY()) {
+      newPosition = new Vector2d(position.getX(), boundary.leftBottomCorner().getY());
+      orientation = MapDirection.NORTH;
+    }
+
+    animal.setOrientation(orientation);
+    animal.setPosition(newPosition);
+
+  }
+
+  private void eatGrass(Animal animal){
+    var position = animal.getPosition();
+    if (grasses.containsKey(position)) {
+      grasses.remove(position);
+      // TODO: increase animal energy
     }
   }
 

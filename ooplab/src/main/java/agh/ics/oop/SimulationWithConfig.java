@@ -6,6 +6,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.configuration.SimulationConfiguration;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.map.Earth;
 import agh.ics.oop.model.map.GrassField;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.elements.Animal;
@@ -21,8 +22,8 @@ public class SimulationWithConfig implements Runnable {
   private final SimulationConfiguration simulationConfiguration;
   private final Random random = new Random();
   private final AnimalFactory animalFactory;
-  private final List<Animal> animals;
-  private final List<Grass> plants = new ArrayList<>();
+  private final List<Animal> animals; // TODO: w tym momencie jednocześnie worldMap ma listę zwierzat i symulacja. Trzeba się na coś zdecydować
+//  private final List<Grass> plants = new ArrayList<>();
   private final WorldMap worldMap;
 
   public SimulationWithConfig(Configuration configuration, WorldMap worldMap) {
@@ -37,7 +38,8 @@ public class SimulationWithConfig implements Runnable {
     for (int i = 0; i < simulationConfiguration.getDaysCount(); i++) {
       try {
         animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
-        createRandomPlants();
+//        createRandomPlants();
+        handleDayEnds();
         Thread.sleep(500);
       }
       catch (InterruptedException e) {
@@ -51,21 +53,21 @@ public class SimulationWithConfig implements Runnable {
     return MoveDirection.values()[random.nextInt(4)];
   }
 
-  private void createRandomPlants() { //TODO refactor
-    var boundary = worldMap.getCurrentBounds();
-
-    var randomizer = new RandomPositionGenerator(
-        simulationConfiguration.getPlantGrowth(),
-        boundary.rightTopCorner().getX(),
-        boundary.rightTopCorner().getY());
-
-    for (Vector2d pos : randomizer) {
-      var grass = new Grass(pos);
-      plants.add(grass);
-      addPlantOnMap(grass);
-    }
-
-  }
+//  private void createRandomPlants() { //TODO refactor
+//    var boundary = worldMap.getCurrentBounds();
+//
+//    var randomizer = new RandomPositionGenerator(
+//        simulationConfiguration.getPlantGrowth(),
+//        boundary.rightTopCorner().getX(),
+//        boundary.rightTopCorner().getY());
+//
+//    for (Vector2d pos : randomizer) {
+//      var grass = new Grass(pos);
+//      plants.add(grass);
+//      addPlantOnMap(grass);
+//    }
+//
+//  }
 
   private List<Animal> createAnimals() {
     var boundary = worldMap.getCurrentBounds();
@@ -89,10 +91,17 @@ public class SimulationWithConfig implements Runnable {
     return animals;
   }
 
-  private void addPlantOnMap(Grass grass) { //TODO do wywalenia
-    if (worldMap instanceof GrassField) {
-      ((GrassField)worldMap).placeGrass(grass);
+  private void handleDayEnds(){
+    if (worldMap instanceof Earth){
+      ((Earth)worldMap).placePlants(simulationConfiguration.getPlantGrowth());
+      ((Earth) worldMap).eatGrass();
     }
   }
+
+//  private void addPlantOnMap(Grass grass) { //TODO do wywalenia
+//    if (worldMap instanceof GrassField) {
+//      ((GrassField)worldMap).placeGrass(grass);
+//    }
+//  }
 
 }
