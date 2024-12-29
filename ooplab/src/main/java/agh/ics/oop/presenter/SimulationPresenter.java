@@ -1,7 +1,7 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.SimulationWithConfig;
+import agh.ics.oop.Simulation;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
@@ -69,7 +69,7 @@ public class SimulationPresenter implements MapChangeListener {
       throw new PresenterNoMapToPresentException("Presenter has no map to present!");
     }
 
-    var simulation = new SimulationWithConfig(configuration, worldMap);
+    var simulation = new Simulation(configuration, worldMap);
     var simulationEngine = new SimulationEngine(simulation);
 
     simulationEngine.runAsyncInThreadPool();

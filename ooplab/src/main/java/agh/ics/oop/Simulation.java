@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 //TODO ogólny refactor tej klasy + testy integracyjne
-public class SimulationWithConfig implements Runnable {
+public class Simulation implements Runnable {
   private final SimulationConfiguration simulationConfiguration;
   private final Random random = new Random();
   private final AnimalFactory animalFactory;
@@ -25,7 +25,7 @@ public class SimulationWithConfig implements Runnable {
   private final List<Grass> plants = new ArrayList<>();
   private final WorldMap worldMap;
 
-  public SimulationWithConfig(Configuration configuration, WorldMap worldMap) {
+  public Simulation(Configuration configuration, WorldMap worldMap) {
     this.simulationConfiguration = configuration.getSimulationConfiguration();
     this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
     this.worldMap = worldMap;
