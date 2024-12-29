@@ -8,7 +8,16 @@ import agh.ics.oop.model.Vector2d;
 public class Animal implements WorldElement {
 
   private Vector2d position;
+
   private MapDirection orientation;
+
+  public void setOrientation(MapDirection orientation) {
+    this.orientation = orientation;
+  }
+
+  public void setPosition(Vector2d position) {
+    this.position = position;
+  }
 
   public Animal() {
     this(new Vector2d(2, 2));

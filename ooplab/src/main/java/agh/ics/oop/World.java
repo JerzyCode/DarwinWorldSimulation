@@ -19,7 +19,8 @@ public class World {
     // f f r f b r r f f b f r f f f f
     try {
       var directions = OptionsParser.parse(args);
-      var simulations = createSimulations(directions);
+//      var simulations = createSimulations(directions);
+      var simulations = List.of(createGrassFieldSimulation(5, directions));
       var simulationEngine = new SimulationEngine(simulations);
 
       simulationEngine.runAsyncInThreadPool();
