@@ -1,7 +1,7 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
@@ -15,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -39,8 +38,6 @@ public class SimulationPresenter implements MapChangeListener {
   private TextArea historyTextArea;
   @FXML
   private Button startButton;
-  @FXML
-  private TextField movesTextField;
 
   private WorldMap worldMap;
   private Configuration configuration;
@@ -49,13 +46,11 @@ public class SimulationPresenter implements MapChangeListener {
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
   public void drawMap() {
-    synchronized (worldMap.getElements()) {
-      var mapBoundary = worldMap.getCurrentBounds();
-      clearGrid();
-      fillCoordinates(mapBoundary);
-      fillGrid(mapBoundary);
-      drawElements(mapBoundary);
-    }
+    var mapBoundary = worldMap.getCurrentBounds();
+    clearGrid();
+    fillCoordinates(mapBoundary);
+    fillGrid(mapBoundary);
+    drawElements(mapBoundary);
   }
 
   @Override

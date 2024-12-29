@@ -22,7 +22,7 @@ public class Simulation implements Runnable {
   private final Random random = new Random();
   private final AnimalFactory animalFactory;
   private final List<Animal> animals;
-  private final List<Grass> plants = new ArrayList<>();
+  private final List<Grass> plants;
   private final WorldMap worldMap;
 
   public Simulation(Configuration configuration, WorldMap worldMap) {
@@ -30,6 +30,7 @@ public class Simulation implements Runnable {
     this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
     this.worldMap = worldMap;
     animals = createAnimals();
+    plants = new ArrayList<>();
   }
 
   @Override
