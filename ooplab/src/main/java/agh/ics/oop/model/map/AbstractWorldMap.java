@@ -8,7 +8,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
 
-abstract class AbstractWorldMap implements WorldMap {
+public abstract class AbstractWorldMap implements WorldMap {
   private final MapVisualizer mapVisualizer;
   private final List<MapChangeListener> mapChangeListeners;
   private final UUID id;

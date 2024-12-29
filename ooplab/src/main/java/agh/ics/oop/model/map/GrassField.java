@@ -1,6 +1,8 @@
 package agh.ics.oop.model.map;
 
-import agh.ics.oop.model.*;
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.map.elements.Animal;
 import agh.ics.oop.model.map.elements.Grass;
 import agh.ics.oop.model.map.elements.WorldElement;
@@ -54,6 +56,10 @@ public class GrassField extends AbstractWorldMap {
   public boolean canMoveTo(Vector2d position) {
     var objectAt = objectAt(position);
     return !(objectAt instanceof Animal);
+  }
+
+  public void placeGrass(Grass grass) {
+    grasses.put(grass.getPosition(), grass);
   }
 
   private void placeGrass() {
