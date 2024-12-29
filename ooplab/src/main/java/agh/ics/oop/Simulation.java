@@ -35,17 +35,29 @@ public class Simulation implements Runnable {
 
   @Override
   public void run() {
+    System.out.println("Simulation Started!");
     for (int i = 0; i < simulationConfiguration.getDaysCount(); i++) {
       try {
-        animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
-        createRandomPlants();
-        Thread.sleep(500);
+        updateAnimals();
+        updatePlants();
+        Thread.sleep(2);
+        System.out.println("Day=" + i);
       }
       catch (InterruptedException e) {
         System.out.println("Simulation was interrupted!!");
         return;
       }
     }
+
+    System.out.println("Simulation Ended!");
+  }
+
+  private void updateAnimals() {
+    animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
+  }
+
+  private void updatePlants() {
+    createRandomPlants();
   }
 
   private MoveDirection getRandomMoveDirection() { //TODO do wydzielenia do genów

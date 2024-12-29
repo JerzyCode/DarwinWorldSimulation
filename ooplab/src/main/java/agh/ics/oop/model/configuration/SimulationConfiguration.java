@@ -11,7 +11,7 @@ public class SimulationConfiguration {
   private int startAnimalCount;
 
   SimulationConfiguration() {
-    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 3);
+    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 1);
   }
 
   public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,

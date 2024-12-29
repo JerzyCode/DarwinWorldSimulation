@@ -55,8 +55,10 @@ public class SimulationPresenter implements MapChangeListener {
 
   @Override
   public void mapChanged(WorldMap worldMap, String message) {
-    historyTextArea.appendText(message + "\n");
-    Platform.runLater(this::drawMap);
+    Platform.runLater(() -> {
+      historyTextArea.appendText(message + "\n");
+      this.drawMap();
+    });
   }
 
   public void onSimulationStartClicked() {
@@ -141,8 +143,17 @@ public class SimulationPresenter implements MapChangeListener {
       Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
 
       if (element instanceof Animal animal) {
-        var animalDrawing = createAnimalDrawing(animal.getOrientation());
-        mapGrid.add(animalDrawing, x, y);
+        System.out.printf("AFTER CALCULATING el.x=%d, el.y=%d, offsetX=%d, offsetY=%d, res.x=%d, res.y=%d, maxLeftX=%d, maxBottomY=%d%n",
+            element.getPosition().getX(), element.getPosition().getY(), calculateOffsetX(maxLeftX), calculateOffsetY(maxBottomY), x, y, maxLeftX, maxBottomY);
+
+        try {
+          var animalDrawing = createAnimalDrawing(animal.getOrientation());
+          mapGrid.add(animalDrawing, x, y);
+        }
+        catch (Exception e) {
+          System.out.println("Exception");
+          System.out.println(String.format("x=%d, y=%d", x, y));
+        }
       }
       else {
         rectangle.setFill(Color.GREEN);
