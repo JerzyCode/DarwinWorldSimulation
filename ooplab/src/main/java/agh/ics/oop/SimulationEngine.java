@@ -9,29 +9,20 @@ import java.util.concurrent.TimeUnit;
 public class SimulationEngine {
   private final List<Thread> threads;
   private final ExecutorService executor;
-  private final List<Simulation> simulations;
   private final List<SimulationWithConfig> simulationsWithConfig;
 
-  public SimulationEngine(List<Simulation> simulations) {
-    this.simulations = simulations;
-    this.simulationsWithConfig = new ArrayList<>();
-    this.threads = new ArrayList<>();
-    this.executor = Executors.newFixedThreadPool(4);
-  }
-
   public SimulationEngine(SimulationWithConfig simulationWithConfig) {
-    this.simulations = new ArrayList<>();
     this.simulationsWithConfig = List.of(simulationWithConfig);
     this.threads = new ArrayList<>();
     this.executor = Executors.newFixedThreadPool(4);
   }
 
   public void runSync() {
-    simulations.forEach(Simulation::run);
+    simulationsWithConfig.forEach(SimulationWithConfig::run);
   }
 
   public void runAsync() {
-    simulations.forEach(simulation -> {
+    simulationsWithConfig.forEach(simulation -> {
       var thread = new Thread(simulation);
       threads.add(thread);
       thread.start();
@@ -39,7 +30,6 @@ public class SimulationEngine {
   }
 
   public void runAsyncInThreadPool() {
-    simulations.forEach(executor::submit);
     simulationsWithConfig.forEach(executor::submit);
     executor.shutdown();
   }
