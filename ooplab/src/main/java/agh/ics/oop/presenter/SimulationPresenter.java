@@ -48,6 +48,8 @@ public class SimulationPresenter implements MapChangeListener {
   private static final int GRID_WIDTH = 40;
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
+  // TODO: obstawiam, że problem jest taki, że synchronizacja jest na elementach mapy, ale gdzies po drodze zacząłeś tworzyć w symulacji zwierzęta i trawy zamiast w mapie
+  // TODO: Chyba się gdzieś spójność danych popsuła
   public void drawMap() {
     synchronized (worldMap.getElements()) {
       var mapBoundary = worldMap.getCurrentBounds();
