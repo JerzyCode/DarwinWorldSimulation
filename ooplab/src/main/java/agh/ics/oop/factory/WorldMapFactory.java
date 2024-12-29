@@ -26,7 +26,9 @@ public class WorldMapFactory {
   }
 
   private Earth createEarth() {
-    return new Earth(); //TODO
+    var width = worldMapConfiguration.getWidth();
+    var height = worldMapConfiguration.getHeight();
+    return new Earth(width, height);
   }
 
   private FireEarth createFireEarth() {

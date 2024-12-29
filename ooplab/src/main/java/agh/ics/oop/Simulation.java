@@ -29,8 +29,9 @@ public class Simulation implements Runnable {
       var index = i % animalCount;
       var animal = animals.get(index);
       try {
-        worldMap.move(animal, moveDirections.get(i));
         Thread.sleep(0);
+        worldMap.move(animal, moveDirections.get(i));
+        // TODO: coś nie tak z tym sleep jest
       }
       catch (InterruptedException e) {
         System.out.println("Simulation was interrupted!!");

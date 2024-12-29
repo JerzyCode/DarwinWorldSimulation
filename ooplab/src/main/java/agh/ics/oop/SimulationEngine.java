@@ -19,6 +19,7 @@ public class SimulationEngine {
     this.executor = Executors.newFixedThreadPool(4);
   }
 
+  // TODO: nie ma to żadnego sensu
   public SimulationEngine(SimulationWithConfig simulationWithConfig) {
     this.simulations = new ArrayList<>();
     this.simulationsWithConfig = List.of(simulationWithConfig);
