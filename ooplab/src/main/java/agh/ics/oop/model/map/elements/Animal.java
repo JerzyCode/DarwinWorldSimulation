@@ -43,6 +43,9 @@ public class Animal implements WorldElement {
 
     validator.adjustAnimalAfterMove(this);
   }
+  public void move(MoveDirection moveDirection, PositionAdjuster adjuster) {
+
+  }
 
   private void updatePosition(Vector2d newPosition, MoveValidator validator) {
     if (validator.canMoveTo(newPosition)) {

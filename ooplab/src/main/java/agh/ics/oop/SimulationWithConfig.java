@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.factory.AnimalFactory;
+import agh.ics.oop.factory.PlantFactory;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
@@ -22,15 +23,18 @@ public class SimulationWithConfig implements Runnable {
   private final SimulationConfiguration simulationConfiguration;
   private final Random random = new Random();
   private final AnimalFactory animalFactory;
-  private final List<Animal> animals; // TODO: w tym momencie jednocześnie worldMap ma listę zwierzat i symulacja. Trzeba się na coś zdecydować
-//  private final List<Grass> plants = new ArrayList<>();
+  private final PlantFactory plantFactory;
+  private final List<Animal> animals;
+  private final List<Grass> plants;
   private final WorldMap worldMap;
 
   public SimulationWithConfig(Configuration configuration, WorldMap worldMap) {
     this.simulationConfiguration = configuration.getSimulationConfiguration();
     this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
+    this.plantFactory = new PlantFactory(configuration.getSimulationConfiguration().getPlantVariant());
     this.worldMap = worldMap;
     animals = createAnimals();
+    plants = createPlants();
   }
 
   @Override
@@ -49,9 +53,19 @@ public class SimulationWithConfig implements Runnable {
     }
   }
 
+  private void handleGrassEating(){
+    animals.forEach(animal -> {
+      if (((Earth)worldMap).isGrassAtPosition(animal.getPosition())){
+        ((Earth)worldMap).removeGrass(animal.getPosition());
+        //TODO: zwiekszyc energie zwierzaka
+      }
+    });
+  }
+
   private MoveDirection getRandomMoveDirection() { //TODO do wydzielenia do genów
     return MoveDirection.values()[random.nextInt(4)];
   }
+
 
 //  private void createRandomPlants() { //TODO refactor
 //    var boundary = worldMap.getCurrentBounds();
@@ -68,7 +82,6 @@ public class SimulationWithConfig implements Runnable {
 //    }
 //
 //  }
-
   private List<Animal> createAnimals() {
     var boundary = worldMap.getCurrentBounds();
     List<Animal> animals = new ArrayList<>();
@@ -91,10 +104,14 @@ public class SimulationWithConfig implements Runnable {
     return animals;
   }
 
+  private List<Grass> createPlants() {
+    //TODO: napisac
+  }
+
   private void handleDayEnds(){
     if (worldMap instanceof Earth){
       ((Earth)worldMap).placePlants(simulationConfiguration.getPlantGrowth());
-      ((Earth) worldMap).eatGrass();
+      handleGrassEating();
     }
   }
 

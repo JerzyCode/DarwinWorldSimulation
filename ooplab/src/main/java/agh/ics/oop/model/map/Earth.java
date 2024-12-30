@@ -7,7 +7,7 @@ import agh.ics.oop.model.map.elements.WorldElement;
 
 import java.util.*;
 
-public class Earth extends AbstractWorldMap {
+public class Earth extends AbstractWorldMap implements PositionAdjuster {
   private final Boundary boundary;
   private final Map<Vector2d, Grass> grasses;
 
@@ -15,7 +15,7 @@ public class Earth extends AbstractWorldMap {
     super();
     boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
     grasses = new HashMap<>();
-    placePlants(height, width, startPlantCount);
+//    placePlants(height, width, startPlantCount);
   }
 
   // TODO: remove unused constructor
@@ -59,48 +59,49 @@ public class Earth extends AbstractWorldMap {
     return Collections.unmodifiableCollection(elements);
   }
 
-  public void placePlants(int plantCount){
-      var height = this.boundary.rightTopCorner().getY() - this.boundary.leftBottomCorner().getY();
-      var width = this.boundary.rightTopCorner().getX() - this.boundary.leftBottomCorner().getX();
-      placePlants(height, width, plantCount);
+//  public void placePlants(int plantCount){
+//      var height = this.boundary.rightTopCorner().getY() - this.boundary.leftBottomCorner().getY();
+//      var width = this.boundary.rightTopCorner().getX() - this.boundary.leftBottomCorner().getX();
+//      placePlants(height, width, plantCount);
+//  }
+
+  public boolean isGrassAtPosition(Vector2d position) {
+    return grasses.containsKey(position);
   }
 
-  public void eatGrass(){
-    animals.values().forEach(this::eatGrass);
-  }
-
-  private void placePlants(int countOfRows, int countOfColumns, int plantCount) {
-    int countOfPreferableRows = Math.max(1, (int) (countOfRows * 0.2));
-    int notPreferableRows = countOfRows - countOfPreferableRows;
-    int minIndexOfPreferableRow = notPreferableRows / 2;
-
-    int CountOfPlacedPlants = 0;
-    while(CountOfPlacedPlants < plantCount) {
-      int row;
-      if (Math.random() < 0.8) {
-        row = minIndexOfPreferableRow + (int) (Math.random() * countOfPreferableRows);
-      } else {
-        row = (int) (Math.random() * notPreferableRows);
-        if (row >= minIndexOfPreferableRow) {
-          row += countOfPreferableRows;
-        }
-      }
-      int col = (int) (Math.random() * countOfColumns);
-      // TODO: z jakiejś przyczny tutaj col i row musi być tutaj odwrotnie żeby działało
-      Vector2d position = new Vector2d(col, row);
-      if (!grasses.containsKey(position)) {
-        grasses.put(position, new Grass(position));
-        CountOfPlacedPlants++;
-      }
-    }
-  }
-
-  private void eatGrass(Animal animal){
-    var position = animal.getPosition();
-    if (grasses.containsKey(position)) {
+  public void removeGrass(Vector2d position){
       grasses.remove(position);
-      // TODO: increase animal energy
-    }
   }
 
-}
+  @Override
+  public MoveDirection adjustPosition(Vector2d position) {
+    return null;
+  }
+
+//  private void placePlants(int countOfRows, int countOfColumns, int plantCount) {
+//    int countOfPreferableRows = Math.max(1, (int) (countOfRows * 0.2));
+//    int notPreferableRows = countOfRows - countOfPreferableRows;
+//    int minIndexOfPreferableRow = notPreferableRows / 2;
+//
+//    int CountOfPlacedPlants = 0;
+//    while(CountOfPlacedPlants < plantCount) {
+//      int row;
+//      if (Math.random() < 0.8) {
+//        row = minIndexOfPreferableRow + (int) (Math.random() * countOfPreferableRows);
+//      } else {
+//        row = (int) (Math.random() * notPreferableRows);
+//        if (row >= minIndexOfPreferableRow) {
+//          row += countOfPreferableRows;
+//        }
+//      }
+//      int col = (int) (Math.random() * countOfColumns);
+//      // TODO: z jakiejś przyczny tutaj col i row musi być tutaj odwrotnie żeby działało
+//      Vector2d position = new Vector2d(col, row);
+//      if (!grasses.containsKey(position)) {
+//        grasses.put(position, new Grass(position));
+//        CountOfPlacedPlants++;
+//      }
+//    }
+  }
+
+//}
