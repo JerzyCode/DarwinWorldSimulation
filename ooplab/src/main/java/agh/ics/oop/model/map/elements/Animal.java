@@ -33,12 +33,16 @@ public class Animal implements WorldElement {
     return this.position.equals(position);
   }
 
+  public void changeDirection(int angle) {
+
+  }
+
   public void move(MoveDirection moveDirection, MoveValidator validator) {
     switch (moveDirection) {
       case FORWARD -> updatePosition(position.add(orientation.toUnitVector()), validator);
       case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()), validator);
-      case LEFT -> orientation = orientation.previous();
-      case RIGHT -> orientation = orientation.next();
+      case LEFT -> orientation = orientation.previous_right_angle();
+      case RIGHT -> orientation = orientation.next_right_angle();
     }
 
     validator.adjustAnimalAfterMove(this);
