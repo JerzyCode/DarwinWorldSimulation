@@ -1,7 +1,6 @@
 package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Boundary;
-import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.map.elements.Animal;
 import agh.ics.oop.model.map.elements.Grass;
@@ -25,11 +24,6 @@ public class GrassField extends AbstractWorldMap {
     this.grasses = new HashMap<>();
     this.randomizer = randomizer;
     placeGrass();
-  }
-
-  @Override
-  public void move(Animal animal, MoveDirection direction) {
-    super.move(animal, direction);
   }
 
   @Override
@@ -86,6 +80,5 @@ public class GrassField extends AbstractWorldMap {
     displayLeftBotCorner = botLeft;
     displayRightTopCorner = rightTop;
   }
-
 
 }

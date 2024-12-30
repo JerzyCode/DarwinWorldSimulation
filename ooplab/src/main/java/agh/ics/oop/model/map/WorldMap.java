@@ -31,6 +31,8 @@ public interface WorldMap extends MoveValidator {
    */
   void move(Animal animal, MoveDirection direction);
 
+
+  void move(Animal animal);
   /**
    * Return true if given position on the map is occupied. Should not be
    * confused with canMove since there might be empty positions where the animal

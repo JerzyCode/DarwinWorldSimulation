@@ -37,7 +37,7 @@ public class SimulationWithConfig implements Runnable {
   public void run() {
     for (int i = 0; i < simulationConfiguration.getDaysCount(); i++) {
       try {
-        animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
+        animals.forEach(worldMap::move);
 //        createRandomPlants();
         handleDayEnds();
         Thread.sleep(500);

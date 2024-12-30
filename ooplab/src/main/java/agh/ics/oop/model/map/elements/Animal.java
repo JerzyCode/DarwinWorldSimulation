@@ -1,6 +1,9 @@
 package agh.ics.oop.model.map.elements;
 
-import agh.ics.oop.model.*;
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.MoveValidator;
+import agh.ics.oop.model.Vector2d;
 
 public class Animal implements WorldElement {
 
@@ -8,12 +11,20 @@ public class Animal implements WorldElement {
 
   private MapDirection orientation;
 
+  private Genome genome;
+
   public void setOrientation(MapDirection orientation) {
     this.orientation = orientation;
   }
 
   public void setPosition(Vector2d position) {
     this.position = position;
+  }
+
+  public Animal(Genome genome, Vector2d position) {
+    this.genome = genome;
+    this.position = position;
+    this.orientation = MapDirection.NORTH;
   }
 
   public Animal() {
@@ -33,8 +44,11 @@ public class Animal implements WorldElement {
     return this.position.equals(position);
   }
 
-  public void changeDirection(int angle) {
-
+  public void move(MoveValidator moveValidator) {
+    var moveGen = genome.nextGen();
+    setOrientation(moveGen.rotate(orientation));
+    updatePosition(position.add(orientation.toUnitVector()), moveValidator);
+    moveValidator.adjustAnimalAfterMove(this);
   }
 
   public void move(MoveDirection moveDirection, MoveValidator validator) {
