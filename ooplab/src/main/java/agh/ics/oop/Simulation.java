@@ -1,7 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;

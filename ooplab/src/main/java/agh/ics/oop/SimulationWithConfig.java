@@ -2,7 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.factory.AnimalFactory;
 import agh.ics.oop.factory.PlantFactory;
-import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.configuration.SimulationConfiguration;

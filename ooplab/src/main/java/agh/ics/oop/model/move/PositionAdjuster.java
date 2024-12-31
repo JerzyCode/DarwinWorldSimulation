@@ -1,4 +1,4 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.move;
 
 
 import agh.ics.oop.model.map.elements.Animal;

@@ -5,6 +5,9 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.elements.Animal;
 import agh.ics.oop.model.map.elements.Grass;
 import agh.ics.oop.model.map.elements.WorldElement;
+import agh.ics.oop.model.move.MoveAdjustment;
+import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.move.PositionAdjuster;
 
 import java.util.*;
 

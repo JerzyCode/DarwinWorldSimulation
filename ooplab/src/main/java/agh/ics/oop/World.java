@@ -3,6 +3,7 @@ package agh.ics.oop;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.map.GrassField;
 import agh.ics.oop.model.map.RectangularMap;
+import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.ArrayList;
 import java.util.List;

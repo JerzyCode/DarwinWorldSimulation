@@ -1,4 +1,7 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.move;
+
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.Vector2d;
 
 public class MoveAdjustment {
     private final Vector2d position;

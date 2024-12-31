@@ -1,6 +1,9 @@
 package agh.ics.oop.model.map.elements;
 
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.move.MoveValidator;
+import agh.ics.oop.model.move.PositionAdjuster;
 
 public class Animal implements WorldElement {
 
