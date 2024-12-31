@@ -8,14 +8,6 @@ public class Animal implements WorldElement {
 
   private MapDirection orientation;
 
-  public void setOrientation(MapDirection orientation) {
-    this.orientation = orientation;
-  }
-
-  public void setPosition(Vector2d position) {
-    this.position = position;
-  }
-
   public Animal() {
     this(new Vector2d(2, 2));
   }
@@ -40,11 +32,13 @@ public class Animal implements WorldElement {
       case LEFT -> orientation = orientation.previous();
       case RIGHT -> orientation = orientation.next();
     }
-
-    validator.adjustAnimalAfterMove(this);
   }
-  public void move(MoveDirection moveDirection, PositionAdjuster adjuster) {
+  public void move(MoveDirection moveDirection, MoveValidator validator, PositionAdjuster adjuster) {
+    move(moveDirection, validator);
 
+    var adjustedMove = adjuster.adjustMove(this);
+    position = adjustedMove.getPosition();
+    orientation = adjustedMove.getOrientation();
   }
 
   private void updatePosition(Vector2d newPosition, MoveValidator validator) {

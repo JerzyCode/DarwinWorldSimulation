@@ -173,12 +173,10 @@ public class ConfigurationPresenter {
   private void updateMapConfiguration() {
     var height = Integer.parseInt(heightInput.getText());
     var width = Integer.parseInt(widthInput.getText());
-    var startPlantCount = Integer.parseInt(startPlantCountInput.getText());
 
     var mapConfiguration = configuration.getWorldMapConfiguration();
     mapConfiguration.setHeight(height);
     mapConfiguration.setWidth(width);
-    mapConfiguration.setStartPlantCount(startPlantCount);
 
   }
 
@@ -204,6 +202,8 @@ public class ConfigurationPresenter {
     var lossCopulateEnergy = Integer.parseInt(lossCopulateEnergyInput.getText());
     var startAnimalCount = Integer.parseInt(startAnimalCountInput.getText());
     var fireFrequency = Integer.parseInt(fireFrequencyInput.getText());
+    var startPlantCount = Integer.parseInt(startPlantCountInput.getText());
+
 
     var simulationConfiguration = configuration.getSimulationConfiguration();
     simulationConfiguration.setDaysCount(daysCount);
@@ -213,13 +213,13 @@ public class ConfigurationPresenter {
     simulationConfiguration.setLossCopulateEnergy(lossCopulateEnergy);
     simulationConfiguration.setFireFrequency(fireFrequency);
     simulationConfiguration.setStartAnimalCount(startAnimalCount);
+    simulationConfiguration.setStartPlantCount(startPlantCount);
   }
 
   private void setInputValues(Configuration configuration) {
     var mapConfiguration = configuration.getWorldMapConfiguration();
     heightInput.setText(String.valueOf(mapConfiguration.getHeight()));
     widthInput.setText(String.valueOf(mapConfiguration.getWidth()));
-    startPlantCountInput.setText(String.valueOf(mapConfiguration.getStartPlantCount()));
 
     var animalConfiguration = configuration.getAnimalConfiguration();
     startEnergyInput.setText(String.valueOf(animalConfiguration.getStartEnergy()));
@@ -235,5 +235,6 @@ public class ConfigurationPresenter {
     lossCopulateEnergyInput.setText(String.valueOf(simulationConfiguration.getLossCopulateEnergy()));
     fireFrequencyInput.setText(String.valueOf(simulationConfiguration.getFireFrequency()));
     startAnimalCountInput.setText(String.valueOf(simulationConfiguration.getStartAnimalCount()));
+    startPlantCountInput.setText(String.valueOf(simulationConfiguration.getStartPlantCount()));
   }
 }

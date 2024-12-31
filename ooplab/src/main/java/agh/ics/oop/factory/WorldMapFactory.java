@@ -21,6 +21,7 @@ public class WorldMapFactory {
     };
   }
 
+
   private GrassField createGrassField() {
     return new GrassField(worldMapConfiguration.getStartPlantCount());
   }
@@ -28,8 +29,7 @@ public class WorldMapFactory {
   private Earth createEarth() {
     var width = worldMapConfiguration.getWidth();
     var height = worldMapConfiguration.getHeight();
-    var startPlantCount = worldMapConfiguration.getStartPlantCount();
-    return new Earth(width, height, startPlantCount);
+    return new Earth(width, height);
   }
 
   private FireEarth createFireEarth() {

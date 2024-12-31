@@ -9,13 +9,15 @@ public class SimulationConfiguration {
   private int lossCopulateEnergy;
   private int fireFrequency;
   private int startAnimalCount;
+  private int startPlantCount;
+
 
   SimulationConfiguration() {
-    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 3);
+    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 3, 3);
   }
 
   public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
-      int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int startAnimalCount) {
+      int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int startAnimalCount, int startPlantCount) {
     this.daysCount = daysCount;
     this.energyGain = energyGain;
     this.plantGrowth = plantGrowth;
@@ -24,6 +26,7 @@ public class SimulationConfiguration {
     this.lossCopulateEnergy = lossCopulateEnergy;
     this.fireFrequency = fireFrequency;
     this.startAnimalCount = startAnimalCount;
+    this.startPlantCount = startPlantCount;
   }
 
   public int getEnergyGain() {
@@ -90,6 +93,14 @@ public class SimulationConfiguration {
     this.startAnimalCount = startAnimalCount;
   }
 
+  public int getStartPlantCount() {
+    return startPlantCount;
+  }
+
+  public void setStartPlantCount(int startPlantCount) {
+    this.startPlantCount = startPlantCount;
+  }
+
   @Override
   public String toString() {
     return "SimulationConfiguration{" +
@@ -100,6 +111,7 @@ public class SimulationConfiguration {
         ", lossCopulateEnergy=" + lossCopulateEnergy +
         ", fireFrequency=" + fireFrequency +
         ", startAnimalCount=" + startAnimalCount +
+            ", startPlantCount=" + startPlantCount +
         '}';
   }
 }

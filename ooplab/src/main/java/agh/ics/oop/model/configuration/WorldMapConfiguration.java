@@ -3,17 +3,15 @@ package agh.ics.oop.model.configuration;
 public class WorldMapConfiguration {
   private int height;
   private int width;
-  private int startPlantCount;
   private WorldMapVariant mapVariant;
 
   WorldMapConfiguration() {
-    this(5, 5, 3, WorldMapVariant.GRASS_FIELD);
+    this(5, 5, WorldMapVariant.GRASS_FIELD);
   }
 
-  public WorldMapConfiguration(int height, int width, int startPlantCount, WorldMapVariant mapVariant) {
+  public WorldMapConfiguration(int height, int width, WorldMapVariant mapVariant) {
     this.height = height;
     this.width = width;
-    this.startPlantCount = startPlantCount;
     this.mapVariant = mapVariant;
   }
 
@@ -33,14 +31,6 @@ public class WorldMapConfiguration {
     this.width = width;
   }
 
-  public int getStartPlantCount() {
-    return startPlantCount;
-  }
-
-  public void setStartPlantCount(int startPlantCount) {
-    this.startPlantCount = startPlantCount;
-  }
-
   public WorldMapVariant getMapVariant() {
     return mapVariant;
   }
@@ -49,12 +39,16 @@ public class WorldMapConfiguration {
     this.mapVariant = mapVariant;
   }
 
+  // TODO: to chwilowo żeby działało, ale jakoś musisz grassField przerobić do przyjętej konwencji, że to symulacja zarządza
+  public int getStartPlantCount(){
+    return 5;
+  }
+
   @Override
   public String toString() {
     return "WorldMapConfiguration{" +
         "height=" + height +
         ", width=" + width +
-        ", startPlantCount=" + startPlantCount +
         ", mapVariant=" + mapVariant +
         '}';
   }
