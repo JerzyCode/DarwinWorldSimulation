@@ -1,9 +1,11 @@
 package agh.ics.oop.model.map.elements;
 
-import agh.ics.oop.model.*;
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.move.Move;
+import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
-import agh.ics.oop.model.move.PositionAdjuster;
 
 public class Animal implements WorldElement {
 
@@ -36,11 +38,12 @@ public class Animal implements WorldElement {
       case RIGHT -> orientation = orientation.next();
     }
   }
-  public void move(MoveDirection moveDirection, MoveValidator validator, PositionAdjuster adjuster) {
+
+  public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
     move(moveDirection, validator);
 
-    var adjustedMove = adjuster.adjustMove(this);
-    position = adjustedMove.getPosition();
+    var adjustedMove = adjuster.adjustMove(new Move(position, orientation));
+    position = adjustedMove.getToPosition();
     orientation = adjustedMove.getOrientation();
   }
 
