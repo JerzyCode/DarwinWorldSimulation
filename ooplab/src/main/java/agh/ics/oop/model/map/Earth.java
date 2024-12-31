@@ -69,12 +69,15 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
   // TODO: różni się tylko jedną linijką ale trzeba zrobić override bo trzeba jakoś przekazać 3 argument do move
   @Override
   public void move(Animal animal, MoveDirection direction) {
-    if (animals.containsValue(animal) && !isOccupied(animal.getPosition())) {
+    if (animals.containsValue(animal)){
       animals.remove(animal.getPosition());
       animal.move(direction, this, this);
       animals.put(animal.getPosition(), animal);
       notifyListeners("Animal moved to position: " + animal.getPosition());
+      System.out.println("After move:" + animals.size());
+
     }
+
   }
 }
 
