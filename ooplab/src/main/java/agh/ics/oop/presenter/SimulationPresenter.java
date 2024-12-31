@@ -2,7 +2,7 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.SimulationWithConfig;
+import agh.ics.oop.Simulation;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
@@ -77,7 +77,7 @@ public class SimulationPresenter implements MapChangeListener {
     var simulationContext = new SimulationContext(configuration);
     worldMap = simulationContext.getWorldMap();
     simulationContext.setMapChangeListener(this);
-    var simulation = new SimulationWithConfig(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
+    var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
     var simulationEngine = new SimulationEngine(simulation);
 
     simulationEngine.runAsyncInThreadPool();
