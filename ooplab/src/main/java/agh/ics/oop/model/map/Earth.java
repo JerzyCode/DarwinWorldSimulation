@@ -2,7 +2,7 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PlantIsAlreadyGrownException;
 import agh.ics.oop.model.map.elements.Animal;
 import agh.ics.oop.model.map.elements.Plant;
 import agh.ics.oop.model.map.elements.WorldElement;
@@ -14,12 +14,12 @@ import java.util.*;
 
 public class Earth extends AbstractWorldMap implements MoveAdjuster, PlantMap {
   private final Boundary boundary;
-  private final Map<Vector2d, Plant> grasses;
+  private final Map<Vector2d, Plant> plants;
 
   public Earth(int width, int height) {
     super();
     boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
-    grasses = new HashMap<>();
+    plants = new HashMap<>();
   }
 
   // TODO: remove unused constructor
@@ -40,7 +40,7 @@ public class Earth extends AbstractWorldMap implements MoveAdjuster, PlantMap {
   @Override
   public Collection<WorldElement> getElements() {
     var elements = new ArrayList<WorldElement>();
-    elements.addAll(grasses.values());
+    elements.addAll(plants.values());
     elements.addAll(super.getElements());
 
     return Collections.unmodifiableCollection(elements);
@@ -80,29 +80,26 @@ public class Earth extends AbstractWorldMap implements MoveAdjuster, PlantMap {
   }
 
   @Override
-  public void placePlant(Plant plant) throws IncorrectPositionException {
-    if (grasses.containsKey(plant.getPosition())) {
-      throw new IncorrectPositionException(plant.getPosition());
+  public void placePlant(Plant plant) throws PlantIsAlreadyGrownException {
+    if (isPlantAtPosition(plant.getPosition())) {
+      throw new PlantIsAlreadyGrownException(plant.getPosition());
     }
-    else {
-      grasses.put(plant.getPosition(), plant);
-    }
+    plants.put(plant.getPosition(), plant);
+    notifyListeners("Plant was placed on position: " + plant.getPosition());
   }
 
   @Override
   public void removePlant(Vector2d position) {
-    grasses.remove(position);
+    if (isPlantAtPosition(position)) {
+      plants.remove(position);
+      notifyListeners("Plant was removed from position: " + position);
+    }
   }
-
 
   @Override
   public boolean isPlantAtPosition(Vector2d position) {
-    return grasses.containsKey(position);
+    return plants.containsKey(position);
   }
 
-
-  public int getMapSize() {
-    return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
-  }
 }
 
