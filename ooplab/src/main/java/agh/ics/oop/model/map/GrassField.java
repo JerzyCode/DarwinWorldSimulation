@@ -4,7 +4,7 @@ import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.Grass;
+import agh.ics.oop.model.map.elements.Plant;
 import agh.ics.oop.model.map.elements.WorldElement;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -12,7 +12,7 @@ import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
   private final RandomPositionGenerator randomizer;
-  private final Map<Vector2d, Grass> grasses;
+  private final Map<Vector2d, Plant> grasses;
   private Vector2d displayLeftBotCorner;
   private Vector2d displayRightTopCorner;
 
@@ -58,13 +58,13 @@ public class GrassField extends AbstractWorldMap {
     return !(objectAt instanceof Animal);
   }
 
-  public void placeGrass(Grass grass) {
-    grasses.put(grass.getPosition(), grass);
+  public void placeGrass(Plant plant) {
+    grasses.put(plant.getPosition(), plant);
   }
 
   private void placeGrass() {
     randomizer.forEach(position -> {
-      var grass = new Grass(position);
+      var grass = new Plant(position);
       grasses.put(grass.getPosition(), grass);
     });
   }

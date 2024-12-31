@@ -5,7 +5,7 @@ import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.Grass;
+import agh.ics.oop.model.map.elements.Plant;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class GrassFieldTest {
+class PlantFieldTest {
 
   @Test
   void shouldInitializeGrassField() {
@@ -57,7 +57,7 @@ class GrassFieldTest {
     var elements = grassField.getElements();
     assertEquals(grassCount, elements.size());
 
-    elements.forEach(element -> assertInstanceOf(Grass.class, element));
+    elements.forEach(element -> assertInstanceOf(Plant.class, element));
   }
 
   @Test
@@ -105,7 +105,7 @@ class GrassFieldTest {
     var elements = grassField.getElements();
     assertEquals(2, elements.size());
     var iterator = elements.iterator();
-    assertInstanceOf(Grass.class, iterator.next());
+    assertInstanceOf(Plant.class, iterator.next());
     assertInstanceOf(Animal.class, iterator.next());
   }
 
@@ -176,7 +176,7 @@ class GrassFieldTest {
     var result = grassField.objectAt(new Vector2d(1, 1));
 
     //then
-    assertInstanceOf(Grass.class, result);
+    assertInstanceOf(Plant.class, result);
     assertEquals(result.getPosition(), new Vector2d(1, 1));
   }
 

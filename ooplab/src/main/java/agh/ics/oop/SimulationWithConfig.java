@@ -10,7 +10,7 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.Earth;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.Grass;
+import agh.ics.oop.model.map.elements.Plant;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class SimulationWithConfig implements Runnable {
     private final AnimalFactory animalFactory;
     private final PlantFactory plantFactory;
     private final List<Animal> animals;
-    private final List<Grass> plants = new LinkedList<>();
+    private final List<Plant> plants = new LinkedList<>();
     private final WorldMap worldMap;
 
     public SimulationWithConfig(Configuration configuration, WorldMap worldMap) {

@@ -4,7 +4,7 @@ import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.Grass;
+import agh.ics.oop.model.map.elements.Plant;
 import agh.ics.oop.model.map.elements.WorldElement;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Earth extends AbstractWorldMap implements MoveAdjuster {
   private final Boundary boundary;
-  private final Map<Vector2d, Grass> grasses;
+  private final Map<Vector2d, Plant> grasses;
 
   public Earth(int width, int height) {
     super();
@@ -79,7 +79,7 @@ public class Earth extends AbstractWorldMap implements MoveAdjuster {
     }
   }
 
-  public void placePlant(Grass plant) throws IncorrectPositionException {
+  public void placePlant(Plant plant) throws IncorrectPositionException {
     if (grasses.containsKey(plant.getPosition())) {
       throw new IncorrectPositionException(plant.getPosition());
     }
