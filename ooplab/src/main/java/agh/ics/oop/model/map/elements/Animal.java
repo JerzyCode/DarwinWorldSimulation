@@ -39,7 +39,7 @@ public class Animal implements WorldElement {
     }
   }
 
-  public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
+  public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) { //TODO nie działa!
     move(moveDirection, validator);
 
     var adjustedMove = adjuster.adjustMove(new Move(position, orientation));
