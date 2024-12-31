@@ -12,7 +12,7 @@ import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.*;
 
-public class Earth extends AbstractWorldMap implements MoveAdjuster {
+public class Earth extends AbstractWorldMap implements MoveAdjuster, PlantMap {
   private final Boundary boundary;
   private final Map<Vector2d, Plant> grasses;
 
@@ -79,6 +79,7 @@ public class Earth extends AbstractWorldMap implements MoveAdjuster {
     }
   }
 
+  @Override
   public void placePlant(Plant plant) throws IncorrectPositionException {
     if (grasses.containsKey(plant.getPosition())) {
       throw new IncorrectPositionException(plant.getPosition());
@@ -88,13 +89,17 @@ public class Earth extends AbstractWorldMap implements MoveAdjuster {
     }
   }
 
-  public boolean isGrassAtPosition(Vector2d position) {
+  @Override
+  public void removePlant(Vector2d position) {
+    grasses.remove(position);
+  }
+
+
+  @Override
+  public boolean isPlantAtPosition(Vector2d position) {
     return grasses.containsKey(position);
   }
 
-  public void removeGrass(Vector2d position) {
-    grasses.remove(position);
-  }
 
   public int getMapSize() {
     return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
