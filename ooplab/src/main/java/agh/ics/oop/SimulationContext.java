@@ -90,7 +90,7 @@ public class SimulationContext {
         plants.add(plant);
       }
       catch (PlantIsAlreadyGrownException e) {
-        System.out.println(e.getMessage());
+        System.out.println("Not placed plant: " +e.getMessage());
       }
     }
     return plants;

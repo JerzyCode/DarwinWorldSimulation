@@ -19,7 +19,7 @@ public class SimulationEngine {
 
   // TODO: nie ma to żadnego sensu
   public SimulationEngine(Simulation simulation) {
-    this.simulations = new ArrayList<>();
+    this.simulations = List.of(simulation);
     this.threads = new ArrayList<>();
     this.executor = Executors.newFixedThreadPool(4);
   }
