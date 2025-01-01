@@ -1,8 +1,9 @@
 package agh.ics.oop.model.map.elements;
 
 import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.MoveValidator;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.move.MoveValidator;
 import agh.ics.oop.model.Vector2d;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

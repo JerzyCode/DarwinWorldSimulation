@@ -1,20 +1,26 @@
 package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Boundary;
-import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.Grass;
-import agh.ics.oop.model.map.elements.WorldElement;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
-public class GrassField extends AbstractWorldMap {
-  private final RandomPositionGenerator randomizer;
-  private final Map<Vector2d, Grass> grasses;
+public class GrassField extends AbstractPlantMap {
+  private RandomPositionGenerator randomizer;
   private Vector2d displayLeftBotCorner;
   private Vector2d displayRightTopCorner;
+
+  public GrassField(int startWidth, int startHeight) {
+    super(); //TODO grassfield źle działa, bo tworzą mu się rośliny nie przez simulationContext
+    displayLeftBotCorner = new Vector2d(0, 0);
+    displayRightTopCorner = new Vector2d(startWidth - 1, startHeight - 1);
+  }
 
   public GrassField(int grassCount) {
     this(new RandomPositionGenerator(grassCount, (int)Math.sqrt(grassCount * 10) + 1, (int)Math.sqrt(grassCount * 10) + 1));
@@ -22,31 +28,25 @@ public class GrassField extends AbstractWorldMap {
 
   GrassField(RandomPositionGenerator randomizer) { //constructor for testing purposes
     super();
-    this.grasses = new HashMap<>();
     this.randomizer = randomizer;
     placeGrass();
   }
 
   @Override
-  public void move(Animal animal, MoveDirection direction) {
-    super.move(animal, direction);
-  }
-
-  @Override
   public boolean isOccupied(Vector2d position) {
-    return super.isOccupied(position) || grasses.containsKey(position);
+    return super.isOccupied(position) || plants.containsKey(position);
   }
 
   @Override
   public WorldElement objectAt(Vector2d position) {
     var animal = super.objectAt(position);
-    return animal != null ? animal : grasses.get(position);
+    return animal != null ? animal : plants.get(position);
   }
 
   @Override
   public Collection<WorldElement> getElements() {
     var elements = new ArrayList<WorldElement>();
-    elements.addAll(grasses.values());
+    elements.addAll(plants.values());
     elements.addAll(super.getElements());
 
     return Collections.unmodifiableCollection(elements);
@@ -58,14 +58,10 @@ public class GrassField extends AbstractWorldMap {
     return !(objectAt instanceof Animal);
   }
 
-  public void placeGrass(Grass grass) {
-    grasses.put(grass.getPosition(), grass);
-  }
-
   private void placeGrass() {
     randomizer.forEach(position -> {
-      var grass = new Grass(position);
-      grasses.put(grass.getPosition(), grass);
+      var grass = new Plant(position);
+      plants.put(grass.getPosition(), grass);
     });
   }
 
@@ -86,4 +82,5 @@ public class GrassField extends AbstractWorldMap {
     displayLeftBotCorner = botLeft;
     displayRightTopCorner = rightTop;
   }
+
 }

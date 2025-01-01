@@ -1,15 +1,16 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.SimulationWithConfig;
+import agh.ics.oop.Simulation;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
-import agh.ics.oop.model.exceptions.PresenterNoMapToPresentException;
+import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.elements.Animal;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -48,6 +49,8 @@ public class SimulationPresenter implements MapChangeListener {
   private static final int GRID_WIDTH = 40;
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
+  // TODO: obstawiam, że problem jest taki, że synchronizacja jest na elementach mapy, ale gdzies po drodze zacząłeś tworzyć w symulacji zwierzęta i trawy zamiast w mapie
+  // TODO: Chyba się gdzieś spójność danych popsuła
   public void drawMap() {
     synchronized (worldMap.getElements()) {
       var mapBoundary = worldMap.getCurrentBounds();
@@ -60,24 +63,25 @@ public class SimulationPresenter implements MapChangeListener {
 
   @Override
   public void mapChanged(WorldMap worldMap, String message) {
-    historyTextArea.appendText(message + "\n");
-    Platform.runLater(this::drawMap);
+    Platform.runLater(() -> {
+      historyTextArea.appendText(message + "\n");
+      this.drawMap();
+    });
   }
 
   public void onSimulationStartClicked() {
-    if (worldMap == null) {
-      throw new PresenterNoMapToPresentException("Presenter has no map to present!");
+    if (configuration == null) {
+      throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
     }
 
-    var simulation = new SimulationWithConfig(configuration, worldMap);
+    var simulationContext = new SimulationContext(configuration);
+    worldMap = simulationContext.getWorldMap();
+    simulationContext.setMapChangeListener(this);
+    var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
     var simulationEngine = new SimulationEngine(simulation);
 
     simulationEngine.runAsyncInThreadPool();
     startButton.setDisable(true);
-  }
-
-  public void setWorldMap(WorldMap worldMap) {
-    this.worldMap = worldMap;
   }
 
   public void setConfiguration(Configuration configuration) {
