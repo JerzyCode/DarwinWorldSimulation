@@ -70,7 +70,7 @@ public class ConfigurationPresenter {
     littleCorrectionVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.LITTLE_CORRECTION));
     fullRandomVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.FULL_RANDOM));
     forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
-    noneVariant.setOnAction(event -> choosePlantVariant(PlantVariant.NONE));
+//    noneVariant.setOnAction(event -> choosePlantVariant(PlantVariant.NONE));
   }
 
   public void setConfiguration(Configuration configuration) {

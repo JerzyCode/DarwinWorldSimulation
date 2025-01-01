@@ -70,7 +70,7 @@
                     GridPane.rowIndex = "1">
             <items>
                 <MenuItem fx:id = "forestEquatorsVariant" mnemonicParsing = "false" text = "Forest Equators"/>
-                <MenuItem fx:id = "noneVariant" mnemonicParsing = "false" text = "None"/>
+<!--                <MenuItem fx:id = "noneVariant" mnemonicParsing = "false" text = "None"/>-->
             </items>
         </MenuButton>
 

@@ -3,7 +3,7 @@ package agh.ics.oop.factory;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
-import agh.ics.oop.model.map.elements.Grass;
+import agh.ics.oop.model.elements.Plant;
 
 public class PlantFactory {
     private final PlantVariant variant;
@@ -12,7 +12,7 @@ public class PlantFactory {
         this.variant = variant;
     }
 
-    public Grass createPlant(Boundary boundary) {
+    public Plant createPlant(Boundary boundary) {
         return switch (variant){
             case PlantVariant.FORESTED_EQUATORS -> createPlantForestedEquators(boundary);
             case PlantVariant.NONE -> null;
@@ -20,7 +20,7 @@ public class PlantFactory {
     }
 
     //TODO: zapytać o to
-    private Grass createPlantForestedEquators(Boundary boundary) {
+    private Plant createPlantForestedEquators(Boundary boundary) {
         var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY();
         var countOfColumns = boundary.rightTopCorner().getX() - boundary.leftBottomCorner().getX();
 
@@ -40,7 +40,7 @@ public class PlantFactory {
         int col = (int) (Math.random() * countOfColumns);
         // TODO: z jakiejś przyczny tutaj col i row musi być tutaj odwrotnie żeby działało
         Vector2d position = new Vector2d(col, row);
-        return new Grass(position);
+        return new Plant(position);
     }
 
 }

@@ -1,6 +1,5 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.factory.WorldMapFactory;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.configuration.WorldMapVariant;
 import javafx.fxml.FXML;
@@ -69,13 +68,8 @@ public class MainPanelPresenter {
     configurationPresenter.updateConfiguration();
     System.out.println("Starting simulation with configuration: " + configuration);
 
-    var mapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
-    var map = mapFactory.createWorldMap();
-
     SimulationPresenter presenter = loader.getController();
-    map.addListener(presenter);
     presenter.setConfiguration(configuration);
-    presenter.setWorldMap(map);
 
     configureStage(stage, viewRoot);
     stage.show();

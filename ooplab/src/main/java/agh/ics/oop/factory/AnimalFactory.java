@@ -2,7 +2,7 @@ package agh.ics.oop.factory;
 
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.AnimalConfiguration;
-import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.elements.Animal;
 
 public class AnimalFactory {
   private final AnimalConfiguration animalConfiguration;

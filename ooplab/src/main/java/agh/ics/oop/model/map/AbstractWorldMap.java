@@ -2,8 +2,9 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.WorldElement;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
@@ -73,6 +74,11 @@ public abstract class AbstractWorldMap implements WorldMap {
   public final String toString() {
     var bounds = getCurrentBounds();
     return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
+  }
+
+  public int getSize() {
+    var boundary = this.getCurrentBounds();
+    return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
   }
 
   public void addListener(MapChangeListener listener) {
