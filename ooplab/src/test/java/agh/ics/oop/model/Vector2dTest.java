@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -111,6 +112,78 @@ class Vector2dTest {
 
     //then
     Assertions.assertEquals(expected, result);
+  }
+
+  @Test
+  void shouldVerifyIfVectorIsAboveOther() {
+    //given
+    var given = new Vector2d(0, 0);
+    var vector1 = new Vector2d(1, 1);
+    var vector2 = new Vector2d(2, 3);
+    var vector3 = new Vector2d(10, -5);
+    var vector4 = new Vector2d(-5, -3);
+    var vector5 = new Vector2d(-5, 0);
+
+    //when && then
+    Assertions.assertTrue(given.isAbove(vector3));
+    Assertions.assertTrue(given.isAbove(vector4));
+    Assertions.assertFalse(given.isAbove(vector1));
+    Assertions.assertFalse(given.isAbove(vector2));
+    Assertions.assertFalse(given.isAbove(vector5));
+  }
+
+  @Test
+  void shouldVerifyIfVectorIsUnderOther() {
+    //given
+    var given = new Vector2d(0, 0);
+    var vector1 = new Vector2d(1, 1);
+    var vector2 = new Vector2d(2, 3);
+    var vector3 = new Vector2d(10, -5);
+    var vector4 = new Vector2d(-5, -3);
+    var vector5 = new Vector2d(-5, 0);
+
+    //when && then
+    Assertions.assertTrue(given.isUnder(vector2));
+    Assertions.assertTrue(given.isUnder(vector1));
+    Assertions.assertFalse(given.isUnder(vector3));
+    Assertions.assertFalse(given.isUnder(vector4));
+    Assertions.assertFalse(given.isUnder(vector5));
+  }
+
+  @Test
+  void shouldVerifyIfVectorIsOnTheRightOther() {
+    //given
+    var given = new Vector2d(0, 0);
+    var vector1 = new Vector2d(1, 1);
+    var vector2 = new Vector2d(2, 3);
+    var vector3 = new Vector2d(0, -5);
+    var vector4 = new Vector2d(-1, -3);
+    var vector5 = new Vector2d(-5, 0);
+
+    // when && then
+    Assertions.assertTrue(given.isOnTheRight(vector4));
+    Assertions.assertTrue(given.isOnTheRight(vector5));
+    Assertions.assertFalse(given.isOnTheRight(vector1));
+    Assertions.assertFalse(given.isOnTheRight(vector2));
+    Assertions.assertFalse(given.isOnTheRight(vector3));
+  }
+
+  @Test
+  void shouldVerifyIfVectorIsOnTheLeftOther() {
+    //given
+    var given = new Vector2d(0, 0);
+    var vector1 = new Vector2d(1, 1);
+    var vector2 = new Vector2d(2, 3);
+    var vector3 = new Vector2d(0, -5);
+    var vector4 = new Vector2d(-1, -3);
+    var vector5 = new Vector2d(-5, 0);
+
+    // when && then
+    Assertions.assertTrue(given.isOnTheLeft(vector1));
+    Assertions.assertTrue(given.isOnTheLeft(vector2));
+    Assertions.assertFalse(given.isOnTheLeft(vector3));
+    Assertions.assertFalse(given.isOnTheLeft(vector4));
+    Assertions.assertFalse(given.isOnTheLeft(vector5));
   }
 
   private static Stream<Arguments> provideAddVectorsTestCases() {
