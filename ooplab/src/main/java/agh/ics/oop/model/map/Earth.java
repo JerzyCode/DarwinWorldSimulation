@@ -26,13 +26,22 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
   }
 
   @Override
+  public boolean canPlacePlant(Vector2d position) {
+    return !super.isPlantAtPosition(position) &&
+        position.follows(boundary.leftBottomCorner()) &&
+        position.precedes(boundary.rightTopCorner());
+  }
+
+  @Override
   public Boundary getCurrentBounds() {
     return boundary;
   }
 
   @Override
   public boolean canMoveTo(Vector2d position) {
-    return true;
+    var topRightMaxMove = boundary.rightTopCorner().add(new Vector2d(1, 1));
+    var bottomLeftMaxMove = boundary.leftBottomCorner().add(new Vector2d(-1, -1));
+    return position.follows(bottomLeftMaxMove) && position.precedes(topRightMaxMove);
   }
 
   @Override
@@ -66,18 +75,14 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     return new Move(position, orientation);
   }
 
-  // TODO: różni się tylko jedną linijką ale trzeba zrobić override bo trzeba jakoś przekazać 3 argument do move
   @Override
   public void move(Animal animal, MoveDirection direction) {
-    if (animals.containsValue(animal)){
+    if (animals.containsValue(animal)) {
       animals.remove(animal.getPosition());
       animal.move(direction, this, this);
       animals.put(animal.getPosition(), animal);
       notifyListeners("Animal moved to position: " + animal.getPosition());
-      System.out.println("After move:" + animals.size());
-
     }
-
   }
 }
 
