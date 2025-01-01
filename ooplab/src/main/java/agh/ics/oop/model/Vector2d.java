@@ -43,6 +43,22 @@ public class Vector2d {
     return new Vector2d(Math.min(x, other.x), Math.min(y, other.y));
   }
 
+  public boolean isUnder(Vector2d other) {
+    return y < other.y;
+  }
+
+  public boolean isAbove(Vector2d other) {
+    return y > other.y;
+  }
+
+  public boolean isOnTheLeft(Vector2d other) {
+    return x < other.x;
+  }
+
+  public boolean isOnTheRight(Vector2d other) {
+    return x > other.x;
+  }
+
   public Vector2d opposite() {
     return new Vector2d(-x, -y);
   }

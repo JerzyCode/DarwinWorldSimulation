@@ -58,18 +58,18 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     var position = move.getToPosition();
     var orientation = move.getOrientation();
 
-    if (position.getY() < boundary.leftBottomCorner().getY()) {
+    if (position.isUnder(boundary.leftBottomCorner())) {
       position = new Vector2d(position.getX(), boundary.leftBottomCorner().getY());
       orientation = orientation.next().next();
     }
-    else if (position.getY() > boundary.rightTopCorner().getY()) {
+    else if (position.isAbove(boundary.rightTopCorner())) {
       position = new Vector2d(position.getX(), boundary.rightTopCorner().getY());
       orientation = orientation.next().next();
     }
-    else if (position.getX() < boundary.leftBottomCorner().getX()) {
+    else if (position.isOnTheLeft(boundary.leftBottomCorner())) {
       position = new Vector2d(boundary.rightTopCorner().getX(), position.getY());
     }
-    else if (position.getX() > boundary.rightTopCorner().getX()) {
+    else if (position.isOnTheRight(boundary.rightTopCorner())) {
       position = new Vector2d(boundary.leftBottomCorner().getX(), position.getY());
     }
     return new Move(position, orientation);
