@@ -10,7 +10,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.map.elements.Animal;
+import agh.ics.oop.model.elements.Animal;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

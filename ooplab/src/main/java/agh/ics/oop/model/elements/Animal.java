@@ -1,4 +1,4 @@
-package agh.ics.oop.model.map.elements;
+package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
@@ -39,7 +39,7 @@ public class Animal implements WorldElement {
     }
   }
 
-  public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) { //TODO nie działa!
+  public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
     move(moveDirection, validator);
 
     var adjustedMove = adjuster.adjustMove(new Move(position, orientation));

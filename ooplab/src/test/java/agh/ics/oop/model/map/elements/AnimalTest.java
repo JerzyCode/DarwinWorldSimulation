@@ -1,6 +1,7 @@
 package agh.ics.oop.model.map.elements;
 
 import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 import agh.ics.oop.model.Vector2d;

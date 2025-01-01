@@ -2,8 +2,8 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.WorldElement;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;

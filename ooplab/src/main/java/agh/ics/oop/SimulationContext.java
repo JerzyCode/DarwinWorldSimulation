@@ -10,8 +10,8 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.PlantMap;
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.map.elements.Animal;
-import agh.ics.oop.model.map.elements.Plant;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 

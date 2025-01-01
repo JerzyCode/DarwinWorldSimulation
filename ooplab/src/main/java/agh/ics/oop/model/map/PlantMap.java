@@ -2,7 +2,7 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.map.elements.Plant;
+import agh.ics.oop.model.elements.Plant;
 
 public interface PlantMap extends WorldMap {
   void placePlant(Plant plant) throws IncorrectPositionException;

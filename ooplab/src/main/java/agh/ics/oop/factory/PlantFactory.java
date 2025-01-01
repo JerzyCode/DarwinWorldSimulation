@@ -3,7 +3,7 @@ package agh.ics.oop.factory;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
-import agh.ics.oop.model.map.elements.Plant;
+import agh.ics.oop.model.elements.Plant;
 
 public class PlantFactory {
     private final PlantVariant variant;
