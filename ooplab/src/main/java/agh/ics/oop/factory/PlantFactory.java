@@ -21,8 +21,8 @@ public class PlantFactory {
 
     //TODO: zapytać o to
     private Plant createPlantForestedEquators(Boundary boundary) {
-        var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY();
-        var countOfColumns = boundary.rightTopCorner().getX() - boundary.leftBottomCorner().getX();
+        var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY() + 1;
+        var countOfColumns = boundary.rightTopCorner().getX() - boundary.leftBottomCorner().getX() + 1;
 
         int countOfPreferableRows = Math.max(1, (int) (countOfRows * 0.2));
         int notPreferableRows = countOfRows - countOfPreferableRows;
