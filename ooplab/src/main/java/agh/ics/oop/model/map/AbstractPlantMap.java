@@ -1,6 +1,5 @@
 package agh.ics.oop.model.map;
 
-import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.elements.Plant;
@@ -8,16 +7,11 @@ import agh.ics.oop.model.map.elements.Plant;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AbstractPlantMap extends AbstractWorldMap implements PlantMap {
+public abstract class AbstractPlantMap extends AbstractWorldMap implements PlantMap {
   protected final Map<Vector2d, Plant> plants;
 
   public AbstractPlantMap() {
     this.plants = new HashMap<>();
-  }
-
-  @Override
-  public Boundary getCurrentBounds() {
-    return null;
   }
 
   @Override
@@ -41,4 +35,5 @@ public class AbstractPlantMap extends AbstractWorldMap implements PlantMap {
   public boolean isPlantAtPosition(Vector2d position) {
     return plants.containsKey(position);
   }
+
 }

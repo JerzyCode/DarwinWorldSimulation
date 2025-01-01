@@ -59,4 +59,6 @@ public interface WorldMap extends MoveValidator {
 
   UUID getId();
 
+  int getSize();
+
 }

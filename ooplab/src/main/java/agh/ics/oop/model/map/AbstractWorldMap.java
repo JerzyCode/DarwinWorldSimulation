@@ -76,6 +76,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
   }
 
+  public int getSize() {
+    var boundary = this.getCurrentBounds();
+    return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
+  }
+
   public void addListener(MapChangeListener listener) {
     mapChangeListeners.add(listener);
   }

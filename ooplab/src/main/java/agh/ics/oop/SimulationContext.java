@@ -34,8 +34,11 @@ public class SimulationContext {
     WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
     this.plantFactory = new PlantFactory(configuration.getSimulationConfiguration().getPlantVariant());
     this.worldMap = worldMapFactory.createWorldMap();
-    this.plants = createPlants(configuration.getWorldMapConfiguration().getStartPlantCount());
-    this.animals = createAnimals();
+    this.plants =  new ArrayList<>();
+    this.animals = new ArrayList<>();
+
+    createPlants(configuration.getWorldMapConfiguration().getStartPlantCount());
+    createAnimals();
   }
 
   public void handleDayEnds() {
@@ -74,30 +77,28 @@ public class SimulationContext {
 
   }
 
-  private List<Plant> createPlants(int count) {
-    //TODO walidacja ze nie moze byc startPlantCount > width * height
-    if (!(worldMap instanceof PlantMap)) {
-      return new ArrayList<>();
-    }
-    var boundary = worldMap.getCurrentBounds();
-    List<Plant> plants = new ArrayList<>();
-    for (int i = 0; i < count; i++) {
+  private void createPlants(int plantCount) {
+    int countOfPlantsBeforeCreating = plants.size();
+    var countOfAvailablePlacesForPlants = worldMap.getSize() - countOfPlantsBeforeCreating;
+    plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
 
-      var plant = plantFactory.createPlant(boundary);
+    int placedPlantsCount = 0;
+
+    while (placedPlantsCount < plantCount) {
       try {
+        var plant = plantFactory.createPlant(worldMap.getCurrentBounds());
         ((PlantMap)worldMap).placePlant(plant);
         plants.add(plant);
+        placedPlantsCount++;
       }
       catch (IncorrectPositionException e) {
-        System.out.println("Not placed plant: " +e.getMessage());
+        System.out.println("Couldn't create plant: " + e.getMessage());
       }
     }
-    return plants;
   }
 
-  private List<Animal> createAnimals() {
+  private void createAnimals() {
     var boundary = worldMap.getCurrentBounds();
-    List<Animal> animals = new ArrayList<>();
     var randomizer = new RandomPositionGenerator(
         configuration.getSimulationConfiguration().getStartAnimalCount(),
         boundary.rightTopCorner().getX(),
@@ -113,7 +114,6 @@ public class SimulationContext {
         System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
       }
     }
-    return animals;
   }
 
   private MoveDirection getRandomMoveDirection() { //TODO do wydzielenia do genów
