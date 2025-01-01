@@ -2,7 +2,7 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.exceptions.PlantIsAlreadyGrownException;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.elements.Plant;
 
 import java.util.HashMap;
@@ -21,9 +21,9 @@ public class AbstractPlantMap extends AbstractWorldMap implements PlantMap {
   }
 
   @Override
-  public void placePlant(Plant plant) throws PlantIsAlreadyGrownException {
+  public void placePlant(Plant plant) throws IncorrectPositionException {
     if (isPlantAtPosition(plant.getPosition())) {
-      throw new PlantIsAlreadyGrownException(plant.getPosition());
+      throw new IncorrectPositionException(plant.getPosition());
     }
     plants.put(plant.getPosition(), plant);
     notifyListeners("Plant was placed on position: " + plant.getPosition());

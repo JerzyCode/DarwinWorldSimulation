@@ -7,7 +7,6 @@ import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.exceptions.PlantIsAlreadyGrownException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.PlantMap;
 import agh.ics.oop.model.map.WorldMap;
@@ -89,7 +88,7 @@ public class SimulationContext {
         ((PlantMap)worldMap).placePlant(plant);
         plants.add(plant);
       }
-      catch (PlantIsAlreadyGrownException e) {
+      catch (IncorrectPositionException e) {
         System.out.println("Not placed plant: " +e.getMessage());
       }
     }
