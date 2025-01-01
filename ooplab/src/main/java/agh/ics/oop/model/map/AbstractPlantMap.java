@@ -32,6 +32,11 @@ public abstract class AbstractPlantMap extends AbstractWorldMap implements Plant
   }
 
   @Override
+  public Plant getPlantAtPosition(Vector2d position) {
+    return plants.get(position);
+  }
+
+  @Override
   public boolean isPlantAtPosition(Vector2d position) {
     return plants.containsKey(position);
   }

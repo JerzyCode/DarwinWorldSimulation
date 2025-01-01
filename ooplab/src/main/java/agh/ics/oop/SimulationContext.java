@@ -15,9 +15,9 @@ import agh.ics.oop.model.map.elements.Plant;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class SimulationContext {
   private final Random random = new Random();
@@ -25,8 +25,8 @@ public class SimulationContext {
   private final AnimalFactory animalFactory;
   private final PlantFactory plantFactory;
   private final WorldMap worldMap;
-  private final List<Animal> animals;
-  private final List<Plant> plants;
+  private final Set<Animal> animals;
+  private final Set<Plant> plants;
 
   public SimulationContext(Configuration configuration) {
     this.configuration = configuration;
@@ -34,8 +34,8 @@ public class SimulationContext {
     WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
     this.plantFactory = new PlantFactory(configuration.getSimulationConfiguration().getPlantVariant());
     this.worldMap = worldMapFactory.createWorldMap();
-    this.plants =  new ArrayList<>();
-    this.animals = new ArrayList<>();
+    this.plants = new HashSet<>();
+    this.animals = new HashSet<>();
 
     createPlants(configuration.getWorldMapConfiguration().getStartPlantCount());
     createAnimals();
@@ -56,9 +56,10 @@ public class SimulationContext {
   private void handleGrassEating() {
     if (worldMap instanceof PlantMap plantMap)
       animals.forEach(animal -> {
-        if (plantMap.isPlantAtPosition(animal.getPosition())) {
-          plantMap.removePlant(animal.getPosition());
-          plants.removeIf(grass -> grass.getPosition() == animal.getPosition());
+        var position = animal.getPosition();
+        if (plantMap.isPlantAtPosition(position)) {
+          plantMap.removePlant(position);
+          plants.remove(plantMap.getPlantAtPosition(position));
           //TODO increase animal energy
         }
       });
