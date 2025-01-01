@@ -20,8 +20,8 @@ public class Fire implements WorldElement {
         remainingLifetime--;
     }
 
-    public boolean isStillBurning() {
-        return remainingLifetime > 0;
+    public boolean isBurned() {
+        return remainingLifetime <= 0;
     }
 
 
