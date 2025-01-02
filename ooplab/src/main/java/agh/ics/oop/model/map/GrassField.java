@@ -84,7 +84,7 @@ public class GrassField extends AbstractPlantMap {
   }
 
   @Override
-  public boolean canPlacePlant(Vector2d position) {
+  public boolean isPositionInsideMap(Vector2d position) {
     return true;
   }
 }

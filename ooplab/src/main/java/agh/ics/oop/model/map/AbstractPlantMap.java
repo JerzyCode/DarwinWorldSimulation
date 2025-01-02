@@ -16,7 +16,7 @@ public abstract class AbstractPlantMap extends AbstractWorldMap implements Plant
 
   @Override
   public void placePlant(Plant plant) throws IncorrectPositionException {
-    if (!canPlacePlant(plant.getPosition())) {
+    if (!isPositionInsideMap(plant.getPosition())) {
       throw new IncorrectPositionException(plant.getPosition());
     }
     plants.put(plant.getPosition(), plant);
@@ -41,5 +41,5 @@ public abstract class AbstractPlantMap extends AbstractWorldMap implements Plant
     return plants.containsKey(position);
   }
 
-  public abstract boolean canPlacePlant(Vector2d position);
+  public abstract boolean isPositionInsideMap(Vector2d position);
 }

@@ -21,7 +21,7 @@ public class FireEarth extends Earth implements FireWorldMap {
     @Override
     public void placePlant(Plant plant) throws IncorrectPositionException {
         var position = plant.getPosition();
-        if (isPlantAtPosition(position) || isFireAtPosition(position)) {
+        if (!isPositionInsideMap(position) || isPlantAtPosition(position) || isFireAtPosition(position)) {
             throw new IncorrectPositionException(position);
         }
         plants.put(position, plant);
@@ -43,9 +43,14 @@ public class FireEarth extends Earth implements FireWorldMap {
     }
 
     @Override
+    public Fire getFireAtPosition(Vector2d position){
+        return fires.get(position);
+    }
+
+    @Override
     public void placeFire(Fire fire) throws IncorrectPositionException, PositionOccupiedByFireException {
         var position = fire.getPosition();
-        if(isPlantAtPosition(position)){
+        if(isPlantAtPosition(position) | !isPositionInsideMap(position)){
             throw new IncorrectPositionException(position);
         }
         if(isFireAtPosition(position)){

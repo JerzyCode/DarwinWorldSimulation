@@ -26,7 +26,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
   }
 
   @Override
-  public boolean canPlacePlant(Vector2d position) {
+  public boolean isPositionInsideMap(Vector2d position) {
     return !super.isPlantAtPosition(position) &&
         position.follows(boundary.leftBottomCorner()) &&
         position.precedes(boundary.rightTopCorner());
