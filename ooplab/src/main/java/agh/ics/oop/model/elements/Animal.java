@@ -7,11 +7,15 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
+import java.util.List;
+
 public class Animal implements WorldElement {
 
   private Vector2d position;
 
   private MapDirection orientation;
+
+  private final Genome genome;
 
   public Animal() {
     this(new Vector2d(2, 2));
@@ -22,12 +26,26 @@ public class Animal implements WorldElement {
   }
 
   public Animal(Vector2d position, MapDirection orientation) {
+    this(position, orientation, new Genome(List.of(new Gen(1))));
+  }
+
+  Animal(Vector2d position, MapDirection orientation, Genome genome) {
     this.orientation = orientation;
     this.position = position;
+    this.genome = genome;
   }
 
   public boolean isAt(Vector2d position) {
     return this.position.equals(position);
+  }
+
+  public void move(MoveValidator moveValidator) {
+    move(moveValidator, null);
+  }
+
+  public void move(MoveValidator moveValidator, MoveAdjuster moveAdjuster) {
+    orientation = genome.nextGen().rotate(orientation);
+    move(MoveDirection.FORWARD, moveValidator, moveAdjuster);
   }
 
   public void move(MoveDirection moveDirection, MoveValidator validator) {
@@ -42,9 +60,11 @@ public class Animal implements WorldElement {
   public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
     move(moveDirection, validator);
 
-    var adjustedMove = adjuster.adjustMove(new Move(position, orientation));
-    position = adjustedMove.getToPosition();
-    orientation = adjustedMove.getOrientation();
+    if (adjuster != null) {
+      var adjustedMove = adjuster.adjustMove(new Move(position, orientation));
+      position = adjustedMove.getToPosition();
+      orientation = adjustedMove.getOrientation();
+    }
   }
 
   private void updatePosition(Vector2d newPosition, MoveValidator validator) {
