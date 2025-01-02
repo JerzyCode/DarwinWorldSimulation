@@ -11,9 +11,8 @@ public class SimulationConfiguration {
   private int startAnimalCount;
   private int startPlantCount;
 
-
   SimulationConfiguration() {
-    this(50, 2, 4, PlantVariant.NONE, 5, 2, 0, 3, 3);
+    this(15000, 10, 3, PlantVariant.NONE, 5, 2, 0, 15, 5);
   }
 
   public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
@@ -111,7 +110,7 @@ public class SimulationConfiguration {
         ", lossCopulateEnergy=" + lossCopulateEnergy +
         ", fireFrequency=" + fireFrequency +
         ", startAnimalCount=" + startAnimalCount +
-            ", startPlantCount=" + startPlantCount +
+        ", startPlantCount=" + startPlantCount +
         '}';
   }
 }

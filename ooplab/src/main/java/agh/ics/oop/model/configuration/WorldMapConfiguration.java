@@ -6,7 +6,7 @@ public class WorldMapConfiguration {
   private WorldMapVariant mapVariant;
 
   WorldMapConfiguration() {
-    this(5, 5, WorldMapVariant.GRASS_FIELD);
+    this(20, 41, WorldMapVariant.EARTH);
   }
 
   public WorldMapConfiguration(int height, int width, WorldMapVariant mapVariant) {
@@ -40,7 +40,7 @@ public class WorldMapConfiguration {
   }
 
   // TODO: to chwilowo żeby działało, ale jakoś musisz grassField przerobić do przyjętej konwencji, że to symulacja zarządza
-  public int getStartPlantCount(){
+  public int getStartPlantCount() {
     return 5;
   }
 

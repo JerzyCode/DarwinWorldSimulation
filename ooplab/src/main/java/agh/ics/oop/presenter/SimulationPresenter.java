@@ -1,26 +1,23 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.Simulation;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.elements.Animal;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -46,8 +43,22 @@ public class SimulationPresenter implements MapChangeListener {
   private WorldMap worldMap;
   private Configuration configuration;
 
-  private static final int GRID_WIDTH = 40;
+  private static final int GRID_WIDTH = 20;
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
+
+  public void initialize() {
+    System.out.println("initialize()");
+    AnchorPane.setTopAnchor(topCoordinates, 0.0);
+    AnchorPane.setLeftAnchor(topCoordinates, 0.0);
+
+    AnchorPane.setTopAnchor(leftCoordinates, (double)GRID_WIDTH);
+    AnchorPane.setLeftAnchor(leftCoordinates, 0.0);
+
+    AnchorPane.setTopAnchor(mapGrid, (double)GRID_WIDTH);
+    AnchorPane.setLeftAnchor(mapGrid, (double)GRID_WIDTH);
+
+    leftCoordinates.setPrefWidth(GRID_WIDTH);
+  }
 
   // TODO: obstawiam, że problem jest taki, że synchronizacja jest na elementach mapy, ale gdzies po drodze zacząłeś tworzyć w symulacji zwierzęta i trawy zamiast w mapie
   // TODO: Chyba się gdzieś spójność danych popsuła
@@ -169,8 +180,9 @@ public class SimulationPresenter implements MapChangeListener {
     head.setFill(Color.LIGHTBLUE);
 
     Text text = new Text(width, width, orientation.getSymbol());
+    var fontSize = GRID_WIDTH / 2;
     text.setFill(Color.BLACK);
-    text.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
+    text.setStyle(String.format("-fx-font-size: %d; -fx-font-weight: bold", fontSize));
 
     pane.getChildren().addAll(head, text);
     return pane;

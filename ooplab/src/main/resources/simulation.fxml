@@ -11,16 +11,15 @@
         <ScrollPane fitToHeight = "true" fitToWidth = "true">
             <AnchorPane>
                 <GridPane fx:id = "topCoordinates" gridLinesVisible = "true" BorderPane.alignment = "CENTER"
-                          alignment = "BASELINE_LEFT" AnchorPane.topAnchor = "0.0" AnchorPane.leftAnchor = "0.0">
+                          alignment = "BASELINE_LEFT">
                 </GridPane>
 
                 <GridPane fx:id = "leftCoordinates" gridLinesVisible = "true" BorderPane.alignment = "CENTER"
-                          alignment = "BASELINE_LEFT" AnchorPane.topAnchor = "40.0" AnchorPane.leftAnchor = "0.0"
-                          prefWidth = "40">
+                          alignment = "BASELINE_LEFT">
                 </GridPane>
 
                 <GridPane fx:id = "mapGrid" gridLinesVisible = "true" BorderPane.alignment = "CENTER"
-                          alignment = "BASELINE_LEFT" AnchorPane.topAnchor = "40.0" AnchorPane.leftAnchor = "40.0">
+                          alignment = "BASELINE_LEFT">
                 </GridPane>
             </AnchorPane>
         </ScrollPane>
