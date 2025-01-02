@@ -1,9 +1,10 @@
 package agh.ics.oop.model.map;
 
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
@@ -18,49 +19,46 @@ import java.util.UUID;
  */
 public interface WorldMap extends MoveValidator {
 
-  /**
-   * Place a animal on the map.
-   *
-   * @param animal
-   *     The animal to place on the map.
-   * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
-   */
-  void place(Animal animal) throws IncorrectPositionException;
+    /**
+     * Place a animal on the map.
+     *
+     * @param animal The animal to place on the map.
+     * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
+     */
+    void place(Animal animal) throws IncorrectPositionException;
 
-  /**
-   * Moves an animal (if it is present on the map) according to specified direction.
-   * If the move is not possible, this method has no effect.
-   */
-  void move(Animal animal, MoveDirection direction);
+    /**
+     * Moves an animal (if it is present on the map) according to specified direction.
+     * If the move is not possible, this method has no effect.
+     */
+    void move(Animal animal, MoveDirection direction);
 
-  /**
-   * Return true if given position on the map is occupied. Should not be
-   * confused with canMove since there might be empty positions where the animal
-   * cannot move.
-   *
-   * @param position
-   *     Position to check.
-   * @return True if the position is occupied.
-   */
-  boolean isOccupied(Vector2d position);
+    /**
+     * Return true if given position on the map is occupied. Should not be
+     * confused with canMove since there might be empty positions where the animal
+     * cannot move.
+     *
+     * @param position Position to check.
+     * @return True if the position is occupied.
+     */
+    boolean isOccupied(Vector2d position);
 
-  /**
-   * Return an animal at a given position.
-   *
-   * @param position
-   *     The position of the animal.
-   * @return animal or null if the position is not occupied.
-   */
-  WorldElement objectAt(Vector2d position);
+    /**
+     * Return an animal at a given position.
+     *
+     * @param position The position of the animal.
+     * @return animal or null if the position is not occupied.
+     */
+    WorldElement objectAt(Vector2d position);
 
-  Collection<WorldElement> getElements();
+    Collection<WorldElement> getElements();
 
-  Boundary getCurrentBounds();
+    Boundary getCurrentBounds();
 
-  UUID getId();
+    UUID getId();
 
-  int getSize();
+    int getSize();
 
-  void removeAnimal(Animal animal);
+    void removeAnimal(Animal animal);
 
 }

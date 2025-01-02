@@ -12,24 +12,24 @@ import java.util.List;
 import java.util.Random;
 
 public class AnimalFactory {
-  private final AnimalConfiguration animalConfiguration;
-  private final Random random = new Random();
+    private final AnimalConfiguration animalConfiguration;
+    private final Random random = new Random();
 
-  public AnimalFactory(AnimalConfiguration animalConfiguration) {
-    this.animalConfiguration = animalConfiguration;
-  }
-
-  public Animal createAnimal(Vector2d position) {
-    var genome = createGenome();
-    return new Animal(animalConfiguration.getStartEnergy(), position, genome);
-  }
-
-  private Genome createGenome() {
-    List<Gen> gens = new ArrayList<>();
-    for (int i = 0; i < animalConfiguration.getGenomeLength(); i++) {
-      gens.add(new Gen(random.nextInt(0, MapDirection.values().length)));
+    public AnimalFactory(AnimalConfiguration animalConfiguration) {
+        this.animalConfiguration = animalConfiguration;
     }
 
-    return new Genome(gens);
-  }
+    public Animal createAnimal(Vector2d position) {
+        var genome = createGenome();
+        return new Animal(animalConfiguration.getStartEnergy(), position, genome);
+    }
+
+    private Genome createGenome() {
+        List<Gen> gens = new ArrayList<>();
+        for (int i = 0; i < animalConfiguration.getGenomeLength(); i++) {
+            gens.add(new Gen(random.nextInt(0, MapDirection.values().length)));
+        }
+
+        return new Genome(gens);
+    }
 }

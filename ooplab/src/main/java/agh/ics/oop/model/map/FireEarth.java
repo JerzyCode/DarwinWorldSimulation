@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class FireEarth extends Earth implements FireWorldMap {
     private final HashMap<Vector2d, Fire> fires;
 
-    public FireEarth(int width, int height){
+    public FireEarth(int width, int height) {
         super(width, height);
         this.fires = new HashMap<>();
     }
@@ -38,17 +38,17 @@ public class FireEarth extends Earth implements FireWorldMap {
     }
 
     @Override
-    public boolean isFireAtPosition(Vector2d position){
+    public boolean isFireAtPosition(Vector2d position) {
         return fires.containsKey(position);
     }
 
     @Override
     public void placeFire(Fire fire) throws IncorrectPositionException, PositionOccupiedByFireException {
         var position = fire.getPosition();
-        if(isPlantAtPosition(position)){
+        if (isPlantAtPosition(position)) {
             throw new IncorrectPositionException(position);
         }
-        if(isFireAtPosition(position)){
+        if (isFireAtPosition(position)) {
             throw new PositionOccupiedByFireException(position);
         }
         this.fires.put(position, fire);
@@ -56,25 +56,25 @@ public class FireEarth extends Earth implements FireWorldMap {
     }
 
     @Override
-    public void decreaseFireRemainingLifetime(){
+    public void decreaseFireRemainingLifetime() {
         fires.values().forEach(Fire::decreaseRemainingLifetime);
     }
 
     @Override
-    public void removeFire(Fire fire){
+    public void removeFire(Fire fire) {
         fires.remove(fire.getPosition());
         notifyListeners("Fire was removed from position: " + fire.getPosition());
     }
 
     @Override
-    public Set<Fire> getBurnedFires(){
+    public Set<Fire> getBurnedFires() {
         return fires.values()
                 .stream()
                 .filter(Fire::isBurned)
                 .collect(Collectors.toSet());
     }
 
-    public Set<Vector2d> getNewFirePositions(Fire fire){
+    public Set<Vector2d> getNewFirePositions(Fire fire) {
         var adjacentFields = getAdjacentFields(fire.getPosition());
         return adjacentFields
                 .stream()
@@ -83,7 +83,7 @@ public class FireEarth extends Earth implements FireWorldMap {
                 .collect(Collectors.toSet());
     }
 
-    private List<Vector2d> getAdjacentFields(Vector2d position){
+    private List<Vector2d> getAdjacentFields(Vector2d position) {
         var x = position.getX();
         var y = position.getY();
 
