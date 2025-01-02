@@ -32,7 +32,9 @@ public class WorldMapFactory {
   }
 
   private FireEarth createFireEarth() {
-    return new FireEarth(); //TODO
+    var width = worldMapConfiguration.getWidth();
+    var height = worldMapConfiguration.getHeight();
+    return new FireEarth(width, height);
   }
 
 }

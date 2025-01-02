@@ -2,6 +2,7 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Fire;
+import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
 import java.util.HashMap;
@@ -9,12 +10,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class FireEarth extends Earth {  //TODO implements FireWorldMap
-    private final HashMap<Vector2d, Fire> fires;
+public class FireEarth extends Earth {
+//    private final HashMap<Vector2d, Fire> fires;
+    public final HashMap<Vector2d, Fire> fires;
 
     public FireEarth(int width, int height){
         super(width, height);
         this.fires = new HashMap<>();
+    }
+
+    @Override
+    public void placePlant(Plant plant) throws IncorrectPositionException {
+        var position = plant.getPosition();
+        if (isPlantAtPosition(position) || isFireAtPosition(position)) {
+            throw new IncorrectPositionException(position);
+        }
+        plants.put(position, plant);
+        notifyListeners("Plant was placed on position: " + position);
     }
 
     public boolean isFireAtPosition(Vector2d position){
@@ -23,10 +35,11 @@ public class FireEarth extends Earth {  //TODO implements FireWorldMap
 
     public void placeFire(Fire fire) throws IncorrectPositionException {
         var position = fire.getPosition();
-        if(!isFireAtPosition(position)){
+        if(isFireAtPosition(position) || isPlantAtPosition(position)){
             throw new IncorrectPositionException(position);
         }
         this.fires.put(position, fire);
+        notifyListeners("Fire was placed at position: " + position);
     }
 
     public void decreaseFireRemainingLifetime(){
@@ -46,6 +59,7 @@ public class FireEarth extends Earth {  //TODO implements FireWorldMap
 
     public void removeFire(Fire fire){
         fires.remove(fire.getPosition());
+        notifyListeners("Fire was removed from position: " + fire.getPosition());
     }
 
     public Set<Fire> getBurnedFires(){
