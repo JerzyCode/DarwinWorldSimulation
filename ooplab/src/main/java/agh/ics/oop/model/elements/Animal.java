@@ -26,6 +26,10 @@ public class Animal implements WorldElement {
     this(position, MapDirection.NORTH);
   }
 
+  public Animal(Vector2d position, Genome genome) {
+    this(10, position, MapDirection.NORTH, genome);
+  }
+
   public Animal(Vector2d position, MapDirection orientation) {
     this(position, orientation, new Genome(List.of(new Gen(1))));
   }
@@ -79,7 +83,7 @@ public class Animal implements WorldElement {
     }
   }
 
-  public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
+  void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
     move(moveDirection, validator);
 
     if (adjuster != null) {

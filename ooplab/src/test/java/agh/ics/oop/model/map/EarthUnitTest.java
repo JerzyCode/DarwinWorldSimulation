@@ -3,6 +3,8 @@ package agh.ics.oop.model.map;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Gen;
+import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.move.Move;
@@ -13,6 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -157,8 +160,10 @@ class EarthUnitTest {
   @Test
   void moveAnimalAdjusterShouldNoTrigger() {
     //given
-    var animalN = new Animal(new Vector2d(2, 2), MapDirection.NORTH);
-    var animalS = new Animal(new Vector2d(1, 3), MapDirection.SOUTH);
+    var genomeN = new Genome(List.of(new Gen(0)));
+    var genomeS = new Genome(List.of(new Gen(4)));
+    var animalN = new Animal(new Vector2d(2, 2), genomeN);
+    var animalS = new Animal(new Vector2d(1, 3), genomeS);
     try {
       map.place(animalN);
       map.place(animalS);
@@ -180,8 +185,10 @@ class EarthUnitTest {
   @Test
   void moveAnimalsOnTheSamePosition() {
     //given
-    var animalN = new Animal(new Vector2d(2, 2), MapDirection.NORTH);
-    var animalE = new Animal(new Vector2d(1, 2), MapDirection.EAST);
+    var genomeN = new Genome(List.of(new Gen(0)));
+    var genomeE = new Genome(List.of(new Gen(2)));
+    var animalN = new Animal(new Vector2d(2, 2), genomeN);
+    var animalE = new Animal(new Vector2d(1, 2), genomeE);
     try {
       map.place(animalN);
       map.place(animalE);
@@ -204,8 +211,10 @@ class EarthUnitTest {
   @Test
   void moveAnimalsWithAdjusterHorizontal() {
     // given
-    var animalW = new Animal(new Vector2d(0, 3), MapDirection.WEST);
-    var animalE = new Animal(new Vector2d(4, 2), MapDirection.EAST);
+    var genomeE = new Genome(List.of(new Gen(2)));
+    var genomeW = new Genome(List.of(new Gen(6)));
+    var animalW = new Animal(new Vector2d(0, 3), genomeW);
+    var animalE = new Animal(new Vector2d(4, 2), genomeE);
     try {
       map.place(animalW);
       map.place(animalE);
@@ -229,8 +238,10 @@ class EarthUnitTest {
   @Test
   void moveAnimalsWithAdjusterVertical() {
     // given
-    var animalN = new Animal(new Vector2d(2, 4), MapDirection.NORTH);
-    var animalS = new Animal(new Vector2d(1, 0), MapDirection.SOUTH);
+    var genomeN = new Genome(List.of(new Gen(0)));
+    var genomeS = new Genome(List.of(new Gen(4)));
+    var animalN = new Animal(new Vector2d(2, 4), genomeN);
+    var animalS = new Animal(new Vector2d(1, 0), genomeS);
     try {
       map.place(animalN);
       map.place(animalS);
@@ -251,6 +262,44 @@ class EarthUnitTest {
     assertEquals(MapDirection.NORTH, animalS.getOrientation());
     assertEquals(animalN, map.objectAt(animalN.getPosition()));
     assertEquals(animalS, map.objectAt(animalS.getPosition()));
+  }
+
+  @Test
+  void moveAnimalsWithAdjusterCorners() {
+    // given
+    var genomeNE = new Genome(List.of(new Gen(1)));
+    var genomeSE = new Genome(List.of(new Gen(3)));
+    var genomeSW = new Genome(List.of(new Gen(5)));
+    var genomeNW = new Genome(List.of(new Gen(7)));
+    var animalNE = new Animal(new Vector2d(4, 4), genomeNE);
+    var animalSE = new Animal(new Vector2d(4, 0), genomeSE);
+    var animalSW = new Animal(new Vector2d(0, 0), genomeSW);
+    var animalNW = new Animal(new Vector2d(0, 4), genomeNW);
+    try {
+      map.place(animalNE);
+      map.place(animalSE);
+      map.place(animalSW);
+      map.place(animalNW);
+    }
+    catch (IncorrectPositionException e) {
+      fail("Should not fail placing animal, e=" + e.getMessage());
+    }
+
+    //when & then
+    assertEquals(4, map.getElements().size());
+
+    map.move(animalNE, MoveDirection.FORWARD);
+    assertEquals(new Vector2d(0, 4), animalNE.getPosition());
+
+    map.move(animalSE, MoveDirection.FORWARD);
+    assertEquals(new Vector2d(0, 0), animalSE.getPosition());
+
+    map.move(animalSW, MoveDirection.FORWARD);
+    assertEquals(new Vector2d(4, 0), animalSW.getPosition());
+
+    map.move(animalNW, MoveDirection.FORWARD);
+    assertEquals(new Vector2d(4, 4), animalNW.getPosition());
+
   }
 
   @Test

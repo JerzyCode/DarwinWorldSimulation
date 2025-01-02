@@ -51,7 +51,7 @@ public class SimulationContext {
   }
 
   private void handleAnimalsMove() {
-    animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
+    animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
   }
 
   private void handleGrassEating() {
@@ -85,7 +85,7 @@ public class SimulationContext {
   }
 
   private void handleAnimalLossEnergy() {
-    animals.forEach(animal -> animal.decreaseEnergy(1)); //TODO nie wiem czy nie powinno być konfigurowalne
+    animals.forEach(animal -> animal.decreaseEnergy(1));
   }
 
   private void createPlants(int plantCount) {
@@ -125,10 +125,6 @@ public class SimulationContext {
         System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
       }
     }
-  }
-
-  private MoveDirection getRandomMoveDirection() { //TODO do wydzielenia do genów
-    return MoveDirection.values()[random.nextInt(4)];
   }
 
   public void setMapChangeListener(MapChangeListener listener) {

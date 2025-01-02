@@ -1,6 +1,6 @@
 package agh.ics.oop.factory;
 
-2import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.AnimalConfiguration;
 import agh.ics.oop.model.elements.Animal;

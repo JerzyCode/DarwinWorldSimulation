@@ -91,16 +91,17 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
       position = new Vector2d(position.getX(), boundary.leftBottomCorner().getY());
       orientation = orientation.rotateRightAngleClockwise().rotateRightAngleClockwise();
     }
-    else if (position.isAbove(boundary.rightTopCorner())) {
+    if (position.isAbove(boundary.rightTopCorner())) {
       position = new Vector2d(position.getX(), boundary.rightTopCorner().getY());
       orientation = orientation.rotateRightAngleClockwise().rotateRightAngleClockwise();
     }
-    else if (position.isOnTheLeft(boundary.leftBottomCorner())) {
+    if (position.isOnTheLeft(boundary.leftBottomCorner())) {
       position = new Vector2d(boundary.rightTopCorner().getX(), position.getY());
     }
-    else if (position.isOnTheRight(boundary.rightTopCorner())) {
+    if (position.isOnTheRight(boundary.rightTopCorner())) {
       position = new Vector2d(boundary.leftBottomCorner().getX(), position.getY());
     }
+
     return new Move(position, orientation);
   }
 
@@ -109,7 +110,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     var animalsAtPosition = animals.get(animal.getPosition());
     if (animalsAtPosition.contains(animal)) {
       animalsAtPosition.remove(animal);
-      animal.move(direction, this, this);
+      animal.move(this, this);
       placeAnimalAtNewPosition(animal);
       notifyListeners("Animal moved to position: " + animal.getPosition());
     }
