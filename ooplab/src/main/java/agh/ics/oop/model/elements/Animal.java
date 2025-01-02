@@ -34,8 +34,8 @@ public class Animal implements WorldElement {
     switch (moveDirection) {
       case FORWARD -> updatePosition(position.add(orientation.toUnitVector()), validator);
       case BACKWARD -> updatePosition(position.subtract(orientation.toUnitVector()), validator);
-      case LEFT -> orientation = orientation.previous();
-      case RIGHT -> orientation = orientation.next();
+      case LEFT -> orientation = orientation.rotateRightAngleCounterClockwise();
+      case RIGHT -> orientation = orientation.rotateRightAngleClockwise();
     }
   }
 

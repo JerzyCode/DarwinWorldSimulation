@@ -82,11 +82,11 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
 
     if (position.isUnder(boundary.leftBottomCorner())) {
       position = new Vector2d(position.getX(), boundary.leftBottomCorner().getY());
-      orientation = orientation.next().next();
+      orientation = orientation.rotateRightAngleClockwise().rotateRightAngleClockwise();
     }
     else if (position.isAbove(boundary.rightTopCorner())) {
       position = new Vector2d(position.getX(), boundary.rightTopCorner().getY());
-      orientation = orientation.next().next();
+      orientation = orientation.rotateRightAngleClockwise().rotateRightAngleClockwise();
     }
     else if (position.isOnTheLeft(boundary.leftBottomCorner())) {
       position = new Vector2d(boundary.rightTopCorner().getX(), position.getY());

@@ -1,10 +1,16 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.WrongAngleException;
+
 public enum MapDirection {
   NORTH(new Vector2d(0, 1), "N"),
+  NORTH_EAST(new Vector2d(1, 1), "NE"),
+  EAST(new Vector2d(1, 0), "E"),
+  SOUTH_EAST(new Vector2d(1, -1), "SE"),
   SOUTH(new Vector2d(0, -1), "S"),
+  SOUTH_WEST(new Vector2d(-1, -1), "SW"),
   WEST(new Vector2d(-1, 0), "W"),
-  EAST(new Vector2d(1, 0), "E");
+  NORTH_WEST(new Vector2d(-1, 1), "NW");
 
   private final Vector2d vector;
   private final String symbol;
@@ -18,28 +24,31 @@ public enum MapDirection {
   public String toString() {
     return switch (this) {
       case NORTH -> "Północ";
-      case SOUTH -> "Południe";
-      case WEST -> "Zachód";
+      case NORTH_EAST -> "Północny Wschód";
       case EAST -> "Wschód";
+      case SOUTH_EAST -> "Południowy Wschód";
+      case SOUTH -> "Południe";
+      case SOUTH_WEST -> "Południowy Zachód";
+      case WEST -> "Zachód";
+      case NORTH_WEST -> "Północny Zachód";
     };
   }
 
-  public MapDirection next() {
-    return switch (this) {
-      case NORTH -> EAST;
-      case SOUTH -> WEST;
-      case WEST -> NORTH;
-      case EAST -> SOUTH;
-    };
+  public MapDirection rotateRightAngleClockwise() {
+    return MapDirection.values()[(this.ordinal() + 2) % 8];
   }
 
-  public MapDirection previous() {
-    return switch (this) {
-      case NORTH -> WEST;
-      case SOUTH -> EAST;
-      case WEST -> SOUTH;
-      case EAST -> NORTH;
-    };
+  public MapDirection rotateRightAngleCounterClockwise() {
+    return MapDirection.values()[(this.ordinal() + 6) % 8];
+  }
+
+  public MapDirection rotate(int angle) {
+    if (angle % 45 != 0) {
+      throw new WrongAngleException();
+    }
+
+    var index = (this.ordinal() + angle / 45) % 8;
+    return MapDirection.values()[index];
   }
 
   public Vector2d toUnitVector() {
@@ -49,5 +58,4 @@ public enum MapDirection {
   public String getSymbol() {
     return symbol;
   }
-
 }
