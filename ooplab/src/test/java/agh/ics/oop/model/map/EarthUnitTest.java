@@ -33,6 +33,38 @@ class EarthUnitTest {
   }
 
   @Test
+  void placeAnimalShouldCreateNewListAtPosition() {
+    //given
+    var animal = new Animal(new Vector2d(2, 2));
+
+    //when && then
+    try {
+      map.place(animal);
+      var animalsAtPosition = map.getAnimalsAtPosition(animal.getPosition());
+      assertEquals(1, animalsAtPosition.size());
+      assertTrue(animalsAtPosition.contains(animal));
+    }
+    catch (IncorrectPositionException e) {
+      fail("Should not fail place animal test, e=" + e.getMessage());
+    }
+  }
+
+  @Test
+  void placeAnimalOutsideMapShouldThrowException() {
+    //given
+    var animal1 = new Animal(new Vector2d(-1, 2));
+    var animal2 = new Animal(new Vector2d(0, 10));
+    var animal3 = new Animal(new Vector2d(15, 2));
+    var animal4 = new Animal(new Vector2d(3, -2));
+
+    //when && then
+    assertThrows(IncorrectPositionException.class, () -> map.place(animal1));
+    assertThrows(IncorrectPositionException.class, () -> map.place(animal2));
+    assertThrows(IncorrectPositionException.class, () -> map.place(animal3));
+    assertThrows(IncorrectPositionException.class, () -> map.place(animal4));
+  }
+
+  @Test
   void canMoveToShouldReturnTrue() {
     assertTrue(map.canMoveTo(new Vector2d(0, 0)));
     assertTrue(map.canMoveTo(new Vector2d(1, 2)));
@@ -140,7 +172,7 @@ class EarthUnitTest {
     map.move(animalS, MoveDirection.FORWARD);
 
     //then
-    assertEquals(2, map.animals.size());
+    assertEquals(2, map.getElements().size());
     assertEquals(new Vector2d(2, 3), animalN.getPosition());
     assertEquals(new Vector2d(1, 2), animalS.getPosition());
   }
@@ -162,7 +194,9 @@ class EarthUnitTest {
     map.move(animalE, MoveDirection.FORWARD);
 
     //then
-    //    assertEquals(2, map.animals.size()); TODO po zmianie ze na polu moga byc 2 zwierzaki
+    var animalsAtPosition = map.getAnimalsAtPosition(animalN.getPosition());
+    assertTrue(animalsAtPosition.contains(animalE));
+    assertTrue(animalsAtPosition.contains(animalN));
     assertEquals(new Vector2d(2, 2), animalE.getPosition());
     assertEquals(new Vector2d(2, 2), animalN.getPosition());
   }
@@ -185,11 +219,11 @@ class EarthUnitTest {
     map.move(animalE, MoveDirection.FORWARD);
 
     //then
-    assertEquals(2, map.animals.size());
+    assertEquals(2, map.getElements().size());
     assertEquals(new Vector2d(4, 3), animalW.getPosition());
     assertEquals(new Vector2d(0, 2), animalE.getPosition());
-    assertEquals(animalE, map.animals.get(animalE.getPosition()));
-    assertEquals(animalW, map.animals.get(animalW.getPosition()));
+    assertEquals(animalE, map.objectAt(animalE.getPosition()));
+    assertEquals(animalW, map.objectAt(animalW.getPosition()));
   }
 
   @Test
@@ -210,13 +244,13 @@ class EarthUnitTest {
     map.move(animalS, MoveDirection.FORWARD);
 
     //then
-    assertEquals(2, map.animals.size());
+    assertEquals(2, map.getElements().size());
     assertEquals(new Vector2d(2, 4), animalN.getPosition());
     assertEquals(new Vector2d(1, 0), animalS.getPosition());
     assertEquals(MapDirection.SOUTH, animalN.getOrientation());
     assertEquals(MapDirection.NORTH, animalS.getOrientation());
-    assertEquals(animalN, map.animals.get(animalN.getPosition()));
-    assertEquals(animalS, map.animals.get(animalS.getPosition()));
+    assertEquals(animalN, map.objectAt(animalN.getPosition()));
+    assertEquals(animalS, map.objectAt(animalS.getPosition()));
   }
 
   @Test

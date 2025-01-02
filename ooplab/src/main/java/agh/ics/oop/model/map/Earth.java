@@ -4,25 +4,36 @@ import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster {
   private final Boundary boundary;
+  private final HashMap<Vector2d, Set<Animal>> animals;
 
   public Earth(int width, int height) {
-    super();
     boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
+    animals = new HashMap<>();
   }
 
   // TODO: remove unused constructor
   public Earth() {
     this(1, 1);
+  }
+
+  @Override
+  public void place(Animal animal) throws IncorrectPositionException {
+    var position = animal.getPosition();
+    if (!isPositionWithinMapBoundary(animal.getPosition())) {
+      throw new IncorrectPositionException(position);
+    }
+
+    placeAnimalAtNewPosition(animal);
+    notifyListeners("Animal was placed at position: " + position);
   }
 
   @Override
@@ -46,11 +57,22 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
 
   @Override
   public Collection<WorldElement> getElements() {
-    var elements = new ArrayList<WorldElement>();
-    elements.addAll(plants.values());
-    elements.addAll(super.getElements());
+    var elements = new ArrayList<WorldElement>(plants.values());
+    for (var entry : animals.entrySet()) {
+      elements.addAll(entry.getValue());
+    }
 
     return Collections.unmodifiableCollection(elements);
+  }
+
+  @Override
+  public boolean isOccupied(Vector2d position) {
+    return !animals.get(position).isEmpty();
+  }
+
+  @Override
+  public WorldElement objectAt(Vector2d position) {
+    return animals.get(position).iterator().next();
   }
 
   @Override
@@ -77,12 +99,31 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
 
   @Override
   public void move(Animal animal, MoveDirection direction) {
-    if (animals.containsValue(animal)) {
-      animals.remove(animal.getPosition());
+    var animalsAtPosition = animals.get(animal.getPosition());
+    if (animalsAtPosition.contains(animal)) {
+      animalsAtPosition.remove(animal);
       animal.move(direction, this, this);
-      animals.put(animal.getPosition(), animal);
+      placeAnimalAtNewPosition(animal);
       notifyListeners("Animal moved to position: " + animal.getPosition());
     }
   }
+
+  public Set<Animal> getAnimalsAtPosition(Vector2d position) {
+    if (animals.containsKey(position)) {
+      return Collections.unmodifiableSet(animals.get(position));
+    }
+    return new HashSet<>();
+  }
+
+  private void placeAnimalAtNewPosition(Animal animal) {
+    var animalsAtPosition = animals.computeIfAbsent(animal.getPosition(), k -> new HashSet<>());
+    animalsAtPosition.add(animal);
+  }
+
+  private boolean isPositionWithinMapBoundary(Vector2d position) {
+    return position.follows(boundary.leftBottomCorner()) &&
+        position.precedes(boundary.rightTopCorner());
+  }
+
 }
 

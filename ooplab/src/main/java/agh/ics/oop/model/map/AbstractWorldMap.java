@@ -13,7 +13,7 @@ public abstract class AbstractWorldMap implements WorldMap {
   private final MapVisualizer mapVisualizer;
   private final List<MapChangeListener> mapChangeListeners;
   private final UUID id;
-  protected final Map<Vector2d, Animal> animals;
+  private final Map<Vector2d, Animal> animals;
 
   protected AbstractWorldMap() {
     this.mapVisualizer = new MapVisualizer(this);
