@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -285,6 +285,18 @@ class AnimalTest {
     animal.move(validator); // 360 degrees
     assertEquals(new Vector2d(2, 1), animal.getPosition());
     assertEquals(MapDirection.SOUTH, animal.getOrientation());
+  }
+
+  @Test
+  void animalIsDeadTest() {
+    //given
+    var animal = new Animal(20, new Vector2d(2, 2), null);
+
+    //when & then
+    assertFalse(animal.isDead());
+
+    animal.decreaseEnergy(20);
+    assertTrue(animal.isDead());
   }
 
 }

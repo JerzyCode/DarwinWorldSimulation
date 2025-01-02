@@ -1,9 +1,11 @@
 package agh.ics.oop.model.map;
 
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.MapVisualizer;
 
@@ -39,12 +41,20 @@ public abstract class AbstractWorldMap implements WorldMap {
   }
 
   @Override
+  public void removeAnimal(Animal animal) {
+    if (animals.containsKey(animal.getPosition())) {
+      animals.remove(animal.getPosition());
+      notifyListeners("Animal was removed at position: " + animal.getPosition());
+    }
+  }
+
+  @Override
   public void move(Animal animal, MoveDirection direction) {
     if (animals.containsValue(animal)) {
       animals.remove(animal.getPosition());
       animal.move(direction, this);
       animals.put(animal.getPosition(), animal);
-      notifyListeners("Animal moved to position: " + animal.getPosition());
+      notifyListeners("Animal moved from position: " + animal.getPosition());
     }
   }
 

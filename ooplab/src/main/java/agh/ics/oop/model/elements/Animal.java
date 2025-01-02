@@ -10,6 +10,7 @@ import agh.ics.oop.model.move.MoveValidator;
 import java.util.List;
 
 public class Animal implements WorldElement {
+  private int energy;
 
   private Vector2d position;
 
@@ -29,7 +30,16 @@ public class Animal implements WorldElement {
     this(position, orientation, new Genome(List.of(new Gen(1))));
   }
 
+  public Animal(int startEnergy, Vector2d position, Genome genome) {
+    this(startEnergy, position, MapDirection.NORTH, genome);
+  }
+
   Animal(Vector2d position, MapDirection orientation, Genome genome) {
+    this(10, position, orientation, genome);
+  }
+
+  Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
+    this.energy = energy;
     this.orientation = orientation;
     this.position = position;
     this.genome = genome;
@@ -37,6 +47,18 @@ public class Animal implements WorldElement {
 
   public boolean isAt(Vector2d position) {
     return this.position.equals(position);
+  }
+
+  public void decreaseEnergy(int amount) {
+    this.energy -= amount;
+  }
+
+  public void increaseEnergy(int amount) {
+    this.energy += amount;
+  }
+
+  public boolean isDead() {
+    return energy <= 0;
   }
 
   public void move(MoveValidator moveValidator) {

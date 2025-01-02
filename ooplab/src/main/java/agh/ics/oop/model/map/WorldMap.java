@@ -61,4 +61,6 @@ public interface WorldMap extends MoveValidator {
 
   int getSize();
 
+  void removeAnimal(Animal animal);
+
 }

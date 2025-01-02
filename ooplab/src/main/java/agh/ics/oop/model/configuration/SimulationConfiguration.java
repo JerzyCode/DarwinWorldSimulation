@@ -13,7 +13,7 @@ public class SimulationConfiguration {
 
 
   SimulationConfiguration() {
-    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 3, 3);
+    this(50, 2, 4, PlantVariant.NONE, 5, 2, 0, 3, 3);
   }
 
   public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,

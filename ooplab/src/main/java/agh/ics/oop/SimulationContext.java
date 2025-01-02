@@ -6,12 +6,12 @@ import agh.ics.oop.factory.WorldMapFactory;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.PlantMap;
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -37,11 +37,12 @@ public class SimulationContext {
     this.plants = new HashSet<>();
     this.animals = new HashSet<>();
 
-    createPlants(configuration.getWorldMapConfiguration().getStartPlantCount());
+    createPlants(configuration.getSimulationConfiguration().getStartPlantCount());
     createAnimals();
   }
 
   public void handleDayEnds() {
+    clearDeadAnimals();
     handleAnimalsMove();
     handleGrassEating();
     handleCopulate();
@@ -60,10 +61,9 @@ public class SimulationContext {
         if (plantMap.isPlantAtPosition(position)) {
           plantMap.removePlant(position);
           plants.remove(plantMap.getPlantAtPosition(position));
-          //TODO increase animal energy
+          animal.increaseEnergy(configuration.getSimulationConfiguration().getEnergyGain());
         }
       });
-
   }
 
   private void handlePlantGrowth() {
@@ -74,8 +74,18 @@ public class SimulationContext {
 
   }
 
-  private void handleAnimalLossEnergy() {
+  private void clearDeadAnimals() {
+    animals.removeIf(animal -> {
+      if (animal.isDead()) {
+        worldMap.removeAnimal(animal);
+        return true;
+      }
+      return false;
+    });
+  }
 
+  private void handleAnimalLossEnergy() {
+    animals.forEach(animal -> animal.decreaseEnergy(1)); //TODO nie wiem czy nie powinno być konfigurowalne
   }
 
   private void createPlants(int plantCount) {

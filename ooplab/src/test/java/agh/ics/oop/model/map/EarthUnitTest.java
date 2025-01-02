@@ -278,6 +278,29 @@ class EarthUnitTest {
     );
   }
 
+  @Test
+  void shouldRemoveAnimal() {
+    //given
+    var animal1 = new Animal(new Vector2d(2, 2));
+    var animal2 = new Animal(new Vector2d(2, 2));
+    try {
+      map.place(animal1);
+      map.place(animal2);
+    }
+    catch (IncorrectPositionException e) {
+      fail("Should not fail placing animal, e=" + e.getMessage());
+    }
+
+    //when
+    map.removeAnimal(animal2);
+
+    //then
+    var animalsAtPosition = map.getAnimalsAtPosition(new Vector2d(2, 2));
+    assertEquals(1, animalsAtPosition.size());
+    assertTrue(animalsAtPosition.contains(animal1));
+    assertFalse(animalsAtPosition.contains(animal2));
+  }
+
   private static Stream<Arguments> providePlacePlantArgumentsSuccess() {
     return Stream.of(
         Arguments.of(new Plant(new Vector2d(0, 0))),

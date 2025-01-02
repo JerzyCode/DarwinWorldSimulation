@@ -37,6 +37,13 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
   }
 
   @Override
+  public void removeAnimal(Animal animal) {
+    var animalsAtPosition = animals.get(animal.getPosition());
+    animalsAtPosition.remove(animal);
+    notifyListeners("Animal was removed at position: " + animal.getPosition());
+  }
+
+  @Override
   public boolean canPlacePlant(Vector2d position) {
     return !super.isPlantAtPosition(position) &&
         position.follows(boundary.leftBottomCorner()) &&
