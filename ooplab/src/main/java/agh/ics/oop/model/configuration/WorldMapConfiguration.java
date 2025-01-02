@@ -39,11 +39,6 @@ public class WorldMapConfiguration {
     this.mapVariant = mapVariant;
   }
 
-  // TODO: to chwilowo żeby działało, ale jakoś musisz grassField przerobić do przyjętej konwencji, że to symulacja zarządza
-  public int getStartPlantCount(){
-    return 5;
-  }
-
   @Override
   public String toString() {
     return "WorldMapConfiguration{" +

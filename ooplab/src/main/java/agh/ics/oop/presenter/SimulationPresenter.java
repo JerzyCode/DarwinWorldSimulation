@@ -8,6 +8,7 @@ import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.elements.Animal;
@@ -49,8 +50,6 @@ public class SimulationPresenter implements MapChangeListener {
   private static final int GRID_WIDTH = 40;
   private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
-  // TODO: obstawiam, że problem jest taki, że synchronizacja jest na elementach mapy, ale gdzies po drodze zacząłeś tworzyć w symulacji zwierzęta i trawy zamiast w mapie
-  // TODO: Chyba się gdzieś spójność danych popsuła
   public void drawMap() {
     synchronized (worldMap.getElements()) {
       var mapBoundary = worldMap.getCurrentBounds();
@@ -153,8 +152,12 @@ public class SimulationPresenter implements MapChangeListener {
         var animalDrawing = createAnimalDrawing(animal.getOrientation());
         mapGrid.add(animalDrawing, x, y);
       }
-      else {
+      else if (element instanceof Plant){
         rectangle.setFill(Color.GREEN);
+        mapGrid.add(rectangle, x, y);
+      }
+      else {
+        rectangle.setFill(Color.RED);
         mapGrid.add(rectangle, x, y);
       }
 
