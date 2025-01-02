@@ -43,7 +43,6 @@ public class SimulationContext {
         this.fires = new HashSet<>();
         currentDay = 1;
 
-        System.out.println("Początkowa liczba traw: " + configuration.getWorldMapConfiguration().getStartPlantCount());
         createPlants(configuration.getSimulationConfiguration().getStartPlantCount());
         createAnimals();
     }

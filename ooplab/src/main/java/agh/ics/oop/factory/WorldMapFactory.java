@@ -21,8 +21,11 @@ public class WorldMapFactory {
     };
   }
 
+//  private GrassField createGrassField() {
+//    return new GrassField(worldMapConfiguration.getStartPlantCount());
+//  }
   private GrassField createGrassField() {
-    return new GrassField(worldMapConfiguration.getStartPlantCount());
+    return null;
   }
 
   private Earth createEarth() {
