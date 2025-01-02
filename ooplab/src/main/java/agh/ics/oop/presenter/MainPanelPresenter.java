@@ -37,8 +37,8 @@ public class MainPanelPresenter {
 
   public void initialize() throws IOException {
     loadConfigurationViews();
-    chooseMap(WorldMapVariant.GRASS_FIELD);
-    grassFieldItem.setOnAction(event -> chooseMap(WorldMapVariant.GRASS_FIELD));
+    chooseMap(WorldMapVariant.EARTH);
+//    grassFieldItem.setOnAction(event -> chooseMap(WorldMapVariant.GRASS_FIELD));
     earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
     fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
 

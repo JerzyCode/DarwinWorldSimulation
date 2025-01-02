@@ -22,7 +22,7 @@
                AnchorPane.rightAnchor = "20.0"/>
     <MenuButton fx:id = "menuButton" layoutX = "94.0" layoutY = "23.0" mnemonicParsing = "false" text = "Grass Field">
         <items>
-            <MenuItem fx:id = "grassFieldItem" mnemonicParsing = "false" text = "Grass Field"/>
+<!--            <MenuItem fx:id = "grassFieldItem" mnemonicParsing = "false" text = "Grass Field"/>-->
             <MenuItem fx:id = "earthItem" mnemonicParsing = "false" text = "Earth"/>
             <MenuItem fx:id = "fireEarthItem" mnemonicParsing = "false" text = "Fire Earth"/>
         </items>
