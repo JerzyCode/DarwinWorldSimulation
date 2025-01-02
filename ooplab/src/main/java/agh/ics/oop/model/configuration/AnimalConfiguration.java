@@ -8,7 +8,7 @@ public class AnimalConfiguration {
   private int genomeLength;
 
   AnimalConfiguration() {
-    this(15, 2, 5, MutationVariant.FULL_RANDOM, 5);
+    this(20, 2, 5, MutationVariant.FULL_RANDOM, 10);
   }
 
   public AnimalConfiguration(int startEnergy, int minimumMutationCount, int maximumMutationCount, MutationVariant mutationVariant, int genomeLength) {

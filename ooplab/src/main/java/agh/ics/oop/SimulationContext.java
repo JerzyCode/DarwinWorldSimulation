@@ -86,7 +86,7 @@ public class SimulationContext {
       animals.stream()
           .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
           .forEach(animal -> {
-            System.out.println("Killing animal at position: " + animal.getPosition());
+            System.out.println("Killing animal by fire at position: " + animal.getPosition());
             animal.kill();
           });
     }
