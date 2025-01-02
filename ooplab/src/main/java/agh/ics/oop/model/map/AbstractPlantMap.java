@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractPlantMap extends AbstractWorldMap implements PlantMap {
-//  protected final Map<Vector2d, Plant> plants;
-  public final Map<Vector2d, Plant> plants;
+  protected final Map<Vector2d, Plant> plants;
 
   public AbstractPlantMap() {
     this.plants = new HashMap<>();

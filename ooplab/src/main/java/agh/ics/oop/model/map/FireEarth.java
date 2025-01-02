@@ -3,16 +3,14 @@ package agh.ics.oop.model.map;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FireEarth extends Earth {
-//    private final HashMap<Vector2d, Fire> fires;
-    public final HashMap<Vector2d, Fire> fires;
+    private final HashMap<Vector2d, Fire> fires;
 
     public FireEarth(int width, int height){
         super(width, height);
@@ -27,6 +25,15 @@ public class FireEarth extends Earth {
         }
         plants.put(position, plant);
         notifyListeners("Plant was placed on position: " + position);
+    }
+
+    @Override
+    public Collection<WorldElement> getElements() {
+        var elements = new ArrayList<WorldElement>();
+        elements.addAll(super.getElements());
+        elements.addAll(fires.values());
+
+        return Collections.unmodifiableCollection(elements);
     }
 
     public boolean isFireAtPosition(Vector2d position){

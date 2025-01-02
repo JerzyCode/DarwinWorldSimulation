@@ -40,6 +40,7 @@ public class WorldMapConfiguration {
   }
 
   // TODO: to chwilowo żeby działało, ale jakoś musisz grassField przerobić do przyjętej konwencji, że to symulacja zarządza
+  // TODO: ALERT TRZEBA COŚ Z TYM WRESZCIE ZROBIĆ, chyba można po prostu usunąć
   public int getStartPlantCount(){
     return 5;
   }
