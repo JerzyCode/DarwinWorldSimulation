@@ -19,9 +19,9 @@ public class AnimalFactory {
     this.animalConfiguration = animalConfiguration;
   }
 
-  public Animal createAnimal(Vector2d vector) {
+  public Animal createAnimal(Vector2d position) {
     var genome = createGenome();
-    return new Animal(animalConfiguration.getStartEnergy(), vector, genome);
+    return new Animal(animalConfiguration.getStartEnergy(), position, genome);
   }
 
   private Genome createGenome() {

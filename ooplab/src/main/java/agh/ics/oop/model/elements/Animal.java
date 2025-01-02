@@ -18,31 +18,12 @@ public class Animal implements WorldElement {
 
   private final Genome genome;
 
-  public Animal() {
-    this(new Vector2d(2, 2));
-  }
-
-  public Animal(Vector2d position) {
-    this(position, MapDirection.NORTH);
-  }
-
-  public Animal(Vector2d position, Genome genome) {
-    this(10, position, MapDirection.NORTH, genome);
-  }
-
-  public Animal(Vector2d position, MapDirection orientation) {
-    this(position, orientation, new Genome(List.of(new Gen(1))));
-  }
-
   public Animal(int startEnergy, Vector2d position, Genome genome) {
     this(startEnergy, position, MapDirection.NORTH, genome);
   }
 
-  Animal(Vector2d position, MapDirection orientation, Genome genome) {
-    this(10, position, orientation, genome);
-  }
 
-  Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
+  public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
     this.energy = energy;
     this.orientation = orientation;
     this.position = position;
@@ -69,7 +50,7 @@ public class Animal implements WorldElement {
     energy = 0;
   }
 
-  public boolean isWellFed(int wellFedEnergy) {
+  public boolean canMakeChild(int wellFedEnergy) {
     return energy >= wellFedEnergy;
   }
 
