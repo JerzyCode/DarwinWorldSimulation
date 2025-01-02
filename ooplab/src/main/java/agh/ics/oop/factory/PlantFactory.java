@@ -13,7 +13,7 @@ public class PlantFactory {
     }
 
     public Plant createPlant(Boundary boundary) {
-        return switch (variant){
+        return switch (variant) {
             case PlantVariant.FORESTED_EQUATORS -> createPlantForestedEquators(boundary);
             case PlantVariant.NONE -> null;
         };
