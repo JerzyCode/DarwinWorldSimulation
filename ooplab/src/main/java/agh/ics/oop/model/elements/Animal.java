@@ -65,6 +65,10 @@ public class Animal implements WorldElement {
     return energy <= 0;
   }
 
+  public void kill() {
+    energy = 0;
+  }
+
   public boolean isWellFed(int wellFedEnergy) {
     return energy >= wellFedEnergy;
   }

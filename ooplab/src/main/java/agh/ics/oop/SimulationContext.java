@@ -11,10 +11,7 @@ import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
-import agh.ics.oop.model.map.AbstractWorldMap;
-import agh.ics.oop.model.map.FireEarth;
-import agh.ics.oop.model.map.PlantMap;
-import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.*;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -56,6 +53,7 @@ public class SimulationContext {
     handleAnimalLossEnergy();
     handlePlantGrowth();
     handleFirefightings();
+    handleAnimalsOnFire();
     currentDay++;
   }
 
@@ -81,6 +79,17 @@ public class SimulationContext {
 
   private void handleCopulate() {
 
+  }
+
+  private void handleAnimalsOnFire() {
+    if (worldMap instanceof FireWorldMap fireWorldMap) {
+      animals.stream()
+          .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
+          .forEach(animal -> {
+            System.out.println("Killing animal at position: " + animal.getPosition());
+            animal.kill();
+          });
+    }
   }
 
   private void clearDeadAnimals() {
@@ -111,8 +120,8 @@ public class SimulationContext {
         plants.add(plant);
         placedPlantsCount++;
       }
-      catch (IncorrectPositionException e) {
-        System.out.println("Couldn't create plant: " + e.getMessage());
+      catch (IncorrectPositionException ignored) {
+        //        System.out.println("Couldn't create plant: " + e.getMessage());
       }
     }
   }
@@ -137,8 +146,8 @@ public class SimulationContext {
   }
 
   private void handleFirefightings() {
-    if (worldMap instanceof FireEarth fireEarth) {
-      fireEarth.decreaseFireRemainingLifetime();
+    if (worldMap instanceof FireWorldMap fireWorldMap) {
+      fireWorldMap.decreaseFireRemainingLifetime();
       removeBurnedFires();
       spreadFire();
       var fireFrequency = configuration.getSimulationConfiguration().getFireFrequency();
@@ -176,8 +185,8 @@ public class SimulationContext {
             newFires.add(newFire);
 
           }
-          catch (IncorrectPositionException | PositionOccupiedByFireException e) {
-            System.out.println("Couldn't spread fire to new position: " + e.getMessage());
+          catch (IncorrectPositionException | PositionOccupiedByFireException ignored) {
+            //            System.out.println("Couldn't spread fire to new position: " + e.getMessage());
           }
         });
       }
@@ -209,8 +218,8 @@ public class SimulationContext {
           isFirePlaced = true;
 
         }
-        catch (IncorrectPositionException | PositionOccupiedByFireException e) {
-          System.out.println("Couldn't create fire: " + e.getMessage());
+        catch (IncorrectPositionException | PositionOccupiedByFireException ignored) {
+          //          System.out.println("Couldn't create fire: " + e.getMessage());
         }
         if (isFirePlaced) {
           return;
