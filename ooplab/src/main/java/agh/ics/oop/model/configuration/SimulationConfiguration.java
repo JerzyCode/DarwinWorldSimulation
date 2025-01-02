@@ -8,16 +8,16 @@ public class SimulationConfiguration {
   private int wellFedEnergy;
   private int lossCopulateEnergy;
   private int fireFrequency;
+  private int fireDuration;
   private int startAnimalCount;
   private int startPlantCount;
 
-
   SimulationConfiguration() {
-    this(50, 2, 4, PlantVariant.NONE, 5, 2, 0, 3, 3);
+    this(50, 2, 0, PlantVariant.NONE, 5, 2, 0, 0, 3, 3);
   }
 
   public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
-      int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int startAnimalCount, int startPlantCount) {
+      int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int fireDuration, int startAnimalCount, int startPlantCount) {
     this.daysCount = daysCount;
     this.energyGain = energyGain;
     this.plantGrowth = plantGrowth;
@@ -25,6 +25,7 @@ public class SimulationConfiguration {
     this.wellFedEnergy = wellFedEnergy;
     this.lossCopulateEnergy = lossCopulateEnergy;
     this.fireFrequency = fireFrequency;
+    this.fireDuration = fireDuration;
     this.startAnimalCount = startAnimalCount;
     this.startPlantCount = startPlantCount;
   }
@@ -51,6 +52,10 @@ public class SimulationConfiguration {
 
   public int getFireFrequency() {
     return fireFrequency;
+  }
+
+  public int getFireDuration() {
+    return fireDuration;
   }
 
   public int getStartAnimalCount() {
@@ -89,6 +94,10 @@ public class SimulationConfiguration {
     this.fireFrequency = fireFrequency;
   }
 
+  public void setFireDuration(int fireDuration) {
+    this.fireDuration = fireDuration;
+  }
+
   public void setStartAnimalCount(int startAnimalCount) {
     this.startAnimalCount = startAnimalCount;
   }
@@ -111,7 +120,7 @@ public class SimulationConfiguration {
         ", lossCopulateEnergy=" + lossCopulateEnergy +
         ", fireFrequency=" + fireFrequency +
         ", startAnimalCount=" + startAnimalCount +
-            ", startPlantCount=" + startPlantCount +
+        ", startPlantCount=" + startPlantCount +
         '}';
   }
 }

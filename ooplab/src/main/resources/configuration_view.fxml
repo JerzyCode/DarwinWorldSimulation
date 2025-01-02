@@ -92,8 +92,11 @@
         <Label text = "Fire Frequency:" GridPane.columnIndex = "2" GridPane.rowIndex = "7"/>
         <TextField fx:id = "fireFrequencyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "7"/>
 
-        <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "8"/>
-        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "8"/>
+        <Label text = "Fire duration:" GridPane.columnIndex = "2" GridPane.rowIndex = "8"/>
+        <TextField fx:id = "fireDurationInput" GridPane.columnIndex = "3" GridPane.rowIndex = "8"/>
+
+        <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "9"/>
+        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "9"/>
 
     </GridPane>
 

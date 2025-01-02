@@ -7,17 +7,19 @@ import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
 import agh.ics.oop.model.map.AbstractWorldMap;
+import agh.ics.oop.model.map.FireEarth;
 import agh.ics.oop.model.map.PlantMap;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SimulationContext {
   private final Random random = new Random();
@@ -27,6 +29,8 @@ public class SimulationContext {
   private final WorldMap worldMap;
   private final Set<Animal> animals;
   private final Set<Plant> plants;
+  private final Set<Fire> fires;
+  private int currentDay;
 
   public SimulationContext(Configuration configuration) {
     this.configuration = configuration;
@@ -36,18 +40,23 @@ public class SimulationContext {
     this.worldMap = worldMapFactory.createWorldMap();
     this.plants = new HashSet<>();
     this.animals = new HashSet<>();
+    this.fires = new HashSet<>();
+    currentDay = 1;
 
     createPlants(configuration.getSimulationConfiguration().getStartPlantCount());
     createAnimals();
   }
 
   public void handleDayEnds() {
+    System.out.println("Current day: " + currentDay);
     clearDeadAnimals();
     handleAnimalsMove();
     handlePlantEating();
     handleCopulate();
     handleAnimalLossEnergy();
     handlePlantGrowth();
+    handleFirefightings();
+    currentDay++;
   }
 
   private void handleAnimalsMove() {
@@ -125,6 +134,91 @@ public class SimulationContext {
         System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
       }
     }
+  }
+
+  private void handleFirefightings() {
+    if (worldMap instanceof FireEarth fireEarth) {
+      fireEarth.decreaseFireRemainingLifetime();
+      removeBurnedFires();
+      spreadFire();
+      var fireFrequency = configuration.getSimulationConfiguration().getFireFrequency();
+      if (fireFrequency > 0 && currentDay % fireFrequency == 0) {
+        createFire();
+      }
+    }
+  }
+
+  private void removeBurnedFires() {
+    if (worldMap instanceof FireEarth fireEarth) {
+      fireEarth.getBurnedFires()
+          .forEach(fire -> {
+            fires.remove(fire);
+            fireEarth.removeFire(fire);
+          });
+    }
+  }
+
+  private void spreadFire() {
+    if (worldMap instanceof FireEarth fireEarth) {
+      Set<Fire> newFires = new HashSet<>();
+      for (Fire fire : fires) {
+        var newFirePositions = fireEarth.getNewFirePositions(fire);
+
+        newFirePositions.forEach(firePosition -> {
+          try {
+            var newFire = new Fire(firePosition, configuration.getSimulationConfiguration().getFireDuration());
+
+            var plant = fireEarth.getPlantAtPosition(firePosition);
+            plants.remove(plant);
+            fireEarth.removePlant(firePosition);
+
+            fireEarth.placeFire(newFire);
+            newFires.add(newFire);
+
+          }
+          catch (IncorrectPositionException | PositionOccupiedByFireException e) {
+            System.out.println("Couldn't spread fire to new position: " + e.getMessage());
+          }
+        });
+      }
+      fires.addAll(newFires);
+    }
+  }
+
+  //TODO: tak sobie myślę, że skoro na polu może być maksymalnie jedna trawa, tak samo jak maksymalnie jeden ogień to może lepiej to trzymać w HashMapie.
+  private void createFire() {
+    if (worldMap instanceof FireEarth fireEarth) {
+
+      List<Vector2d> plantsPositions
+          = plants.stream()
+          .map(Plant::getPosition)
+          .collect(Collectors.toCollection(ArrayList::new));
+
+      Collections.shuffle(plantsPositions);
+
+      boolean isFirePlaced = false;
+      for (Vector2d position : plantsPositions) {
+        try {
+          var plant = fireEarth.getPlantAtPosition(position);
+          plants.remove(plant);
+          fireEarth.removePlant(position);
+
+          var newFire = new Fire(position, configuration.getSimulationConfiguration().getFireDuration());
+          fireEarth.placeFire(newFire);
+          fires.add(newFire);
+          isFirePlaced = true;
+
+        }
+        catch (IncorrectPositionException | PositionOccupiedByFireException e) {
+          System.out.println("Couldn't create fire: " + e.getMessage());
+        }
+        if (isFirePlaced) {
+          return;
+        }
+      }
+
+    }
+
   }
 
   public void setMapChangeListener(MapChangeListener listener) {
