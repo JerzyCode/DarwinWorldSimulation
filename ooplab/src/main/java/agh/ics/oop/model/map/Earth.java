@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster {
   private final Boundary boundary;
-  private final HashMap<Vector2d, Set<Animal>> animals;
+  private final Map<Vector2d, Set<Animal>> animals;
 
   public Earth(int width, int height) {
     boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));

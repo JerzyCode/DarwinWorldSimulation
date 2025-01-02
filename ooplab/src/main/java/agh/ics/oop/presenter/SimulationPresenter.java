@@ -16,14 +16,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -37,8 +35,6 @@ public class SimulationPresenter implements MapChangeListener {
   private TextArea historyTextArea;
   @FXML
   private Button startButton;
-  @FXML
-  private TextField movesTextField;
 
   private WorldMap worldMap;
   private Configuration configuration;
@@ -60,8 +56,6 @@ public class SimulationPresenter implements MapChangeListener {
     leftCoordinates.setPrefWidth(GRID_WIDTH);
   }
 
-  // TODO: obstawiam, że problem jest taki, że synchronizacja jest na elementach mapy, ale gdzies po drodze zacząłeś tworzyć w symulacji zwierzęta i trawy zamiast w mapie
-  // TODO: Chyba się gdzieś spójność danych popsuła
   public void drawMap() {
     synchronized (worldMap.getElements()) {
       var mapBoundary = worldMap.getCurrentBounds();
@@ -158,14 +152,13 @@ public class SimulationPresenter implements MapChangeListener {
       int x = element.getPosition().getX() + calculateOffsetX(maxLeftX);
       int y = element.getPosition().getY() + calculateOffsetY(maxBottomY);
 
-      Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
-
       if (element instanceof Animal animal) {
         var animalDrawing = createAnimalDrawing(animal.getOrientation());
         mapGrid.add(animalDrawing, x, y);
       }
       else {
-        rectangle.setFill(Color.GREEN);
+        Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
+        rectangle.setFill(Color.LIGHTGREEN);
         mapGrid.add(rectangle, x, y);
       }
 
@@ -174,17 +167,18 @@ public class SimulationPresenter implements MapChangeListener {
 
   private Pane createAnimalDrawing(MapDirection orientation) {
     Pane pane = new Pane();
-    double width = (double)GRID_WIDTH / 2;
-    double radius = width / 1.5;
-    Circle head = new Circle(width, width, radius);
+    double centerX = (double)GRID_WIDTH / 2;
+    double centerY = (double)GRID_WIDTH / 2;
+    double radius = (double)GRID_WIDTH / 2 - 2;
+    Circle head = new Circle(centerX, centerY, radius);
     head.setFill(Color.LIGHTBLUE);
 
-    Text text = new Text(width, width, orientation.getSymbol());
-    var fontSize = GRID_WIDTH / 2;
-    text.setFill(Color.BLACK);
-    text.setStyle(String.format("-fx-font-size: %d; -fx-font-weight: bold", fontSize));
+    //    Text text = new Text(width, width, orientation.getSymbol());
+    //    var fontSize = GRID_WIDTH / 2;
+    //    text.setFill(Color.BLACK);
+    //    text.setStyle(String.format("-fx-font-size: %d; -fx-font-weight: bold", fontSize));
 
-    pane.getChildren().addAll(head, text);
+    pane.getChildren().add(head);
     return pane;
   }
 
