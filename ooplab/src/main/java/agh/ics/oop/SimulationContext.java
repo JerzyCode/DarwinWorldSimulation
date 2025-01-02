@@ -44,7 +44,7 @@ public class SimulationContext {
   public void handleDayEnds() {
     clearDeadAnimals();
     handleAnimalsMove();
-    handleGrassEating();
+    handlePlantEating();
     handleCopulate();
     handleAnimalLossEnergy();
     handlePlantGrowth();
@@ -54,13 +54,13 @@ public class SimulationContext {
     animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
   }
 
-  private void handleGrassEating() {
+  private void handlePlantEating() {
     if (worldMap instanceof PlantMap plantMap)
       animals.forEach(animal -> {
         var position = animal.getPosition();
         if (plantMap.isPlantAtPosition(position)) {
-          plantMap.removePlant(position);
           plants.remove(plantMap.getPlantAtPosition(position));
+          plantMap.removePlant(position);
           animal.increaseEnergy(configuration.getSimulationConfiguration().getEnergyGain());
         }
       });
