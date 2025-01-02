@@ -10,7 +10,7 @@ import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FireEarth extends Earth {
+public class FireEarth extends Earth implements FireWorldMap {
     private final HashMap<Vector2d, Fire> fires;
 
     public FireEarth(int width, int height){
@@ -37,10 +37,12 @@ public class FireEarth extends Earth {
         return Collections.unmodifiableCollection(elements);
     }
 
+    @Override
     public boolean isFireAtPosition(Vector2d position){
         return fires.containsKey(position);
     }
 
+    @Override
     public void placeFire(Fire fire) throws IncorrectPositionException, PositionOccupiedByFireException {
         var position = fire.getPosition();
         if(isPlantAtPosition(position)){
@@ -53,11 +55,24 @@ public class FireEarth extends Earth {
         notifyListeners("Fire was placed at position: " + position);
     }
 
+    @Override
     public void decreaseFireRemainingLifetime(){
         fires.values().forEach(Fire::decreaseRemainingLifetime);
     }
 
-    //TODO: ma się rozprzestrzeniać na przylegające rośliny, ale czy roślina całkiem po prawej przylega do tej całkiem po lewej, a ta całkiem u góry do tej całkiem na dole?
+    @Override
+    public void removeFire(Fire fire){
+        fires.remove(fire.getPosition());
+        notifyListeners("Fire was removed from position: " + fire.getPosition());
+    }
+
+    @Override
+    public Set<Fire> getBurnedFires(){
+        return fires.values()
+                .stream()
+                .filter(Fire::isBurned)
+                .collect(Collectors.toSet());
+    }
 
     public Set<Vector2d> getNewFirePositions(Fire fire){
         var adjacentFields = getAdjacentFields(fire.getPosition());
@@ -65,18 +80,6 @@ public class FireEarth extends Earth {
                 .stream()
                 .filter(position -> !isFireAtPosition(position))
                 .filter(this::isPlantAtPosition)
-                .collect(Collectors.toSet());
-    }
-
-    public void removeFire(Fire fire){
-        fires.remove(fire.getPosition());
-        notifyListeners("Fire was removed from position: " + fire.getPosition());
-    }
-
-    public Set<Fire> getBurnedFires(){
-        return fires.values()
-                .stream()
-                .filter(Fire::isBurned)
                 .collect(Collectors.toSet());
     }
 
