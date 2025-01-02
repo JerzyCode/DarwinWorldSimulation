@@ -299,4 +299,20 @@ class AnimalTest {
     assertTrue(animal.isDead());
   }
 
+  @Test
+  void animalIsWellFeedTest() {
+    //given
+    var animal = new Animal(10, new Vector2d(1, 2), null);
+    var wellFedEnergy = 5;
+
+    //when & then
+    assertTrue(animal.isWellFed(wellFedEnergy));
+
+    animal.decreaseEnergy(5);
+    assertTrue(animal.isWellFed(wellFedEnergy));
+
+    animal.decreaseEnergy(3);
+    assertFalse(animal.isWellFed(wellFedEnergy));
+  }
+
 }

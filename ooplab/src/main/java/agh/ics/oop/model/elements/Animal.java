@@ -65,6 +65,10 @@ public class Animal implements WorldElement {
     return energy <= 0;
   }
 
+  public boolean isWellFed(int wellFedEnergy) {
+    return energy >= wellFedEnergy;
+  }
+
   public void move(MoveValidator moveValidator) {
     move(moveValidator, null);
   }
@@ -112,4 +116,5 @@ public class Animal implements WorldElement {
   public MapDirection getOrientation() {
     return orientation;
   }
+
 }
