@@ -5,6 +5,7 @@ import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,10 +41,13 @@ public class FireEarth extends Earth {
         return fires.containsKey(position);
     }
 
-    public void placeFire(Fire fire) throws IncorrectPositionException {
+    public void placeFire(Fire fire) throws IncorrectPositionException, PositionOccupiedByFireException {
         var position = fire.getPosition();
-        if(isFireAtPosition(position) || isPlantAtPosition(position)){
+        if(isPlantAtPosition(position)){
             throw new IncorrectPositionException(position);
+        }
+        if(isFireAtPosition(position)){
+            throw new PositionOccupiedByFireException(position);
         }
         this.fires.put(position, fire);
         notifyListeners("Fire was placed at position: " + position);

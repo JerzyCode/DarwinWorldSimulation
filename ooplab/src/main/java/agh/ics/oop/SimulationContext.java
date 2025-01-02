@@ -8,6 +8,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.FireEarth;
 import agh.ics.oop.model.map.PlantMap;
@@ -126,7 +127,7 @@ public class SimulationContext {
                         fireEarth.placeFire(newFire);
                         newFires.add(newFire);
 
-                    } catch (IncorrectPositionException e) {
+                    } catch (IncorrectPositionException | PositionOccupiedByFireException e) {
                         System.out.println("Couldn't spread fire to new position: " + e.getMessage());
                     }
                 });
@@ -158,7 +159,7 @@ public class SimulationContext {
                     fires.add(newFire);
                     isFirePlaced = true;
 
-                } catch (IncorrectPositionException e) {
+                } catch (IncorrectPositionException | PositionOccupiedByFireException e) {
                     System.out.println("Couldn't create fire: " + e.getMessage());
                 }
                 if (isFirePlaced) {
