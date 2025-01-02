@@ -67,7 +67,7 @@ public class Animal implements WorldElement {
         }
     }
 
-    void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
+    public void move(MoveDirection moveDirection, MoveValidator validator, MoveAdjuster adjuster) {
         move(moveDirection, validator);
 
         if (adjuster != null) {

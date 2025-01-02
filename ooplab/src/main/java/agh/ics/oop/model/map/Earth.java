@@ -40,7 +40,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     public void removeAnimal(Animal animal) {
         var animalsAtPosition = animals.get(animal.getPosition());
         animalsAtPosition.remove(animal);
-        notifyListeners("Animal was removed at position: " + animal.getPosition());
+        notifyListeners("Animal was removed from position: " + animal.getPosition());
     }
 
     @Override

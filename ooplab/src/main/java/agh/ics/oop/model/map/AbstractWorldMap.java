@@ -44,7 +44,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void removeAnimal(Animal animal) {
         if (animals.containsKey(animal.getPosition())) {
             animals.remove(animal.getPosition());
-            notifyListeners("Animal was removed at position: " + animal.getPosition());
+            notifyListeners("Animal was removed from position: " + animal.getPosition());
         }
     }
 
@@ -54,7 +54,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             animals.remove(animal.getPosition());
             animal.move(direction, this);
             animals.put(animal.getPosition(), animal);
-            notifyListeners("Animal moved from position: " + animal.getPosition());
+            notifyListeners("Animal moved to position: " + animal.getPosition());
         }
     }
 
