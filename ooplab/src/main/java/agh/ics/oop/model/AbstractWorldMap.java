@@ -74,13 +74,12 @@ abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public Collection<Animal> getOrderedAnimals() {
-        List<Animal> sortedAnimals = new ArrayList<>(animals.values());
-
-        sortedAnimals.sort(Comparator
-                .comparingInt((Animal animal) -> animal.getPosition().getX())
-                .thenComparingInt(animal -> animal.getPosition().getY()));
-
-        return sortedAnimals;
+        return animals.values()
+                .stream()
+                .sorted(Comparator
+                        .comparingInt((Animal animal) -> animal.getPosition().getX())
+                        .thenComparingInt(animal -> animal.getPosition().getY()))
+                .toList();
     }
 
     public void addListener(MapChangeListener listener) {
