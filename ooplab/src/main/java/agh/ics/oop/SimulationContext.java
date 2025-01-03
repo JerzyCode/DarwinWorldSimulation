@@ -6,15 +6,12 @@ import agh.ics.oop.factory.WorldMapFactory;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
+import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
-import agh.ics.oop.model.map.AbstractWorldMap;
-import agh.ics.oop.model.map.FireEarth;
-import agh.ics.oop.model.map.PlantMap;
-import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.map.*;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -49,30 +46,31 @@ public class SimulationContext {
 
     public void handleDayEnds() {
         System.out.println("Current day: " + currentDay);
+        clearDeadAnimals();
         handleAnimalsMove();
-        handleGrassEating();
+        handlePlantEating();
         handleCopulate();
         handleAnimalLossEnergy();
         handlePlantGrowth();
         handleFirefightings();
+        handleAnimalsOnFire();
         currentDay++;
     }
 
     private void handleAnimalsMove() {
-        animals.forEach(animal -> worldMap.move(animal, getRandomMoveDirection()));
+        animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
     }
 
-    private void handleGrassEating() {
+    private void handlePlantEating() {
         if (worldMap instanceof PlantMap plantMap)
             animals.forEach(animal -> {
                 var position = animal.getPosition();
                 if (plantMap.isPlantAtPosition(position)) {
                     plants.remove(plantMap.getPlantAtPosition(position));
                     plantMap.removePlant(position);
-                    //TODO increase animal energy
+                    animal.increaseEnergy(configuration.getSimulationConfiguration().getEnergyGain());
                 }
             });
-
     }
 
     private void handlePlantGrowth() {
@@ -83,13 +81,71 @@ public class SimulationContext {
 
     }
 
-    private void handleAnimalLossEnergy() {
+    private void handleAnimalsOnFire() {
+        if (worldMap instanceof FireWorldMap fireWorldMap) {
+            animals.stream()
+                    .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
+                    .forEach(animal -> {
+                        System.out.println("Killing animal by fire at position: " + animal.getPosition());
+                        animal.kill();
+                    });
+        }
+    }
 
+    private void clearDeadAnimals() {
+        animals.removeIf(animal -> {
+            if (animal.isDead()) {
+                worldMap.removeAnimal(animal);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void handleAnimalLossEnergy() {
+        animals.forEach(animal -> animal.decreaseEnergy(1));
+    }
+
+    private void createPlants(int plantCount) {
+        int countOfPlantsBeforeCreating = plants.size();
+        var countOfAvailablePlacesForPlants = worldMap.getSize() - countOfPlantsBeforeCreating;
+        plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
+
+        int placedPlantsCount = 0;
+
+        while (placedPlantsCount < plantCount) {
+            try {
+                var plant = plantFactory.createPlant(worldMap.getCurrentBounds());
+                ((PlantMap) worldMap).placePlant(plant);
+                plants.add(plant);
+                placedPlantsCount++;
+            } catch (IncorrectPositionException ignored) {
+                //        System.out.println("Couldn't create plant: " + e.getMessage());
+            }
+        }
+    }
+
+    private void createAnimals() {
+        var boundary = worldMap.getCurrentBounds();
+        var randomizer = new RandomPositionGenerator(
+                configuration.getSimulationConfiguration().getStartAnimalCount(),
+                boundary.rightTopCorner().getX(),
+                boundary.rightTopCorner().getY());
+
+        for (Vector2d position : randomizer) {
+            var animal = animalFactory.createAnimal(position);
+            try {
+                worldMap.place(animal);
+                animals.add(animal);
+            } catch (IncorrectPositionException e) {
+                System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
+            }
+        }
     }
 
     private void handleFirefightings() {
-        if (worldMap instanceof FireEarth fireEarth) {
-            fireEarth.decreaseFireRemainingLifetime();
+        if (worldMap instanceof FireWorldMap fireWorldMap) {
+            fireWorldMap.decreaseFireRemainingLifetime();
             removeBurnedFires();
             spreadFire();
             var fireFrequency = configuration.getSimulationConfiguration().getFireFrequency();
@@ -126,8 +182,8 @@ public class SimulationContext {
                         fireEarth.placeFire(newFire);
                         newFires.add(newFire);
 
-                    } catch (IncorrectPositionException | PositionOccupiedByFireException e) {
-                        System.out.println("Couldn't spread fire to new position: " + e.getMessage());
+                    } catch (IncorrectPositionException | PositionOccupiedByFireException ignored) {
+                        //            System.out.println("Couldn't spread fire to new position: " + e.getMessage());
                     }
                 });
             }
@@ -158,8 +214,8 @@ public class SimulationContext {
                     fires.add(newFire);
                     isFirePlaced = true;
 
-                } catch (IncorrectPositionException | PositionOccupiedByFireException e) {
-                    System.out.println("Couldn't create fire: " + e.getMessage());
+                } catch (IncorrectPositionException | PositionOccupiedByFireException ignored) {
+                    //          System.out.println("Couldn't create fire: " + e.getMessage());
                 }
                 if (isFirePlaced) {
                     return;
@@ -168,51 +224,6 @@ public class SimulationContext {
 
         }
 
-
-    }
-
-    private void createPlants(int plantCount) {
-        int countOfPlantsBeforeCreating = plants.size();
-        int countOfFiresBeforeCreating = fires.size();
-        int countOfUnavailableFieldsBeforeCreating = countOfPlantsBeforeCreating + countOfFiresBeforeCreating;
-        var countOfAvailablePlacesForPlants = worldMap.getSize() - countOfUnavailableFieldsBeforeCreating;
-
-        plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
-
-        int placedPlantsCount = 0;
-
-        while (placedPlantsCount < plantCount) {
-            try {
-                var plant = plantFactory.createPlant(worldMap.getCurrentBounds());
-                ((PlantMap) worldMap).placePlant(plant);
-                plants.add(plant);
-                placedPlantsCount++;
-            } catch (IncorrectPositionException e) {
-                System.out.println("Couldn't create plant: " + e.getMessage());
-            }
-        }
-    }
-
-    private void createAnimals() {
-        var boundary = worldMap.getCurrentBounds();
-        var randomizer = new RandomPositionGenerator(
-                configuration.getSimulationConfiguration().getStartAnimalCount(),
-                boundary.rightTopCorner().getX(),
-                boundary.rightTopCorner().getY());
-
-        for (Vector2d position : randomizer) {
-            var animal = animalFactory.createAnimal(position);
-            try {
-                worldMap.place(animal);
-                animals.add(animal);
-            } catch (IncorrectPositionException e) {
-                System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
-            }
-        }
-    }
-
-    private MoveDirection getRandomMoveDirection() { //TODO do wydzielenia do genów
-        return MoveDirection.values()[random.nextInt(4)];
     }
 
     public void setMapChangeListener(MapChangeListener listener) {

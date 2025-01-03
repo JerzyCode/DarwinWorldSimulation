@@ -10,10 +10,15 @@ import java.util.Set;
 public interface FireWorldMap extends WorldMap {
 
     boolean isFireAtPosition(Vector2d position);
+
     void placeFire(Fire fire) throws IncorrectPositionException, PositionOccupiedByFireException;
+
     Fire getFireAtPosition(Vector2d position);
+
     void decreaseFireRemainingLifetime();
+
     void removeFire(Fire fire);
+
     Set<Fire> getBurnedFires();
 
 }
