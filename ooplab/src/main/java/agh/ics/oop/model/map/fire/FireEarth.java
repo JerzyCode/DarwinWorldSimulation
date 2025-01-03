@@ -31,8 +31,8 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
     @Override
     public void handleDayEnds(int currentDay) {
         super.handleDayEnds(currentDay);
-        decreaseFireRemainingLifetime();
         spreadFire();
+        decreaseFireRemainingLifetime();
         removeBurnedFires();
         if (fireFrequency > 0 && currentDay % fireFrequency == 0) {
             createFire();
