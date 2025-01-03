@@ -10,7 +10,6 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
 import agh.ics.oop.model.map.*;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
@@ -182,7 +181,7 @@ public class SimulationContext {
                         fireEarth.placeFire(newFire);
                         newFires.add(newFire);
 
-                    } catch (IncorrectPositionException | PositionOccupiedByFireException ignored) {
+                    } catch (IncorrectPositionException ignored) {
                         //            System.out.println("Couldn't spread fire to new position: " + e.getMessage());
                     }
                 });
@@ -214,7 +213,7 @@ public class SimulationContext {
                     fires.add(newFire);
                     isFirePlaced = true;
 
-                } catch (IncorrectPositionException | PositionOccupiedByFireException ignored) {
+                } catch (IncorrectPositionException ignored) {
                     //          System.out.println("Couldn't create fire: " + e.getMessage());
                 }
                 if (isFirePlaced) {

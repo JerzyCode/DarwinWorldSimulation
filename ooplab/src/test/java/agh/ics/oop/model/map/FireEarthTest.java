@@ -4,7 +4,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +16,10 @@ class FireEarthTest {
     @BeforeEach
     void setUp() {
         fireEarth = new FireEarth(5, 5);
-        try{
+        try {
             fireEarth.placePlant(new Plant(new Vector2d(0, 0)));
             fireEarth.placeFire(new Fire(new Vector2d(0, 1), 3));
-        } catch (PositionOccupiedByFireException | IncorrectPositionException e){
+        } catch (IncorrectPositionException e) {
             fail(e.getMessage());
         }
     }
@@ -52,7 +52,6 @@ class FireEarthTest {
     }
 
 
-
     @Test
     void placePlantWorksProperlyWhenPlantPositionIsAvailable() {
         // given
@@ -65,7 +64,7 @@ class FireEarthTest {
             fireEarth.placePlant(plant1);
             fireEarth.placePlant(plant2);
             fireEarth.placePlant(plant3);
-        } catch (IncorrectPositionException e){
+        } catch (IncorrectPositionException e) {
             fail(e.getMessage());
         }
 
@@ -90,7 +89,7 @@ class FireEarthTest {
             fireEarth.placePlant(plant3);
             fireEarth.placeFire(fire1);
             fireEarth.placeFire(fire2);
-        } catch (IncorrectPositionException | PositionOccupiedByFireException e){
+        } catch (IncorrectPositionException e) {
             fail(e.getMessage());
         }
 
@@ -142,7 +141,7 @@ class FireEarthTest {
         // given
         var fire = new Fire(new Vector2d(0, 1), 3);
         // when & then
-        assertThrows(PositionOccupiedByFireException.class, () -> fireEarth.placeFire(fire));
+        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placeFire(fire));
 
     }
 
@@ -160,9 +159,9 @@ class FireEarthTest {
         // given
         var firePosition = new Vector2d(3, 3);
         var fire = new Fire(firePosition, 1);
-        try{
+        try {
             fireEarth.placeFire(fire);
-        } catch (IncorrectPositionException | PositionOccupiedByFireException e){
+        } catch (IncorrectPositionException e) {
             fail(e.getMessage());
         }
 
@@ -178,9 +177,9 @@ class FireEarthTest {
         // given
         var firePosition = new Vector2d(3, 3);
         var fire = new Fire(firePosition, 1);
-        try{
+        try {
             fireEarth.placeFire(fire);
-        } catch (IncorrectPositionException | PositionOccupiedByFireException e){
+        } catch (IncorrectPositionException e) {
             fail(e.getMessage());
         }
 
@@ -212,11 +211,11 @@ class FireEarthTest {
         var fire1 = new Fire(new Vector2d(0, 2), 1);
         var burnedFire1 = new Fire(new Vector2d(0, 3), 0);
         var burnedFire2 = new Fire(new Vector2d(0, 4), 0);
-        try{
+        try {
             fireEarth.placeFire(fire1);
             fireEarth.placeFire(burnedFire1);
             fireEarth.placeFire(burnedFire2);
-        } catch (IncorrectPositionException | PositionOccupiedByFireException e){
+        } catch (IncorrectPositionException e) {
             fail(e.getMessage());
         }
 
