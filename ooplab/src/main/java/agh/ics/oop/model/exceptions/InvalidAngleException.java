@@ -1,9 +1,9 @@
 package agh.ics.oop.model.exceptions;
 
-public class WrongAngleException extends RuntimeException {
+public class InvalidAngleException extends RuntimeException {
     private static final String MESSAGE = "Angle should be multiplicity of 45";
 
-    public WrongAngleException() {
+    public InvalidAngleException() {
         super(MESSAGE);
     }
 }

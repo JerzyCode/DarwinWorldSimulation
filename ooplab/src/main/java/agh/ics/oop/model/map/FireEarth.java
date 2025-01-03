@@ -5,7 +5,8 @@ import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.exceptions.PositionOccupiedByFireException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
+import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,11 +22,11 @@ public class FireEarth extends Earth implements FireWorldMap {
     @Override
     public void placePlant(Plant plant) throws IncorrectPositionException {
         var position = plant.getPosition();
-        if (isPlantAtPosition(position) || isFireAtPosition(position)) {
-            throw new IncorrectPositionException(position);
+        if (isFireAtPosition(position)) {
+            throw new PositionOccupiedByWorldElementException(position, Plant.class.getSimpleName(), Fire.class.getSimpleName());
         }
-        plants.put(position, plant);
-        notifyListeners("Plant was placed on position: " + position);
+
+        super.placePlant(plant);
     }
 
     @Override
@@ -43,15 +44,24 @@ public class FireEarth extends Earth implements FireWorldMap {
     }
 
     @Override
-    public void placeFire(Fire fire) throws IncorrectPositionException, PositionOccupiedByFireException {
+    public Fire getFireAtPosition(Vector2d position) {
+        return fires.get(position);
+    }
+
+    @Override
+    public void placeFire(Fire fire) throws IncorrectPositionException {
         var position = fire.getPosition();
+
+        if (!isPositionWithinMapBoundary(position)) {
+            throw new PositionOutOfMapBoundaryException(position);
+        }
         if (isPlantAtPosition(position)) {
-            throw new IncorrectPositionException(position);
+            throw new PositionOccupiedByWorldElementException(position, Plant.class.getSimpleName());
         }
         if (isFireAtPosition(position)) {
-            throw new PositionOccupiedByFireException(position);
+            throw new PositionOccupiedByWorldElementException(position, Fire.class.getSimpleName());
         }
-        this.fires.put(position, fire);
+        fires.put(position, fire);
         notifyListeners("Fire was placed at position: " + position);
     }
 

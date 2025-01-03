@@ -3,6 +3,8 @@ package agh.ics.oop.model.map;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
+import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +18,13 @@ public abstract class AbstractPlantMap extends AbstractWorldMap implements Plant
 
     @Override
     public void placePlant(Plant plant) throws IncorrectPositionException {
-        if (!canPlacePlant(plant.getPosition())) {
-            throw new IncorrectPositionException(plant.getPosition());
+        if (!isPositionWithinMapBoundary(plant.getPosition())) {
+            throw new PositionOutOfMapBoundaryException(plant.getPosition());
         }
+        if (isPlantAtPosition(plant.getPosition())) {
+            throw new PositionOccupiedByWorldElementException(plant.getPosition(), Plant.class.getSimpleName());
+        }
+
         plants.put(plant.getPosition(), plant);
         notifyListeners("Plant was placed on position: " + plant.getPosition());
     }
@@ -40,6 +46,4 @@ public abstract class AbstractPlantMap extends AbstractWorldMap implements Plant
     public boolean isPlantAtPosition(Vector2d position) {
         return plants.containsKey(position);
     }
-
-    public abstract boolean canPlacePlant(Vector2d position);
 }
