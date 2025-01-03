@@ -24,12 +24,39 @@ public class AnimalFactory {
         return new Animal(animalConfiguration.getStartEnergy(), position, genome);
     }
 
+    public Animal birthAnimal(Animal parent1, Animal parent2) {
+        var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
+        var other = dominating == parent1 ? parent2 : parent1;
+        var percentage = (double) dominating.getEnergy() / other.getEnergy();
+        var dominatingLeft = random.nextInt(2) == 1;
+        var dominatingGensSize = (int) Math.ceil(percentage * animalConfiguration.getGenomeLength());
+        var otherGensSize = animalConfiguration.getGenomeLength() - dominatingGensSize;
+
+        var childGens = new ArrayList<Gen>();
+        childGens.addAll(dominating.getGensForChild(dominatingGensSize, dominatingLeft));
+        childGens.addAll(other.getGensForChild(otherGensSize, !dominatingLeft));
+
+        var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
+        childGenome.mutate(random.nextInt(
+                animalConfiguration.getMinimumMutationCount(),
+                animalConfiguration.getMaximumMutationCount()
+        ));
+
+        var child = new Animal(parent1.getEnergy() + parent2.getEnergy(),
+                parent1.getPosition(), childGenome);
+
+        //TODO add to children
+        //TODO remove energy from parents (in simulation)
+
+        return child;
+    }
+
     private Genome createGenome() {
         List<Gen> gens = new ArrayList<>();
         for (int i = 0; i < animalConfiguration.getGenomeLength(); i++) {
             gens.add(new Gen(random.nextInt(0, MapDirection.values().length)));
         }
 
-        return new Genome(gens);
+        return new Genome(gens, animalConfiguration.getMutationVariant());
     }
 }

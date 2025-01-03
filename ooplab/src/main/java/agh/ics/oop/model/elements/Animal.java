@@ -7,6 +7,8 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
+import java.util.List;
+
 public class Animal implements WorldElement {
     private final Genome genome;
     private int energy;
@@ -45,8 +47,16 @@ public class Animal implements WorldElement {
         energy = 0;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
     public boolean canMakeChild(int wellFedEnergy) {
         return energy >= wellFedEnergy;
+    }
+
+    public List<Gen> getGensForChild(int count, boolean left) {
+        return genome.getPartOfGenome(count, left);
     }
 
     public void move(MoveValidator moveValidator) {
