@@ -153,9 +153,11 @@ class GrassFieldTest {
         grassField.place(animal);
 
         //when
-        var result = grassField.objectAt(new Vector2d(0, 0));
+        var resultOptional = grassField.objectAt(new Vector2d(0, 0));
 
         //then
+        assertTrue(resultOptional.isPresent());
+        var result = resultOptional.get();
         assertInstanceOf(Animal.class, result);
         assertEquals(result.getPosition(), new Vector2d(0, 0));
     }
@@ -168,9 +170,11 @@ class GrassFieldTest {
         var grassField = new GrassField(randomizer);
 
         //when
-        var result = grassField.objectAt(new Vector2d(1, 1));
+        var resultOptional = grassField.objectAt(new Vector2d(1, 1));
 
         //then
+        assertTrue(resultOptional.isPresent());
+        var result = resultOptional.get();
         assertInstanceOf(Grass.class, result);
         assertEquals(result.getPosition(), new Vector2d(1, 1));
     }

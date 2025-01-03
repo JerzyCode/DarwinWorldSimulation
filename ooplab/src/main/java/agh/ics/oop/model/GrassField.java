@@ -5,6 +5,7 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GrassField extends AbstractWorldMap {
@@ -35,9 +36,9 @@ public class GrassField extends AbstractWorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        var animal = super.objectAt(position);
-        return animal != null ? animal : grasses.get(position);
+    public Optional<WorldElement> objectAt(Vector2d position) {
+      return super.objectAt(position)
+          .or(() -> Optional.ofNullable(grasses.get(position)));
     }
 
     @Override
@@ -49,8 +50,9 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        var objectAt = objectAt(position);
-        return !(objectAt instanceof Animal);
+        return objectAt(position)
+                .filter(worldElement -> worldElement instanceof Animal)
+                .isEmpty();
     }
 
     private void placeGrass() {

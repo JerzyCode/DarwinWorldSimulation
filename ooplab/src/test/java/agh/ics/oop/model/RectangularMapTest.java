@@ -124,10 +124,11 @@ class RectangularMapTest {
     rectangularMap.place(animal);
 
     //when
-    var result = rectangularMap.objectAt(animal.getPosition());
+    var resultOptional = rectangularMap.objectAt(animal.getPosition());
 
     //then
-    assertEquals(animal, result);
+    assertTrue(resultOptional.isPresent());
+    assertEquals(animal, resultOptional.get());
   }
 
   @Test
