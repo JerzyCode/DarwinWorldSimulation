@@ -5,6 +5,7 @@ import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
+import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ class FireEarthTest {
         Plant plant = new Plant(new Vector2d(0, 1));
 
         // when & then
-        assertThrows(IncorrectPositionException.class, () -> fireEarth.placePlant(plant));
+        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placePlant(plant));
     }
 
     @Test
@@ -39,7 +40,7 @@ class FireEarthTest {
         Plant plant = new Plant(new Vector2d(0, 0));
 
         // when & then
-        assertThrows(IncorrectPositionException.class, () -> fireEarth.placePlant(plant));
+        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placePlant(plant));
     }
 
     @Test
@@ -48,7 +49,7 @@ class FireEarthTest {
         Plant plant = new Plant(new Vector2d(5, 4));
 
         // when & then
-        assertThrows(IncorrectPositionException.class, () -> fireEarth.placePlant(plant));
+        assertThrows(PositionOutOfMapBoundaryException.class, () -> fireEarth.placePlant(plant));
     }
 
 
@@ -132,7 +133,7 @@ class FireEarthTest {
         // given
         var fire = new Fire(new Vector2d(0, 0), 3);
         // when & then
-        assertThrows(IncorrectPositionException.class, () -> fireEarth.placeFire(fire));
+        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placeFire(fire));
 
     }
 
@@ -151,7 +152,7 @@ class FireEarthTest {
         var fire = new Fire(new Vector2d(1, 5), 3);
 
         // when & then
-        assertThrows(IncorrectPositionException.class, () -> fireEarth.placeFire(fire));
+        assertThrows(PositionOutOfMapBoundaryException.class, () -> fireEarth.placeFire(fire));
     }
 
     @Test

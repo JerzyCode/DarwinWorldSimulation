@@ -7,6 +7,8 @@ import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
+import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,10 +62,10 @@ class EarthUnitTest {
         var animal4 = TestAnimalBuilder.create().position(new Vector2d(3, -2)).build();
 
         //when && then
-        assertThrows(IncorrectPositionException.class, () -> map.place(animal1));
-        assertThrows(IncorrectPositionException.class, () -> map.place(animal2));
-        assertThrows(IncorrectPositionException.class, () -> map.place(animal3));
-        assertThrows(IncorrectPositionException.class, () -> map.place(animal4));
+        assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal1));
+        assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal2));
+        assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal3));
+        assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal4));
     }
 
     @Test
@@ -121,7 +123,7 @@ class EarthUnitTest {
         var plantToPlace = new Plant(plantPlaced.getPosition());
 
         //when && then
-        assertThrows(IncorrectPositionException.class, () -> map.placePlant(plantToPlace));
+        assertThrows(PositionOccupiedByWorldElementException.class, () -> map.placePlant(plantToPlace));
         assertEquals(1, map.plants.size());
         assertEquals(plantPlaced, map.getPlantAtPosition(plantPlaced.getPosition()));
     }

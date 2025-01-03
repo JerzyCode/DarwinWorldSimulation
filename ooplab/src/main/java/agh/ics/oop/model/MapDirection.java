@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.exceptions.WrongAngleException;
+import agh.ics.oop.model.exceptions.InvalidAngleException;
 
 public enum MapDirection {
     NORTH(new Vector2d(0, 1), "N"),
@@ -44,7 +44,7 @@ public enum MapDirection {
 
     public MapDirection rotate(int angle) {
         if (angle % 45 != 0) {
-            throw new WrongAngleException();
+            throw new InvalidAngleException();
         }
 
         var index = (this.ordinal() + angle / 45) % 8;

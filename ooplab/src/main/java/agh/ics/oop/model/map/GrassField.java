@@ -83,8 +83,4 @@ public class GrassField extends AbstractPlantMap {
         displayRightTopCorner = rightTop;
     }
 
-    @Override
-    public boolean canPlacePlant(Vector2d position) {
-        return true;
-    }
 }
