@@ -25,6 +25,7 @@ public class MainPanelPresenter {
 //    var map = new RectangularMap(20,20);
     SimulationPresenter presenter = loader.getController();
     map.addListener(presenter);
+    map.addListener((worldMap, message) -> System.out.println(message));
     presenter.setWorldMap(map);
     presenter.drawMap();
 
