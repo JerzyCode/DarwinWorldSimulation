@@ -8,6 +8,7 @@ import agh.ics.oop.model.move.MoveValidator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -379,6 +380,99 @@ class AnimalTest {
 
         animal.decreaseEnergy(3);
         assertFalse(animal.canMakeChild(wellFedEnergy));
+    }
+
+
+    @Test
+    void getGensForChildShouldReturnLeftPart() {
+        //given
+        var genome = new Genome(List.of(
+                new Gen(0), new Gen(1), new Gen(2), new Gen(3),
+                new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
+
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+        var count = 5;
+
+        //when
+        var expectedGens = List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3), new Gen(4));
+        var gensForChild = animal.getGensForChild(count, true);
+
+        //then
+        assertEquals(count, gensForChild.size());
+        for (int i = 0; i < count; i++) {
+            assertEquals(expectedGens.get(i).getIndex(), gensForChild.get(i).getIndex());
+        }
+    }
+
+    @Test
+    void getGensForChildShouldReturnRightPart() {
+        //given
+        var genome = new Genome(List.of(
+                new Gen(0), new Gen(1), new Gen(2), new Gen(3),
+                new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
+
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+        var count = 5;
+
+        //when
+        var gensForChild = animal.getGensForChild(count, false);
+
+        //then
+        var expectedGens = List.of(new Gen(3), new Gen(4), new Gen(5), new Gen(6), new Gen(7));
+        assertEquals(count, gensForChild.size());
+
+        for (int i = 0; i < count; i++) {
+            assertEquals(expectedGens.get(i).getIndex(), gensForChild.get(i).getIndex());
+        }
+    }
+
+    @Test
+    void getGensForChildShouldReturnEmptyList() {
+        //given
+        var genome1 = new Genome(List.of(new Gen(0)));
+        var animal1 = TestAnimalBuilder.create()
+                .genome(genome1)
+                .build();
+
+        var genome2 = new Genome(new ArrayList<>());
+        var animal2 = TestAnimalBuilder.create()
+                .genome(genome2)
+                .build();
+
+        //when & then
+        assertEquals(0, animal1.getGensForChild(0, true).size());
+        assertEquals(0, animal1.getGensForChild(0, false).size());
+        assertEquals(0, animal2.getGensForChild(0, true).size());
+        assertEquals(0, animal2.getGensForChild(0, false).size());
+    }
+
+    @Test
+    void getGensForChildShouldReturnAllGens() {
+        //given
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+
+        //when
+        var gensLeft = animal.getGensForChild(10, true);
+        var gensRight = animal.getGensForChild(10, false);
+
+        //then
+        assertEquals(4, gensLeft.size());
+        assertEquals(4, gensRight.size());
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i, gensLeft.get(i).getIndex());
+        }
+
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i, gensRight.get(i).getIndex());
+        }
+
     }
 
 }
