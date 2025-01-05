@@ -92,6 +92,9 @@ public class SimulationContext {
                             var child = animalFactory.birthAnimal(parent1, parent2);
                             newAnimals.add(child);
 
+                            parent1.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
+                            parent2.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
+
                             try {
                                 worldMap.place(child);
                             } catch (IncorrectPositionException e) {

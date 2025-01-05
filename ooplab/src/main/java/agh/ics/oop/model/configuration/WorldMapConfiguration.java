@@ -6,7 +6,7 @@ public class WorldMapConfiguration {
     private WorldMapVariant mapVariant;
 
     WorldMapConfiguration() {
-        this(9, 20, WorldMapVariant.GRASS_FIELD);
+        this(20, 40, WorldMapVariant.EARTH);
     }
 
     public WorldMapConfiguration(int height, int width, WorldMapVariant mapVariant) {
