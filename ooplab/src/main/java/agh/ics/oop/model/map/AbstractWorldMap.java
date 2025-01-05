@@ -6,6 +6,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.MapVisualizer;
 
@@ -33,7 +34,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void place(Animal animal) throws IncorrectPositionException {
         var position = animal.getPosition();
         if (!canMoveTo(position)) {
-            throw new IncorrectPositionException(position);
+            throw new PositionOccupiedByWorldElementException(position, Animal.class.getSimpleName());
         }
 
         animals.put(position, animal);
@@ -79,6 +80,13 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public abstract Boundary getCurrentBounds();
+
+    @Override
+    public boolean isPositionWithinMapBoundary(Vector2d position) {
+        var boundary = getCurrentBounds();
+        return position.follows(boundary.leftBottomCorner()) &&
+                position.precedes(boundary.rightTopCorner());
+    }
 
     @Override
     public final String toString() {

@@ -61,4 +61,6 @@ public interface WorldMap extends MoveValidator {
 
     void removeAnimal(Animal animal);
 
+    boolean isPositionWithinMapBoundary(Vector2d position);
+
 }

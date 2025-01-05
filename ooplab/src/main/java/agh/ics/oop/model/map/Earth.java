@@ -5,6 +5,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
@@ -29,7 +30,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     public void place(Animal animal) throws IncorrectPositionException {
         var position = animal.getPosition();
         if (!isPositionWithinMapBoundary(animal.getPosition())) {
-            throw new IncorrectPositionException(position);
+            throw new PositionOutOfMapBoundaryException(position);
         }
 
         placeAnimalAtNewPosition(animal);
@@ -43,12 +44,6 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
         notifyListeners("Animal was removed from position: " + animal.getPosition());
     }
 
-    @Override
-    public boolean canPlacePlant(Vector2d position) {
-        return !super.isPlantAtPosition(position) &&
-                position.follows(boundary.leftBottomCorner()) &&
-                position.precedes(boundary.rightTopCorner());
-    }
 
     @Override
     public Boundary getCurrentBounds() {
@@ -128,10 +123,6 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
         animalsAtPosition.add(animal);
     }
 
-    private boolean isPositionWithinMapBoundary(Vector2d position) {
-        return position.follows(boundary.leftBottomCorner()) &&
-                position.precedes(boundary.rightTopCorner());
-    }
 
 }
 

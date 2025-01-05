@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.exceptions.WrongAngleException;
+import agh.ics.oop.model.exceptions.InvalidAngleException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,11 +13,11 @@ class MapDirectionTest {
 
   @Test
   void rotateShouldThrowWrongAngleException() {
-    Assertions.assertThrows(WrongAngleException.class, () -> MapDirection.WEST.rotate(10));
-    Assertions.assertThrows(WrongAngleException.class, () -> MapDirection.EAST.rotate(4));
-    Assertions.assertThrows(WrongAngleException.class, () -> MapDirection.NORTH.rotate(34));
-    Assertions.assertThrows(WrongAngleException.class, () -> MapDirection.NORTH_WEST.rotate(531));
-    Assertions.assertThrows(WrongAngleException.class, () -> MapDirection.SOUTH_WEST.rotate(10001));
+    Assertions.assertThrows(InvalidAngleException.class, () -> MapDirection.WEST.rotate(10));
+    Assertions.assertThrows(InvalidAngleException.class, () -> MapDirection.EAST.rotate(4));
+    Assertions.assertThrows(InvalidAngleException.class, () -> MapDirection.NORTH.rotate(34));
+    Assertions.assertThrows(InvalidAngleException.class, () -> MapDirection.NORTH_WEST.rotate(531));
+    Assertions.assertThrows(InvalidAngleException.class, () -> MapDirection.SOUTH_WEST.rotate(10001));
   }
 
   @Test
