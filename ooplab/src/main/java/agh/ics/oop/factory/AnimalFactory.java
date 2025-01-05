@@ -24,7 +24,7 @@ public class AnimalFactory {
         return new Animal(animalConfiguration.getStartEnergy(), position, genome);
     }
 
-    public Animal birthAnimal(Animal parent1, Animal parent2) {
+    public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy) {
         var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
         var other = dominating == parent1 ? parent2 : parent1;
         var percentage = (double) dominating.getEnergy() / other.getEnergy();
@@ -39,14 +39,13 @@ public class AnimalFactory {
         var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
         childGenome.mutate(random.nextInt(
                 animalConfiguration.getMinimumMutationCount(),
-                animalConfiguration.getMaximumMutationCount()
+                animalConfiguration.getMaximumMutationCount() + 1
         ));
 
-        var child = new Animal(parent1.getEnergy() + parent2.getEnergy(),
+        var child = new Animal(startBirthEnergy,
                 parent1.getPosition(), childGenome);
 
         //TODO add to children
-        //TODO remove energy from parents (in simulation)
 
         return child;
     }

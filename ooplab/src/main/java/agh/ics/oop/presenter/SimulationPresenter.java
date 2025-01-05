@@ -18,20 +18,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 
 public class SimulationPresenter implements MapChangeListener {
 
-    private static final int GRID_WIDTH = 40;
+    private static final int GRID_WIDTH = 15;
+
     private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
     @FXML
     private GridPane mapGrid;
@@ -48,11 +44,25 @@ public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
     private Configuration configuration;
 
+    public void initialize() {
+        System.out.println("initialize()");
+        AnchorPane.setTopAnchor(topCoordinates, 0.0);
+        AnchorPane.setLeftAnchor(topCoordinates, 0.0);
+
+        AnchorPane.setTopAnchor(leftCoordinates, (double) GRID_WIDTH);
+        AnchorPane.setLeftAnchor(leftCoordinates, 0.0);
+
+        AnchorPane.setTopAnchor(mapGrid, (double) GRID_WIDTH);
+        AnchorPane.setLeftAnchor(mapGrid, (double) GRID_WIDTH);
+
+        leftCoordinates.setPrefWidth(GRID_WIDTH);
+    }
+
     public void drawMap() {
         synchronized (worldMap.getElements()) {
             var mapBoundary = worldMap.getCurrentBounds();
             clearGrid();
-            fillCoordinates(mapBoundary);
+//            fillCoordinates(mapBoundary);
             fillGrid(mapBoundary);
             drawElements(mapBoundary);
         }
@@ -150,7 +160,7 @@ public class SimulationPresenter implements MapChangeListener {
                 var animalDrawing = createAnimalDrawing(animal.getOrientation());
                 mapGrid.add(animalDrawing, x, y);
             } else if (element instanceof Plant) {
-                rectangle.setFill(Color.GREEN);
+                rectangle.setFill(Color.LIGHTGREEN);
                 mapGrid.add(rectangle, x, y);
             } else {
                 rectangle.setFill(Color.RED);
@@ -162,28 +172,15 @@ public class SimulationPresenter implements MapChangeListener {
 
     private Pane createAnimalDrawing(MapDirection orientation) {
         Pane pane = new Pane();
-        double width = (double) GRID_WIDTH / 2;
-        double radius = width / 1.5;
-        Circle head = new Circle(width, width, radius);
+        double centerX = (double) GRID_WIDTH / 2;
+        double centerY = (double) GRID_WIDTH / 2;
+        double radius = (double) GRID_WIDTH / 2 - 2;
+        Circle head = new Circle(centerX, centerY, radius);
         head.setFill(Color.LIGHTBLUE);
-
-        Text text = new Text(width, width, orientation.getSymbol());
-        text.setFill(Color.BLACK);
-        text.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
-
-        pane.getChildren().addAll(head, text);
+        pane.getChildren().add(head);
         return pane;
     }
 
-    private Circle createCircle(MapDirection orientation) {
-        // TODO draw nice animal with circle and triangle
-        return null;
-    }
-
-    private Polygon createTriangle(MapDirection orientation) {
-        // TODO draw nice animal with circle and triangle
-        return null;
-    }
 
     private Label createCoordinateLabel(String text) {
         Label label = new Label(text);

@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SimulationContext {
-    private final Random random = new Random();
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
     private final PlantFactory plantFactory;
@@ -89,8 +88,11 @@ public class SimulationContext {
                         if (animalsAt.size() >= 2) {
                             var parent1 = animalsAt.iterator().next();
                             var parent2 = animalsAt.iterator().next();
-                            var child = animalFactory.birthAnimal(parent1, parent2);
+                            var child = animalFactory.birthAnimal(parent1, parent2, configuration.getSimulationConfiguration().getLossCopulateEnergy());
                             newAnimals.add(child);
+
+                            parent1.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
+                            parent2.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
 
                             try {
                                 worldMap.place(child);
