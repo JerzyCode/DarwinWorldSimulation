@@ -9,25 +9,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AnimalFactoryTest {
 
-  @Test
-  void should_create_animal() {
-    //given
-    var configuration = new AnimalConfiguration(
-        10,
-        10,
-        10,
-        MutationVariant.FULL_RANDOM
-        , 10
-    );
+    @Test
+    void should_create_animal() {
+        //given
+        var configuration = new AnimalConfiguration(
+                10,
+                10,
+                10,
+                MutationVariant.FULL_RANDOM
+                , 10
+        );
 
-    var factory = new AnimalFactory(configuration);
+        var factory = new AnimalFactory(configuration);
 
-    //when
-    var animal = factory.createAnimal(new Vector2d(1, 1));
+        //when
+        var animal = factory.createAnimal(new Vector2d(1, 1));
 
-    //then
-    assertEquals(new Vector2d(1, 1), animal.getPosition());
-  }
+        //then
+        assertEquals(new Vector2d(1, 1), animal.getPosition());
+        assertEquals(configuration.getStartEnergy(), animal.getEnergy());
+    }
 
-  //TODO przypadki testowe po implementacji dodatkowych pól
+    //TODO przypadki testowe po implementacji dodatkowych pól
 }
