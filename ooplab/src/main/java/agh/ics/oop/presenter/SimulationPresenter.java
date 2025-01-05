@@ -54,8 +54,10 @@ public class SimulationPresenter implements MapChangeListener {
 
   @Override
   public void mapChanged(WorldMap worldMap, String message) {
-    historyTextArea.appendText(message + "\n");
-    Platform.runLater(this::drawMap);
+    Platform.runLater(() -> {
+      historyTextArea.appendText(message + "\n");
+      this.drawMap();
+    });
   }
 
   public void onSimulationStartClicked() {

@@ -1,6 +1,7 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.GrassField;
+import agh.ics.oop.model.log.FileMapDisplay;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,9 +23,11 @@ public class MainPanelPresenter {
     BorderPane viewRoot = loader.load();
 
     var map = new GrassField(10);
+    var fileMapDisplay = new FileMapDisplay();
 //    var map = new RectangularMap(20,20);
     SimulationPresenter presenter = loader.getController();
     map.addListener(presenter);
+    map.addListener(fileMapDisplay);
     map.addListener((worldMap, message) -> System.out.println(message));
     presenter.setWorldMap(map);
     presenter.drawMap();

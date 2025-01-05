@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GrassField extends AbstractWorldMap {
@@ -45,7 +46,7 @@ public class GrassField extends AbstractWorldMap {
     public Collection<WorldElement> getElements() {
         return Stream
                 .concat(animals.values().stream(), grasses.values().stream())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
