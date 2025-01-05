@@ -5,6 +5,7 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.PresenterNoMapToPresentException;
+import agh.ics.oop.ui.WorldElementBox;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,16 +14,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -39,6 +35,8 @@ public class SimulationPresenter implements MapChangeListener {
   @FXML
   private TextField movesTextField;
 
+  private final Map<WorldElement, WorldElementBox> graphicElements = new HashMap<>();
+
   private WorldMap worldMap;
 
   private static final int GRID_WIDTH = 40;
@@ -53,9 +51,15 @@ public class SimulationPresenter implements MapChangeListener {
   }
 
   @Override
-  public void mapChanged(WorldMap worldMap, String message) {
+  public void mapChanged(WorldMap worldMap, MapChangeEventData data) {
+    if (data.getType() == MapChangeEventType.PLACE) {
+      this.worldMap.getElements()
+          .stream()
+          .filter(worldElement -> !graphicElements.containsKey(worldElement))
+          .forEach(worldElement -> graphicElements.put(worldElement, new WorldElementBox(worldElement, GRID_WIDTH)));
+    }
     Platform.runLater(() -> {
-      historyTextArea.appendText(message + "\n");
+      historyTextArea.appendText(data.getMessage() + "\n");
       this.drawMap();
     });
   }
@@ -77,6 +81,9 @@ public class SimulationPresenter implements MapChangeListener {
 
   public void setWorldMap(WorldMap worldMap) {
     this.worldMap = worldMap;
+    this.worldMap.getElements().forEach(element -> {
+      graphicElements.put(element, new WorldElementBox(element, GRID_WIDTH));
+    });
   }
 
   private void clearGrid() {
@@ -137,44 +144,8 @@ public class SimulationPresenter implements MapChangeListener {
     worldMap.getElements().forEach(element -> {
       int x = element.getPosition().getX() + calculateOffsetX(maxLeftX);
       int y = element.getPosition().getY() + calculateOffsetY(maxBottomY);
-
-      Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
-
-      if (element instanceof Animal animal) {
-        var animalDrawing = createAnimalDrawing(animal.getOrientation());
-        mapGrid.add(animalDrawing, x, y);
-      }
-      else {
-        rectangle.setFill(Color.GREEN);
-        mapGrid.add(rectangle, x, y);
-      }
-
+      mapGrid.add(graphicElements.get(element).getContainer(), x, y);
     });
-  }
-
-  private Pane createAnimalDrawing(MapDirection orientation) {
-    Pane pane = new Pane();
-    double width = (double)GRID_WIDTH / 2;
-    double radius = width / 1.5;
-    Circle head = new Circle(width, width, radius);
-    head.setFill(Color.LIGHTBLUE);
-
-    Text text = new Text(width, width, orientation.getSymbol());
-    text.setFill(Color.BLACK);
-    text.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
-
-    pane.getChildren().addAll(head, text);
-    return pane;
-  }
-
-  private Circle createCircle(MapDirection orientation) {
-    // TODO draw nice animal with circle and triangle
-    return null;
-  }
-
-  private Polygon createTriangle(MapDirection orientation) {
-    // TODO draw nice animal with circle and triangle
-    return null;
   }
 
   private Label createCoordinateLabel(String text) {

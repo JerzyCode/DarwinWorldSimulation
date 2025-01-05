@@ -47,6 +47,11 @@ public class Animal implements WorldElement {
     return position;
   }
 
+  @Override
+  public String getImageName() {
+    return orientation.getImageName();
+  }
+
   public MapDirection getOrientation() {
     return orientation;
   }

@@ -1,5 +1,6 @@
 package agh.ics.oop.model.log;
 
+import agh.ics.oop.model.MapChangeEventData;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.WorldMap;
 
@@ -18,8 +19,8 @@ public class FileMapDisplay implements MapChangeListener {
 
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
-        writeLog(worldMap.getId(), message);
+    public void mapChanged(WorldMap worldMap, MapChangeEventData data) {
+        writeLog(worldMap.getId(), data.getMessage());
     }
 
     private void initializeLogDirectory() {
