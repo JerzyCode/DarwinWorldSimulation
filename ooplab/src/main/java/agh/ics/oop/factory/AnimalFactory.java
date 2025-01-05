@@ -42,12 +42,7 @@ public class AnimalFactory {
                 animalConfiguration.getMaximumMutationCount() + 1
         ));
 
-        var child = new Animal(startBirthEnergy,
-                parent1.getPosition(), childGenome);
-
-        //TODO add to children
-
-        return child;
+        return new Animal(startBirthEnergy, parent1.getPosition(), childGenome);
     }
 
     private Genome createGenome() {
