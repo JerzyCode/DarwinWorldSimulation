@@ -21,13 +21,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class SimulationPresenter implements MapChangeListener {
 
-    private static final int GRID_WIDTH = 20;
+    private static final int GRID_WIDTH = 15;
 
     private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
     @FXML
@@ -63,7 +62,7 @@ public class SimulationPresenter implements MapChangeListener {
         synchronized (worldMap.getElements()) {
             var mapBoundary = worldMap.getCurrentBounds();
             clearGrid();
-            fillCoordinates(mapBoundary);
+//            fillCoordinates(mapBoundary);
             fillGrid(mapBoundary);
             drawElements(mapBoundary);
         }
@@ -178,25 +177,10 @@ public class SimulationPresenter implements MapChangeListener {
         double radius = (double) GRID_WIDTH / 2 - 2;
         Circle head = new Circle(centerX, centerY, radius);
         head.setFill(Color.LIGHTBLUE);
-
-//        Text text = new Text(width, width, orientation.getSymbol());
-//        text.setFill(Color.BLACK);
-//        text.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
-//
-//        pane.getChildren().addAll(head, text);
         pane.getChildren().add(head);
         return pane;
     }
 
-    private Circle createCircle(MapDirection orientation) {
-        // TODO draw nice animal with circle and triangle
-        return null;
-    }
-
-    private Polygon createTriangle(MapDirection orientation) {
-        // TODO draw nice animal with circle and triangle
-        return null;
-    }
 
     private Label createCoordinateLabel(String text) {
         Label label = new Label(text);

@@ -6,7 +6,7 @@ public class WorldMapConfiguration {
     private WorldMapVariant mapVariant;
 
     WorldMapConfiguration() {
-        this(20, 40, WorldMapVariant.EARTH);
+        this(26, 54, WorldMapVariant.EARTH);
     }
 
     public WorldMapConfiguration(int height, int width, WorldMapVariant mapVariant) {

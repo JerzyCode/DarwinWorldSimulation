@@ -19,7 +19,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
 
     public Earth(int width, int height) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
-        animals = new HashMap<>();
+        animals = new ConcurrentHashMap<>();
     }
 
     // TODO: remove unused constructor
@@ -28,7 +28,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     }
 
     @Override
-    public synchronized void place(Animal animal) throws IncorrectPositionException {
+    public void place(Animal animal) throws IncorrectPositionException {
         var position = animal.getPosition();
         if (!isPositionWithinMapBoundary(animal.getPosition())) {
             throw new PositionOutOfMapBoundaryException(position);
@@ -39,7 +39,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     }
 
     @Override
-    public synchronized void removeAnimal(Animal animal) {
+    public void removeAnimal(Animal animal) {
         var animalsAtPosition = animals.get(animal.getPosition());
         animalsAtPosition.remove(animal);
         notifyListeners("Animal was removed from position: " + animal.getPosition());
@@ -114,7 +114,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
 
     public Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
-            return Collections.unmodifiableSet(animals.get(position));
+            return animals.get(position);
         }
         return new HashSet<>();
     }
