@@ -2,12 +2,15 @@ package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.configuration.MutationVariant;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 public class Genome {
     private final List<Gen> gens;
     private int currentIndex = 0;
-    private MutationVariant mutation;
+    private final MutationVariant mutation;
 
     public Genome(List<Gen> gens) {
         this(gens, MutationVariant.FULL_RANDOM);
@@ -18,21 +21,29 @@ public class Genome {
         this.mutation = mutation;
     }
 
+    //TODO test
     public void mutate(int count) {
-        if (count > gens.size()) {
-            count = gens.size();
-        }
-        //TODO impl and tests
-        switch (mutation) {
+        count = Math.min(count, gens.size());
 
+        var indices = new ArrayList<Integer>();
+        for (int i = 0; i < gens.size(); i++) {
+            indices.add(i);
+        }
+
+        Collections.shuffle(indices, RandomGenerator.getDefault());
+        for (int i = 0; i < count; i++) {
+            gens.get(indices.get(i)).mutate(mutation);
         }
     }
 
+
+    //TODO test
     public List<Gen> getPartOfGenome(int count, boolean left) {
+        count = Math.min(count, gens.size());
         if (left) {
             return gens.subList(0, count);
         }
-        return gens.subList(count, gens.size());
+        return gens.subList(gens.size() - count, gens.size());
     }
 
     public Gen nextGen() {
@@ -44,6 +55,5 @@ public class Genome {
     public Gen getActivatedGen() {
         return gens.get(currentIndex);
     }
-
 
 }

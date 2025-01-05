@@ -13,7 +13,7 @@ public class SimulationConfiguration {
     private int startPlantCount;
 
     SimulationConfiguration() {
-        this(200, 15, 2, PlantVariant.NONE, 5, 2, 0, 0, 15, 20);
+        this(2000, 3, 2, PlantVariant.NONE, 10, 5, 0, 0, 15, 20);
     }
 
     public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,

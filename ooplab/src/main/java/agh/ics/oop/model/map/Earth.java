@@ -11,10 +11,11 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster {
     private final Boundary boundary;
-    private final HashMap<Vector2d, Set<Animal>> animals;
+    private final Map<Vector2d, Set<Animal>> animals;
 
     public Earth(int width, int height) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
@@ -27,7 +28,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     }
 
     @Override
-    public void place(Animal animal) throws IncorrectPositionException {
+    public synchronized void place(Animal animal) throws IncorrectPositionException {
         var position = animal.getPosition();
         if (!isPositionWithinMapBoundary(animal.getPosition())) {
             throw new PositionOutOfMapBoundaryException(position);
@@ -38,7 +39,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
     }
 
     @Override
-    public void removeAnimal(Animal animal) {
+    public synchronized void removeAnimal(Animal animal) {
         var animalsAtPosition = animals.get(animal.getPosition());
         animalsAtPosition.remove(animal);
         notifyListeners("Animal was removed from position: " + animal.getPosition());

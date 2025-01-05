@@ -44,7 +44,7 @@ public class SimulationContext {
     }
 
     public void handleDayEnds() {
-        System.out.println("Current day: " + currentDay);
+        System.out.println("Current day: " + currentDay + ", animalsCount=" + animals.size());
         clearDeadAnimals();
         handleAnimalsMove();
         handlePlantEating();
@@ -77,23 +77,45 @@ public class SimulationContext {
     }
 
     private void handleCopulate() {
+        if (worldMap instanceof Earth earth) {
+            Set<Animal> newAnimals = new HashSet<>();
 
+            animals.stream()
+                    .filter(animal -> animal.canMakeChild(configuration.getSimulationConfiguration().getWellFedEnergy()))
+                    .map(Animal::getPosition)
+                    .distinct()
+                    .forEach(pos -> {
+                        var animalsAt = earth.getAnimalsAtPosition(pos);
+                        if (animalsAt.size() >= 2) {
+                            var parent1 = animalsAt.iterator().next();
+                            var parent2 = animalsAt.iterator().next();
+                            var child = animalFactory.birthAnimal(parent1, parent2);
+                            newAnimals.add(child);
+
+                            try {
+                                worldMap.place(child);
+                            } catch (IncorrectPositionException e) {
+                                System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
+                            }
+                        }
+                    });
+
+            animals.addAll(newAnimals);
+        }
     }
 
     private void handleAnimalsOnFire() {
         if (worldMap instanceof FireWorldMap fireWorldMap) {
             animals.stream()
                     .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
-                    .forEach(animal -> {
-                        System.out.println("Killing animal by fire at position: " + animal.getPosition());
-                        animal.kill();
-                    });
+                    .forEach(Animal::kill);
         }
     }
 
     private void clearDeadAnimals() {
         animals.removeIf(animal -> {
             if (animal.isDead()) {
+                System.out.println("removing dead animal");
                 worldMap.removeAnimal(animal);
                 return true;
             }
@@ -104,6 +126,7 @@ public class SimulationContext {
     private void handleAnimalLossEnergy() {
         animals.forEach(animal -> animal.decreaseEnergy(1));
     }
+
 
     private void createPlants(int plantCount) {
         int countOfPlantsBeforeCreating = plants.size();
