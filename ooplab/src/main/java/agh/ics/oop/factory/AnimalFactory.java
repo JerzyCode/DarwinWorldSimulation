@@ -27,7 +27,7 @@ public class AnimalFactory {
     public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy) {
         var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
         var other = dominating == parent1 ? parent2 : parent1;
-        var percentage = (double) dominating.getEnergy() / other.getEnergy();
+        var percentage = (double) dominating.getEnergy() / other.getEnergy() + dominating.getEnergy();
         var dominatingLeft = random.nextInt(2) == 1;
         var dominatingGensSize = (int) Math.ceil(percentage * animalConfiguration.getGenomeLength());
         var otherGensSize = animalConfiguration.getGenomeLength() - dominatingGensSize;

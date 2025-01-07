@@ -88,12 +88,14 @@ public class SimulationContext {
                         if (animalsAt.size() >= 2) {
                             var parent1 = animalsAt.iterator().next();
                             var parent2 = animalsAt.iterator().next();
-                            var child = animalFactory.birthAnimal(parent1, parent2, configuration.getSimulationConfiguration().getLossCopulateEnergy());
+                            var child = animalFactory.birthAnimal(parent1, parent2, 2*configuration.getSimulationConfiguration().getLossCopulateEnergy());
                             newAnimals.add(child);
 
                             parent1.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
                             parent2.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
                             //TODO add parents to child, and child to parents
+
+                            System.out.println("animalBirth()");
 
                             try {
                                 worldMap.place(child);
