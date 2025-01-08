@@ -45,13 +45,21 @@ public class SimulationContext {
     public void handleDayEnds() {
         System.out.println("Current day: " + currentDay + ", animalsCount=" + animals.size());
         clearDeadAnimals();
+        System.out.println("clearDeadAnimals");
         handleAnimalsMove();
+        System.out.println("handleAnimalsMove");
         handlePlantEating();
+        System.out.println("handlePlantEating");
         handleCopulate();
+        System.out.println("handleCopulate");
         handleAnimalLossEnergy();
+        System.out.println("handleAnimalLossEnergy");
         handlePlantGrowth();
+        System.out.println("handlePlantGrowth");
         handleFirefightings();
+        System.out.println("handleFirefightings");
         handleAnimalsOnFire();
+        System.out.println("handleAnimalsOnFire");
         currentDay++;
     }
 
@@ -75,21 +83,28 @@ public class SimulationContext {
         createPlants(configuration.getSimulationConfiguration().getPlantGrowth());
     }
 
+    // TODO: poprawic cos
     private void handleCopulate() {
         if (worldMap instanceof Earth earth) {
             Set<Animal> newAnimals = new HashSet<>();
-
+            System.out.println("Before Stream");
             animals.stream()
                     .filter(animal -> animal.canMakeChild(configuration.getSimulationConfiguration().getWellFedEnergy()))
                     .map(Animal::getPosition)
                     .distinct()
                     .forEach(pos -> {
+                        System.out.println("In stream");
                         var animalsAt = earth.getAnimalsAtPosition(pos);
                         if (animalsAt.size() >= 2) {
-                            var parent1 = animalsAt.iterator().next();
-                            var parent2 = animalsAt.iterator().next();
+                            var animalsIterator = animalsAt.iterator();
+                            var parent1 = animalsIterator.next();
+                            var parent2 = animalsIterator.next();
+                            System.out.println("Before Birth ");
+                            System.out.println(parent1.hashCode());
+                            System.out.println(parent2.hashCode());
                             var child = animalFactory.birthAnimal(parent1, parent2, 2*configuration.getSimulationConfiguration().getLossCopulateEnergy());
                             newAnimals.add(child);
+                            System.out.println("Birth child: " + child);
 
                             parent1.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
                             parent2.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
@@ -104,7 +119,7 @@ public class SimulationContext {
                             }
                         }
                     });
-
+            System.out.println("After Stream");
             animals.addAll(newAnimals);
         }
     }

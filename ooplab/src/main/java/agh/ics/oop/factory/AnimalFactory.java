@@ -33,9 +33,11 @@ public class AnimalFactory {
         var otherGensSize = animalConfiguration.getGenomeLength() - dominatingGensSize;
 
         var childGens = new ArrayList<Gen>();
+        System.out.println("gens not added yet");
+        //TODO: psuje sie tutaj
         childGens.addAll(dominating.getGensForChild(dominatingGensSize, dominatingLeft));
         childGens.addAll(other.getGensForChild(otherGensSize, !dominatingLeft));
-
+        System.out.println("added gens " + childGens.size());
         var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
         childGenome.mutate(random.nextInt(
                 animalConfiguration.getMinimumMutationCount(),
