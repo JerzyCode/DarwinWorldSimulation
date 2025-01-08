@@ -8,10 +8,10 @@ public class ConsoleMapDisplay implements MapChangeListener {
   }
 
   @Override
-  public void mapChanged(WorldMap worldMap, String message) {
+  public void mapChanged(WorldMap worldMap, MapChangeEventData data) {
     synchronized (System.out) {
       eventsCount += 1;
-      System.out.println(message);
+      System.out.println(data.getMessage());
       System.out.println("Map ID: " + worldMap.getId());
       System.out.print(worldMap);
       System.out.println("Events count: " + eventsCount);

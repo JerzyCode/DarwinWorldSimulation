@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
       var animal = animals.get(index);
       try {
         worldMap.move(animal, moveDirections.get(i));
-        Thread.sleep(500);
+        Thread.sleep(0);
       }
       catch (InterruptedException e) {
         System.out.println("Simulation was interrupted!!");

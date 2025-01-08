@@ -31,7 +31,7 @@ abstract class AbstractWorldMap implements WorldMap {
     }
 
     animals.put(position, animal);
-    notifyListeners("Animal was placed at position: " + position);
+    notifyListeners(new MapChangeEventData(MapChangeEventType.PLACE, "Animal was placed at position: " + position));
   }
 
   @Override
@@ -40,7 +40,7 @@ abstract class AbstractWorldMap implements WorldMap {
       animals.remove(animal.getPosition());
       animal.move(direction, this);
       animals.put(animal.getPosition(), animal);
-      notifyListeners("Animal moved to position: " + animal.getPosition());
+      notifyListeners(new MapChangeEventData(MapChangeEventType.MOVE, "Animal moved to position: " + animal.getPosition()));
     }
   }
 
@@ -50,8 +50,8 @@ abstract class AbstractWorldMap implements WorldMap {
   }
 
   @Override
-  public WorldElement objectAt(Vector2d position) {
-    return animals.get(position);
+  public Optional<WorldElement> objectAt(Vector2d position) {
+    return Optional.ofNullable(animals.get(position));
   }
 
   @Override
@@ -72,6 +72,16 @@ abstract class AbstractWorldMap implements WorldMap {
     return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
   }
 
+  @Override
+  public Collection<Animal> getOrderedAnimals() {
+    return animals.values()
+        .stream()
+        .sorted(Comparator
+            .comparingInt((Animal animal) -> animal.getPosition().getX())
+            .thenComparingInt(animal -> animal.getPosition().getY()))
+        .toList();
+  }
+
   public void addListener(MapChangeListener listener) {
     mapChangeListeners.add(listener);
   }
@@ -80,7 +90,7 @@ abstract class AbstractWorldMap implements WorldMap {
     mapChangeListeners.remove(listener);
   }
 
-  private void notifyListeners(String message) {
-    mapChangeListeners.forEach(listener -> listener.mapChanged(this, message));
+  private void notifyListeners(MapChangeEventData data) {
+    mapChangeListeners.forEach(listener -> listener.mapChanged(this, data));
   }
 }
