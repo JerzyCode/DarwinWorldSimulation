@@ -28,7 +28,7 @@ public class MainPanelPresenter {
     SimulationPresenter presenter = loader.getController();
     map.addListener(presenter);
     map.addListener(fileMapDisplay);
-    map.addListener((worldMap, message) -> System.out.println(message));
+    map.addListener((worldMap, mapChangeEventData) -> System.out.println(mapChangeEventData.getMessage()));
     presenter.setWorldMap(map);
     presenter.drawMap();
 
