@@ -3,6 +3,7 @@ package agh.ics.oop.model.elements;
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.exceptions.InvalidCountException;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 import org.junit.jupiter.api.Test;
@@ -397,7 +398,12 @@ class AnimalTest {
 
         //when
         var expectedGens = List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3), new Gen(4));
-        var gensForChild = animal.getGensForChild(count, true);
+        List<Gen> gensForChild = null;
+        try {
+            gensForChild = animal.getGensForChild(count, true);
+        } catch (InvalidCountException e) {
+            fail("Should not throw exception in test, e=" + e.getMessage());
+        }
 
         //then
         assertEquals(count, gensForChild.size());
@@ -419,7 +425,12 @@ class AnimalTest {
         var count = 5;
 
         //when
-        var gensForChild = animal.getGensForChild(count, false);
+        List<Gen> gensForChild = null;
+        try {
+            gensForChild = animal.getGensForChild(count, false);
+        } catch (InvalidCountException e) {
+            fail("Should not throw exception in test, e=" + e.getMessage());
+        }
 
         //then
         var expectedGens = List.of(new Gen(3), new Gen(4), new Gen(5), new Gen(6), new Gen(7));
@@ -444,10 +455,14 @@ class AnimalTest {
                 .build();
 
         //when & then
-        assertEquals(0, animal1.getGensForChild(0, true).size());
-        assertEquals(0, animal1.getGensForChild(0, false).size());
-        assertEquals(0, animal2.getGensForChild(0, true).size());
-        assertEquals(0, animal2.getGensForChild(0, false).size());
+        try {
+            assertEquals(0, animal1.getGensForChild(0, true).size());
+            assertEquals(0, animal1.getGensForChild(0, false).size());
+            assertEquals(0, animal2.getGensForChild(0, true).size());
+            assertEquals(0, animal2.getGensForChild(0, false).size());
+        } catch (InvalidCountException e) {
+            fail("Should not throw exception in test, e=" + e.getMessage());
+        }
     }
 
     @Test
@@ -459,8 +474,14 @@ class AnimalTest {
                 .build();
 
         //when
-        var gensLeft = animal.getGensForChild(10, true);
-        var gensRight = animal.getGensForChild(10, false);
+        List<Gen> gensLeft;
+        List<Gen> gensRight;
+        try {
+            gensLeft = animal.getGensForChild(10, true);
+            gensRight = animal.getGensForChild(10, false);
+        } catch (InvalidCountException e) {
+            throw new RuntimeException(e);
+        }
 
         //then
         assertEquals(4, gensLeft.size());
@@ -472,7 +493,22 @@ class AnimalTest {
         for (int i = 0; i < 4; i++) {
             assertEquals(i, gensRight.get(i).getIndex());
         }
+    }
 
+
+    @Test
+    void getGensForChildShouldThrowException() {
+        //given
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+
+        //when & then
+        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-1, true));
+        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-5, true));
+        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-10, false));
+        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-1, false));
     }
 
 }

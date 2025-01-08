@@ -2,6 +2,7 @@ package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.exceptions.InvalidCountException;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
@@ -55,7 +56,10 @@ public class Animal implements WorldElement {
         return energy >= wellFedEnergy;
     }
 
-    public List<Gen> getGensForChild(int count, boolean left) {
+    public List<Gen> getGensForChild(int count, boolean left) throws InvalidCountException {
+        if (count < 0) {
+            throw new InvalidCountException();
+        }
         return genome.getPartOfGenome(count, left);
     }
 

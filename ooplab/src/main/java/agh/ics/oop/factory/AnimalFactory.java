@@ -6,6 +6,8 @@ import agh.ics.oop.model.configuration.AnimalConfiguration;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
+import agh.ics.oop.model.exceptions.AnimalBirthException;
+import agh.ics.oop.model.exceptions.InvalidCountException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ public class AnimalFactory {
         return new Animal(animalConfiguration.getStartEnergy(), position, genome);
     }
 
-    public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy) {
+    public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy) throws AnimalBirthException {
         var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
         var other = dominating == parent1 ? parent2 : parent1;
         var percentage = (double) dominating.getEnergy() / other.getEnergy() + dominating.getEnergy();
@@ -33,16 +35,20 @@ public class AnimalFactory {
         var otherGensSize = animalConfiguration.getGenomeLength() - dominatingGensSize;
 
         var childGens = new ArrayList<Gen>();
-        childGens.addAll(dominating.getGensForChild(dominatingGensSize, dominatingLeft));
-        childGens.addAll(other.getGensForChild(otherGensSize, !dominatingLeft));
 
-        var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
-        childGenome.mutate(random.nextInt(
-                animalConfiguration.getMinimumMutationCount(),
-                animalConfiguration.getMaximumMutationCount() + 1
-        ));
+        try {
+            childGens.addAll(dominating.getGensForChild(dominatingGensSize, dominatingLeft));
+            childGens.addAll(other.getGensForChild(otherGensSize, !dominatingLeft));
+            var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
+            childGenome.mutate(random.nextInt(
+                    animalConfiguration.getMinimumMutationCount(),
+                    animalConfiguration.getMaximumMutationCount() + 1));
+            return new Animal(startBirthEnergy, parent1.getPosition(), childGenome);
 
-        return new Animal(startBirthEnergy, parent1.getPosition(), childGenome);
+        } catch (InvalidCountException e) {
+            throw new AnimalBirthException(e.getMessage());
+        }
+
     }
 
     private Genome createGenome() {
