@@ -1,7 +1,7 @@
 package agh.ics.oop.model.exceptions;
 
-public class InvalidCountException extends Exception {
+public class InvalidCountException extends Exception { //TODO dopytać czy  strumieniach można mieć runtime exception
     public InvalidCountException() {
-        super("Count should be greater or equal zero.");
+        super("Gens count should be greater or equal zero.");
     }
 }

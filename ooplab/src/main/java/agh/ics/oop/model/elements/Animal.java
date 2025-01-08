@@ -56,7 +56,7 @@ public class Animal implements WorldElement {
         return energy >= wellFedEnergy;
     }
 
-    public List<Gen> getGensForChild(int count, boolean left) throws InvalidCountException {
+    public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
         if (count < 0) {
             throw new InvalidCountException();
         }

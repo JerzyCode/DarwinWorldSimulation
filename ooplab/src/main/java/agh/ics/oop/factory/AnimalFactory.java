@@ -15,10 +15,15 @@ import java.util.Random;
 
 public class AnimalFactory {
     private final AnimalConfiguration animalConfiguration;
-    private final Random random = new Random();
+    private final RandomWrapper random;
+
+    AnimalFactory(AnimalConfiguration animalConfiguration, RandomWrapper random) {
+        this.animalConfiguration = animalConfiguration;
+        this.random = random;
+    }
 
     public AnimalFactory(AnimalConfiguration animalConfiguration) {
-        this.animalConfiguration = animalConfiguration;
+        this(animalConfiguration, new RandomWrapper());
     }
 
     public Animal createAnimal(Vector2d position) {
@@ -29,7 +34,7 @@ public class AnimalFactory {
     public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy) throws AnimalBirthException {
         var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
         var other = dominating == parent1 ? parent2 : parent1;
-        var percentage = (double) dominating.getEnergy() / other.getEnergy() + dominating.getEnergy();
+        var percentage = (double) dominating.getEnergy() / (other.getEnergy() + dominating.getEnergy());
         var dominatingLeft = random.nextInt(2) == 1;
         var dominatingGensSize = (int) Math.ceil(percentage * animalConfiguration.getGenomeLength());
         var otherGensSize = animalConfiguration.getGenomeLength() - dominatingGensSize;
@@ -37,8 +42,8 @@ public class AnimalFactory {
         var childGens = new ArrayList<Gen>();
 
         try {
-            childGens.addAll(dominating.getGensForChild(dominatingGensSize, dominatingLeft));
-            childGens.addAll(other.getGensForChild(otherGensSize, !dominatingLeft));
+            childGens.addAll(dominating.getPartOfGens(dominatingGensSize, dominatingLeft));
+            childGens.addAll(other.getPartOfGens(otherGensSize, !dominatingLeft));
             var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
             childGenome.mutate(random.nextInt(
                     animalConfiguration.getMinimumMutationCount(),

@@ -385,7 +385,7 @@ class AnimalTest {
 
 
     @Test
-    void getGensForChildShouldReturnLeftPart() {
+    void getPartOfGensShouldReturnLeftPart() {
         //given
         var genome = new Genome(List.of(
                 new Gen(0), new Gen(1), new Gen(2), new Gen(3),
@@ -400,7 +400,7 @@ class AnimalTest {
         var expectedGens = List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3), new Gen(4));
         List<Gen> gensForChild = null;
         try {
-            gensForChild = animal.getGensForChild(count, true);
+            gensForChild = animal.getPartOfGens(count, true);
         } catch (InvalidCountException e) {
             fail("Should not throw exception in test, e=" + e.getMessage());
         }
@@ -413,7 +413,7 @@ class AnimalTest {
     }
 
     @Test
-    void getGensForChildShouldReturnRightPart() {
+    void getPartOfGensShouldReturnRightPart() {
         //given
         var genome = new Genome(List.of(
                 new Gen(0), new Gen(1), new Gen(2), new Gen(3),
@@ -427,7 +427,7 @@ class AnimalTest {
         //when
         List<Gen> gensForChild = null;
         try {
-            gensForChild = animal.getGensForChild(count, false);
+            gensForChild = animal.getPartOfGens(count, false);
         } catch (InvalidCountException e) {
             fail("Should not throw exception in test, e=" + e.getMessage());
         }
@@ -442,7 +442,7 @@ class AnimalTest {
     }
 
     @Test
-    void getGensForChildShouldReturnEmptyList() {
+    void getPartOfGensShouldReturnEmptyList() {
         //given
         var genome1 = new Genome(List.of(new Gen(0)));
         var animal1 = TestAnimalBuilder.create()
@@ -456,17 +456,17 @@ class AnimalTest {
 
         //when & then
         try {
-            assertEquals(0, animal1.getGensForChild(0, true).size());
-            assertEquals(0, animal1.getGensForChild(0, false).size());
-            assertEquals(0, animal2.getGensForChild(0, true).size());
-            assertEquals(0, animal2.getGensForChild(0, false).size());
+            assertEquals(0, animal1.getPartOfGens(0, true).size());
+            assertEquals(0, animal1.getPartOfGens(0, false).size());
+            assertEquals(0, animal2.getPartOfGens(0, true).size());
+            assertEquals(0, animal2.getPartOfGens(0, false).size());
         } catch (InvalidCountException e) {
             fail("Should not throw exception in test, e=" + e.getMessage());
         }
     }
 
     @Test
-    void getGensForChildShouldReturnAllGens() {
+    void getGensForChildShouldReturnAllPartOfGens() {
         //given
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
         var animal = TestAnimalBuilder.create()
@@ -477,8 +477,8 @@ class AnimalTest {
         List<Gen> gensLeft;
         List<Gen> gensRight;
         try {
-            gensLeft = animal.getGensForChild(10, true);
-            gensRight = animal.getGensForChild(10, false);
+            gensLeft = animal.getPartOfGens(10, true);
+            gensRight = animal.getPartOfGens(10, false);
         } catch (InvalidCountException e) {
             throw new RuntimeException(e);
         }
@@ -497,7 +497,7 @@ class AnimalTest {
 
 
     @Test
-    void getGensForChildShouldThrowException() {
+    void getPartOfGensShouldThrowException() {
         //given
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
         var animal = TestAnimalBuilder.create()
@@ -505,10 +505,10 @@ class AnimalTest {
                 .build();
 
         //when & then
-        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-1, true));
-        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-5, true));
-        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-10, false));
-        assertThrows(InvalidCountException.class, () -> animal.getGensForChild(-1, false));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-1, true));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-5, true));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-10, false));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-1, false));
     }
 
 }
