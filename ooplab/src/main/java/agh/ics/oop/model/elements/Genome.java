@@ -38,10 +38,10 @@ public class Genome {
 
 
     //TODO test
-    public List<Gen> getPartOfGenome(int count, boolean left) {
+    public List<Gen> getPartOfGenome(int count, boolean shouldStartFromLeft) {
         count = Math.min(count, gens.size());
         List<Gen> partOfGenome;
-        if (left) {
+        if (shouldStartFromLeft) {
             partOfGenome = new ArrayList<>(gens.subList(0, count));
         } else {
             partOfGenome = new ArrayList<>(gens.subList(gens.size() - count, gens.size()));
