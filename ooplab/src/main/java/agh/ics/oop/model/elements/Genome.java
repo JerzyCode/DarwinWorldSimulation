@@ -38,12 +38,16 @@ public class Genome {
 
 
     //TODO test
-    public List<Gen> getPartOfGenome(int count, boolean left) {
+    public List<Gen> getPartOfGenome(int count, boolean shouldStartFromLeft) {
         count = Math.min(count, gens.size());
-        if (left) {
-            return gens.subList(0, count);
+        List<Gen> partOfGenome;
+        if (shouldStartFromLeft) {
+            partOfGenome = new ArrayList<>(gens.subList(0, count));
+        } else {
+            partOfGenome = new ArrayList<>(gens.subList(gens.size() - count, gens.size()));
         }
-        return gens.subList(gens.size() - count, gens.size());
+
+        return partOfGenome;
     }
 
     public Gen nextGen() {

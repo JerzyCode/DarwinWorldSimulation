@@ -3,6 +3,7 @@ package agh.ics.oop.model.elements;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.configuration.MutationVariant;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Gen {
@@ -47,5 +48,25 @@ public class Gen {
             int direction = random.nextBoolean() ? 1 : -1;
             index = (index + direction) % MapDirection.values().length;
         }
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Gen gen = (Gen) object;
+        return index == gen.index;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(index);
+    }
+
+    @Override
+    public String toString() {
+        return "Gen{" +
+                "index=" + index +
+                '}';
     }
 }
