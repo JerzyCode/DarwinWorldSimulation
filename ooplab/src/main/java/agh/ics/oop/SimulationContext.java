@@ -9,7 +9,7 @@ import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
-import agh.ics.oop.model.exceptions.AnimalBirthException;
+import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.*;
 import agh.ics.oop.model.move.MoveDirection;
@@ -89,19 +89,20 @@ public class SimulationContext {
                         if (animalsAt.size() >= 2) {
 
                             try {
+                                var lossCopulateEnergy = configuration.getSimulationConfiguration().getLossCopulateEnergy();
                                 var iterator = animalsAt.iterator();
                                 var parent1 = iterator.next();
                                 var parent2 = iterator.next();
-                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * configuration.getSimulationConfiguration().getLossCopulateEnergy());
+                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy);
                                 newAnimals.add(child);
 
-                                parent1.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
-                                parent2.decreaseEnergy(configuration.getSimulationConfiguration().getLossCopulateEnergy());
+                                parent1.decreaseEnergy(lossCopulateEnergy);
+                                parent2.decreaseEnergy(lossCopulateEnergy);
                                 //TODO add parents to child, and child to parents
 
                                 worldMap.place(child);
 
-                            } catch (AnimalBirthException e) {
+                            } catch (AnimalNotBirthException e) {
                                 System.out.println("handleCopulate(), animal could not be born: message=" + e.getMessage());
                             } catch (IncorrectPositionException e) {
                                 System.out.println("handleCopulate(), animal not placed: message=" + e.getMessage());

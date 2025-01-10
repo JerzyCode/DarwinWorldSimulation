@@ -7,7 +7,7 @@ import agh.ics.oop.model.configuration.MutationVariant;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
-import agh.ics.oop.model.exceptions.AnimalBirthException;
+import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.InvalidCountException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -76,7 +76,7 @@ class AnimalFactoryTest {
         try {
             newAnimalLeftDominating = factory.birthAnimal(leftParent, rightParent, 20);
             newAnimalRightDominating = factory.birthAnimal(rightParent, leftParent, 20);
-        } catch (AnimalBirthException e) {
+        } catch (AnimalNotBirthException e) {
             fail("Test shouldBirthAnimalFirstParentDominating should not fail: e=" + e.getMessage());
         }
 
