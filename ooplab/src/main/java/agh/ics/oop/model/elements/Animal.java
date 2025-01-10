@@ -2,10 +2,13 @@ package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.exceptions.InvalidCountException;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
+
+import java.util.List;
 
 public class Animal implements WorldElement {
     private final Genome genome;
@@ -45,8 +48,19 @@ public class Animal implements WorldElement {
         energy = 0;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
     public boolean canMakeChild(int wellFedEnergy) {
         return energy >= wellFedEnergy;
+    }
+
+    public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
+        if (count < 0) {
+            throw new InvalidCountException();
+        }
+        return genome.getPartOfGenome(count, left);
     }
 
     public void move(MoveValidator moveValidator) {

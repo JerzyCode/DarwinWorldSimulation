@@ -9,6 +9,7 @@ import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.*;
 import agh.ics.oop.model.move.MoveDirection;
@@ -18,7 +19,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SimulationContext {
-    private final Random random = new Random();
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
     private final PlantFactory plantFactory;
@@ -44,7 +44,7 @@ public class SimulationContext {
     }
 
     public void handleDayEnds() {
-        System.out.println("Current day: " + currentDay);
+        System.out.println("Current day: " + currentDay + ", animalsCount=" + animals.size());
         clearDeadAnimals();
         handleAnimalsMove();
         handlePlantEating();
@@ -77,23 +77,55 @@ public class SimulationContext {
     }
 
     private void handleCopulate() {
+        if (worldMap instanceof Earth earth) {
+            Set<Animal> newAnimals = new HashSet<>();
 
+            animals.stream()
+                    .filter(animal -> animal.canMakeChild(configuration.getSimulationConfiguration().getWellFedEnergy()))
+                    .map(Animal::getPosition)
+                    .distinct()
+                    .forEach(pos -> {
+                        var animalsAt = earth.getAnimalsAtPosition(pos);
+                        if (animalsAt.size() >= 2) {
+
+                            try {
+                                var lossCopulateEnergy = configuration.getSimulationConfiguration().getLossCopulateEnergy();
+                                var iterator = animalsAt.iterator();
+                                var parent1 = iterator.next();
+                                var parent2 = iterator.next();
+                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy);
+                                newAnimals.add(child);
+
+                                parent1.decreaseEnergy(lossCopulateEnergy);
+                                parent2.decreaseEnergy(lossCopulateEnergy);
+                                //TODO add parents to child, and child to parents
+
+                                worldMap.place(child);
+
+                            } catch (AnimalNotBirthException e) {
+                                System.out.println("handleCopulate(), animal could not be born: message=" + e.getMessage());
+                            } catch (IncorrectPositionException e) {
+                                System.out.println("handleCopulate(), animal not placed: message=" + e.getMessage());
+                            }
+                        }
+                    });
+
+            animals.addAll(newAnimals);
+        }
     }
 
     private void handleAnimalsOnFire() {
         if (worldMap instanceof FireWorldMap fireWorldMap) {
             animals.stream()
                     .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
-                    .forEach(animal -> {
-                        System.out.println("Killing animal by fire at position: " + animal.getPosition());
-                        animal.kill();
-                    });
+                    .forEach(Animal::kill);
         }
     }
 
     private void clearDeadAnimals() {
         animals.removeIf(animal -> {
             if (animal.isDead()) {
+                System.out.println("removing dead animal");
                 worldMap.removeAnimal(animal);
                 return true;
             }
@@ -104,6 +136,7 @@ public class SimulationContext {
     private void handleAnimalLossEnergy() {
         animals.forEach(animal -> animal.decreaseEnergy(1));
     }
+
 
     private void createPlants(int plantCount) {
         int countOfPlantsBeforeCreating = plants.size();

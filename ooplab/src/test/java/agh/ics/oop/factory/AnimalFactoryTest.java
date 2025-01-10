@@ -1,33 +1,108 @@
 package agh.ics.oop.factory;
 
+import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.AnimalConfiguration;
 import agh.ics.oop.model.configuration.MutationVariant;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Gen;
+import agh.ics.oop.model.elements.Genome;
+import agh.ics.oop.model.exceptions.AnimalNotBirthException;
+import agh.ics.oop.model.exceptions.InvalidCountException;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 class AnimalFactoryTest {
 
-  @Test
-  void should_create_animal() {
-    //given
-    var configuration = new AnimalConfiguration(
-        10,
-        10,
-        10,
-        MutationVariant.FULL_RANDOM
-        , 10
-    );
+    @Test
+    void shouldCreateAnimal() {
+        //given
+        var configuration = new AnimalConfiguration(
+                10,
+                10,
+                10,
+                MutationVariant.FULL_RANDOM,
+                10
+        );
 
-    var factory = new AnimalFactory(configuration);
+        var factory = new AnimalFactory(configuration);
 
-    //when
-    var animal = factory.createAnimal(new Vector2d(1, 1));
+        //when
+        var animal = factory.createAnimal(new Vector2d(1, 1));
 
-    //then
-    assertEquals(new Vector2d(1, 1), animal.getPosition());
-  }
+        //then
+        assertEquals(new Vector2d(1, 1), animal.getPosition());
+        assertEquals(configuration.getStartEnergy(), animal.getEnergy());
+    }
 
-  //TODO przypadki testowe po implementacji dodatkowych pól
+
+    @Test
+    void shouldBirthAnimalFirstParentDominatingTakeLeftPartNoMutation() {
+        //given
+        var configuration = new AnimalConfiguration(
+                10,
+                0,
+                0,
+                MutationVariant.FULL_RANDOM,
+                3);
+
+        var parent1Genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var parent2Genome = new Genome(List.of(new Gen(5), new Gen(6), new Gen(7)));
+        var leftParent = TestAnimalBuilder.create()
+                .position(new Vector2d(0, 0))
+                .energy(40)
+                .genome(parent1Genome)
+                .build();
+
+        var rightParent = TestAnimalBuilder.create()
+                .position(new Vector2d(0, 0))
+                .energy(20)
+                .genome(parent2Genome)
+                .build();
+
+        var random = Mockito.mock(RandomWrapper.class);
+        when(random.nextInt(2)).thenReturn(1);
+
+        var factory = new AnimalFactory(configuration, random);
+
+        //when
+        Animal newAnimalLeftDominating = null;
+        Animal newAnimalRightDominating = null;
+        try {
+            newAnimalLeftDominating = factory.birthAnimal(leftParent, rightParent, 20);
+            newAnimalRightDominating = factory.birthAnimal(rightParent, leftParent, 20);
+        } catch (AnimalNotBirthException e) {
+            fail("Test shouldBirthAnimalFirstParentDominating should not fail: e=" + e.getMessage());
+        }
+
+        //then
+        assertNotNull(newAnimalLeftDominating);
+        assertEquals(20, newAnimalLeftDominating.getEnergy());
+        assertEquals(new Vector2d(0, 0), newAnimalLeftDominating.getPosition());
+
+        assertNotNull(newAnimalRightDominating);
+        assertEquals(20, newAnimalRightDominating.getEnergy());
+        assertEquals(new Vector2d(0, 0), newAnimalRightDominating.getPosition());
+
+        try {
+            var newAnimalLeftGens = newAnimalLeftDominating.getPartOfGens(3, true);
+            assertEquals(3, newAnimalLeftGens.size());
+            assertEquals(List.of(new Gen(0), new Gen(1), new Gen(7)), newAnimalLeftGens);
+
+            var newAnimalRightGens = newAnimalRightDominating.getPartOfGens(3, true);
+            assertEquals(3, newAnimalRightGens.size());
+            assertEquals(List.of(new Gen(0), new Gen(1), new Gen(7)), newAnimalRightGens);
+
+        } catch (InvalidCountException e) {
+            fail("Test shouldBirthAnimalFirstParentDominating should not fail: e=" + e.getMessage());
+        }
+
+    }
+
+    //TODO more tests
 }

@@ -3,11 +3,13 @@ package agh.ics.oop.model.elements;
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.exceptions.InvalidCountException;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -379,6 +381,134 @@ class AnimalTest {
 
         animal.decreaseEnergy(3);
         assertFalse(animal.canMakeChild(wellFedEnergy));
+    }
+
+
+    @Test
+    void getPartOfGensShouldReturnLeftPart() {
+        //given
+        var genome = new Genome(List.of(
+                new Gen(0), new Gen(1), new Gen(2), new Gen(3),
+                new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
+
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+        var count = 5;
+
+        //when
+        var expectedGens = List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3), new Gen(4));
+        List<Gen> gensForChild = null;
+        try {
+            gensForChild = animal.getPartOfGens(count, true);
+        } catch (InvalidCountException e) {
+            fail("Should not throw exception in test, e=" + e.getMessage());
+        }
+
+        //then
+        assertEquals(count, gensForChild.size());
+        for (int i = 0; i < count; i++) {
+            assertEquals(expectedGens.get(i).getIndex(), gensForChild.get(i).getIndex());
+        }
+    }
+
+    @Test
+    void getPartOfGensShouldReturnRightPart() {
+        //given
+        var genome = new Genome(List.of(
+                new Gen(0), new Gen(1), new Gen(2), new Gen(3),
+                new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
+
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+        var count = 5;
+
+        //when
+        List<Gen> gensForChild = null;
+        try {
+            gensForChild = animal.getPartOfGens(count, false);
+        } catch (InvalidCountException e) {
+            fail("Should not throw exception in test, e=" + e.getMessage());
+        }
+
+        //then
+        var expectedGens = List.of(new Gen(3), new Gen(4), new Gen(5), new Gen(6), new Gen(7));
+        assertEquals(count, gensForChild.size());
+
+        for (int i = 0; i < count; i++) {
+            assertEquals(expectedGens.get(i).getIndex(), gensForChild.get(i).getIndex());
+        }
+    }
+
+    @Test
+    void getPartOfGensShouldReturnEmptyList() {
+        //given
+        var genome1 = new Genome(List.of(new Gen(0)));
+        var animal1 = TestAnimalBuilder.create()
+                .genome(genome1)
+                .build();
+
+        var genome2 = new Genome(new ArrayList<>());
+        var animal2 = TestAnimalBuilder.create()
+                .genome(genome2)
+                .build();
+
+        //when & then
+        try {
+            assertEquals(0, animal1.getPartOfGens(0, true).size());
+            assertEquals(0, animal1.getPartOfGens(0, false).size());
+            assertEquals(0, animal2.getPartOfGens(0, true).size());
+            assertEquals(0, animal2.getPartOfGens(0, false).size());
+        } catch (InvalidCountException e) {
+            fail("Should not throw exception in test, e=" + e.getMessage());
+        }
+    }
+
+    @Test
+    void getGensForChildShouldReturnAllPartOfGens() {
+        //given
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+
+        //when
+        List<Gen> gensLeft;
+        List<Gen> gensRight;
+        try {
+            gensLeft = animal.getPartOfGens(10, true);
+            gensRight = animal.getPartOfGens(10, false);
+        } catch (InvalidCountException e) {
+            throw new RuntimeException(e);
+        }
+
+        //then
+        assertEquals(4, gensLeft.size());
+        assertEquals(4, gensRight.size());
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i, gensLeft.get(i).getIndex());
+        }
+
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i, gensRight.get(i).getIndex());
+        }
+    }
+
+
+    @Test
+    void getPartOfGensShouldThrowException() {
+        //given
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
+        var animal = TestAnimalBuilder.create()
+                .genome(genome)
+                .build();
+
+        //when & then
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-1, true));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-5, true));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-10, false));
+        assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-1, false));
     }
 
 }

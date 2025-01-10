@@ -11,14 +11,15 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster {
     private final Boundary boundary;
-    private final HashMap<Vector2d, Set<Animal>> animals;
+    private final Map<Vector2d, Set<Animal>> animals;
 
     public Earth(int width, int height) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
-        animals = new HashMap<>();
+        animals = new ConcurrentHashMap<>();
     }
 
     // TODO: remove unused constructor
@@ -113,7 +114,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
 
     public Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
-            return Collections.unmodifiableSet(animals.get(position));
+            return animals.get(position);
         }
         return new HashSet<>();
     }
