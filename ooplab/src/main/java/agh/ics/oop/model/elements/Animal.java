@@ -7,19 +7,17 @@ import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
+import com.sun.javafx.UnmodifiableArrayList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Animal implements WorldElement {
     private final Genome genome;
     private int energy;
     private Vector2d position;
     private MapDirection orientation;
-    private List<Animal> parents;
-    private final List<Animal> children;
+    private Set<Animal> parents;
+    private final Set<Animal> children;
 
     public Animal(int startEnergy, Vector2d position, Genome genome) {
         this(startEnergy, position, MapDirection.NORTH, genome);
@@ -31,12 +29,12 @@ public class Animal implements WorldElement {
         this.orientation = orientation;
         this.position = position;
         this.genome = genome;
-        children = new LinkedList<>();
+        children = new HashSet<>();
     }
 
     public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2) {
         this(energy, position, genome);
-        this.parents = Arrays.asList(parent1, parent2);
+        this.parents = Set.of(parent1, parent2);
     }
 
     public boolean isAt(Vector2d position) {
@@ -70,6 +68,18 @@ public class Animal implements WorldElement {
     public void addChild(Animal child) {
         children.add(child);
     }
+
+    public Set<Animal> getChildren() {
+        return Collections.unmodifiableSet(children);
+    }
+
+    public Set<Animal> getParents() {
+        return Collections.unmodifiableSet(parents);
+    }
+
+//    public List<Animal> getAncestors() {
+//        List<Animal>
+//    }
 
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
         if (count < 0) {
