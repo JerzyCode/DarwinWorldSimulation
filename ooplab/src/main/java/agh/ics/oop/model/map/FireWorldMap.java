@@ -2,22 +2,21 @@ package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Fire;
-import agh.ics.oop.model.exceptions.IncorrectPositionException;
-
-import java.util.Set;
 
 public interface FireWorldMap extends WorldMap {
 
     boolean isFireAtPosition(Vector2d position);
 
-    void placeFire(Fire fire) throws IncorrectPositionException;
-
-    Fire getFireAtPosition(Vector2d position);
-
     void decreaseFireRemainingLifetime();
 
     void removeFire(Fire fire);
 
-    Set<Fire> getBurnedFires();
+    void spreadFire(int fireDuration);
+
+    void removeBurnedFires();
+
+    void createFire(int fireDuration);
+
+    void handleDayEnds(); //TODO przenieść do innego interfejsu
 
 }

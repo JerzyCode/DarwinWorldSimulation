@@ -206,27 +206,4 @@ class FireEarthTest {
 
     }
 
-    @Test
-    void getBurnedFires() {
-        // given
-        var fire1 = new Fire(new Vector2d(0, 2), 1);
-        var burnedFire1 = new Fire(new Vector2d(0, 3), 0);
-        var burnedFire2 = new Fire(new Vector2d(0, 4), 0);
-        try {
-            fireEarth.placeFire(fire1);
-            fireEarth.placeFire(burnedFire1);
-            fireEarth.placeFire(burnedFire2);
-        } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
-        }
-
-        // when
-        var burnedFires = fireEarth.getBurnedFires();
-
-        // then
-        assertEquals(2, burnedFires.size());
-        assertTrue(burnedFires.contains(burnedFire1));
-        assertTrue(burnedFires.contains(burnedFire2));
-
-    }
 }

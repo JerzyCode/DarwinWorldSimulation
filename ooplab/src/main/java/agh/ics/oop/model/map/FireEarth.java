@@ -43,13 +43,72 @@ public class FireEarth extends Earth implements FireWorldMap {
         return fires.containsKey(position);
     }
 
+
     @Override
-    public Fire getFireAtPosition(Vector2d position) {
-        return fires.get(position);
+    public void decreaseFireRemainingLifetime() {
+        fires.values().forEach(Fire::decreaseRemainingLifetime);
     }
 
     @Override
-    public void placeFire(Fire fire) throws IncorrectPositionException {
+    public void removeFire(Fire fire) {
+        fires.remove(fire.getPosition());
+        notifyListeners("Fire was removed from position: " + fire.getPosition());
+    }
+
+    @Override
+    public void spreadFire(int fireDuration) {
+        Set<Fire> newFires = new HashSet<>();
+        for (Fire fire : fires.values()) {
+            var newFirePositions = getNewFirePositions(fire);
+            newFirePositions.forEach(firePosition -> {
+                var newFire = new Fire(firePosition, fireDuration);
+                newFires.add(newFire);
+            });
+        }
+
+        newFires.forEach(fire -> {
+            try {
+                removePlant(fire.getPosition());
+                placeFire(fire);
+            } catch (IncorrectPositionException e) {
+                System.out.println("Couldn't spread fire to new position: " + e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void removeBurnedFires() {
+        fires.entrySet().removeIf(entry -> entry.getValue().isBurned());
+    }
+
+    @Override
+    public void createFire(int fireDuration) {
+        var plantsPositions = new ArrayList<>(plants.keySet());
+        Collections.shuffle(plantsPositions);
+
+        boolean isFirePlaced = false;
+        for (Vector2d position : plantsPositions) {
+            try {
+                removePlant(position);
+                var newFire = new Fire(position, fireDuration);
+                placeFire(newFire);
+                isFirePlaced = true;
+
+            } catch (IncorrectPositionException e) {
+                System.out.println("Couldn't create fire: " + e.getMessage());
+            }
+            if (isFirePlaced) {
+                return;
+            }
+        }
+
+    }
+
+    @Override
+    public void handleDayEnds() {
+    }
+
+    void placeFire(Fire fire) throws IncorrectPositionException {
         var position = fire.getPosition();
 
         if (!isPositionWithinMapBoundary(position)) {
@@ -65,26 +124,12 @@ public class FireEarth extends Earth implements FireWorldMap {
         notifyListeners("Fire was placed at position: " + position);
     }
 
-    @Override
-    public void decreaseFireRemainingLifetime() {
-        fires.values().forEach(Fire::decreaseRemainingLifetime);
+    Fire getFireAtPosition(Vector2d position) {
+        return fires.get(position);
     }
 
-    @Override
-    public void removeFire(Fire fire) {
-        fires.remove(fire.getPosition());
-        notifyListeners("Fire was removed from position: " + fire.getPosition());
-    }
 
-    @Override
-    public Set<Fire> getBurnedFires() {
-        return fires.values()
-                .stream()
-                .filter(Fire::isBurned)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Vector2d> getNewFirePositions(Fire fire) {
+    private Set<Vector2d> getNewFirePositions(Fire fire) {
         var adjacentFields = getAdjacentFields(fire.getPosition());
         return adjacentFields
                 .stream()
@@ -109,5 +154,6 @@ public class FireEarth extends Earth implements FireWorldMap {
 
         return List.of(neighbour1, neighbour2, neighbour3, neighbour4);
     }
+
 
 }
