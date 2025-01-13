@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="550.0" minWidth="850.0" maxWidth="1200"
@@ -32,18 +31,11 @@
             <VBox prefWidth="600" spacing="10">
                 <Label style="-fx-font-weight: bold;" text="History:"/>
                 <ScrollPane>
-                    <TextArea fx:id="historyTextArea" editable="false" prefHeight="100" prefWidth="599"
-                              wrapText="false"/>
+                    <TextArea fx:id="historyTextArea" editable="false" prefHeight="100" prefWidth="599"/>
                 </ScrollPane>
             </VBox>
 
-            <VBox alignment="TOP_CENTER" prefHeight="107.0" prefWidth="200.0" spacing="10">
-                <TextField fx:id="movesTextField" prefWidth="200"
-                           text="l l f f f f f f b b b r f f f r f f f r f">
-                    <VBox.margin>
-                        <Insets top="25.0"/>
-                    </VBox.margin>
-                </TextField>
+            <VBox alignment="CENTER" prefHeight="107.0" prefWidth="200.0" spacing="10">
                 <Button fx:id="startButton" onAction="#onSimulationStartClicked" text="Simulation start"/>
             </VBox>
         </HBox>
