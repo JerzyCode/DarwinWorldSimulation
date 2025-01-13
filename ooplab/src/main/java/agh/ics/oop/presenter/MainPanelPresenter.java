@@ -18,15 +18,12 @@ import java.util.Objects;
 
 public class MainPanelPresenter {
     private static final String CONFIGURATION_VIEW_RESOURCE = "/configuration_view.fxml";
-    private final Configuration configuration = new Configuration();
     @FXML
     private StackPane contentContainer;
     @FXML
     private Button startSimulationButton;
     @FXML
     private MenuButton menuButton;
-    @FXML
-    private MenuItem grassFieldItem;
     @FXML
     private MenuItem earthItem;
     @FXML
@@ -36,7 +33,6 @@ public class MainPanelPresenter {
     public void initialize() throws IOException {
         loadConfigurationViews();
         chooseMap(WorldMapVariant.EARTH);
-//    grassFieldItem.setOnAction(event -> chooseMap(WorldMapVariant.GRASS_FIELD));
         earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
         fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
 
@@ -46,14 +42,12 @@ public class MainPanelPresenter {
         var configurationViewLoader = new FXMLLoader(getClass().getResource(CONFIGURATION_VIEW_RESOURCE));
         AnchorPane configurationView = configurationViewLoader.load();
         configurationPresenter = configurationViewLoader.getController();
-        configurationPresenter.setConfiguration(configuration);
-
+        configurationPresenter.setConfiguration(new Configuration());
         contentContainer.getChildren().add(configurationView);
     }
 
     private void chooseMap(WorldMapVariant mapVariant) {
         menuButton.setText(mapVariant.getDisplayText());
-        configuration.getWorldMapConfiguration().setMapVariant(mapVariant);
         configurationPresenter.switchWorldMapVariant(mapVariant);
     }
 
@@ -63,7 +57,7 @@ public class MainPanelPresenter {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
 
-        configurationPresenter.updateConfiguration();
+        var configuration = configurationPresenter.createConfiguration();
         System.out.println("Starting simulation with configuration: " + configuration);
 
         SimulationPresenter presenter = loader.getController();

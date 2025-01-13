@@ -6,9 +6,33 @@ public class Configuration {
     private final SimulationConfiguration simulationConfiguration;
 
     public Configuration() {
-        this.worldMapConfiguration = new WorldMapConfiguration();
-        this.animalConfiguration = new AnimalConfiguration();
-        this.simulationConfiguration = new SimulationConfiguration();
+        this.worldMapConfiguration = WorldMapConfigurationBuilder.create()
+                .height(26)
+                .width(54)
+                .mapVariant(WorldMapVariant.EARTH)
+                .build();
+
+
+        this.animalConfiguration = AnimalConfigurationBuilder.create()
+                .startEnergy(15)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(7)
+                .build();
+
+        this.simulationConfiguration = SimulationConfigurationBuilder.create()
+                .daysCount(2000)
+                .energyGain(5)
+                .plantGrowth(7)
+                .plantVariant(PlantVariant.FORESTED_EQUATORS)
+                .wellFedEnergy(10)
+                .lossCopulateEnergy(10)
+                .fireFrequency(0)
+                .fireDuration(0)
+                .startAnimalCount(45)
+                .startPlantCount(45)
+                .build();
     }
 
     public Configuration(WorldMapConfiguration worldMapConfiguration, AnimalConfiguration animalConfiguration, SimulationConfiguration simulationConfiguration) {

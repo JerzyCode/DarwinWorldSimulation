@@ -1,9 +1,6 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.model.configuration.Configuration;
-import agh.ics.oop.model.configuration.MutationVariant;
-import agh.ics.oop.model.configuration.PlantVariant;
-import agh.ics.oop.model.configuration.WorldMapVariant;
+import agh.ics.oop.model.configuration.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -15,7 +12,6 @@ import java.util.function.UnaryOperator;
 
 public class ConfigurationPresenter {
 
-    private Configuration configuration;
     @FXML
     private GridPane mainGridPane;
 
@@ -67,40 +63,29 @@ public class ConfigurationPresenter {
     @FXML
     private TextField startPlantCountInput;
 
+    private WorldMapVariant mapVariant;
+    private PlantVariant plantVariant;
+    private MutationVariant mutationVariant;
+
     public void initialize() {
         setTextFieldValidation();
         littleCorrectionVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.LITTLE_CORRECTION));
         fullRandomVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.FULL_RANDOM));
         forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
-//    noneVariant.setOnAction(event -> choosePlantVariant(PlantVariant.NONE));
     }
 
     public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
         chooseMutationVariant(MutationVariant.FULL_RANDOM);
         choosePlantVariant(PlantVariant.FORESTED_EQUATORS);
         setInputValues(configuration);
-
     }
 
     public void switchWorldMapVariant(WorldMapVariant newVariant) {
+        this.mapVariant = newVariant;
         switch (newVariant) {
-            case WorldMapVariant.GRASS_FIELD -> setGrassFieldModeVisibility();
             case WorldMapVariant.EARTH -> setEarthFieldModeVisibility();
             case WorldMapVariant.FIRE -> setFireEarthFieldModeVisibility();
         }
-    }
-
-    public void setGrassFieldModeVisibility() {
-        heightInput.setDisable(true);
-        heightInput.setText("5");
-
-        widthInput.setDisable(true);
-        widthInput.setText("5");
-
-        disableNumericInputWithZeroValue(plantGrowthInput);
-        disableNumericInputWithZeroValue(fireFrequencyInput);
-        disableNumericInputWithZeroValue(fireDurationInput);
     }
 
     public void setEarthFieldModeVisibility() {
@@ -117,20 +102,52 @@ public class ConfigurationPresenter {
         enableNumericTextField(fireDurationInput);
     }
 
-    public void updateConfiguration() {
-        updateMapConfiguration();
-        updateAnimalConfiguration();
-        updateSimulationConfiguration();
+    public Configuration createConfiguration() {
+        var animalConfiguration = AnimalConfigurationBuilder
+                .create()
+                .startEnergy(Integer.parseInt(startEnergyInput.getText()))
+                .minimumMutationCount(Integer.parseInt(minMutationCountInput.getText()))
+                .mutationVariant(mutationVariant)
+                .maximumMutationCount(Integer.parseInt(maxMutationCountInput.getText()))
+                .genomeLength(Integer.parseInt(genomeLengthInput.getText()))
+                .build();
+
+        var simulationConfiguration = SimulationConfigurationBuilder
+                .create()
+                .daysCount(Integer.parseInt(daysCountInput.getText()))
+                .energyGain(Integer.parseInt(energyGainInput.getText()))
+                .plantGrowth(Integer.parseInt(plantGrowthInput.getText()))
+                .wellFedEnergy(Integer.parseInt(wellFedEnergyInput.getText()))
+                .lossCopulateEnergy(Integer.parseInt(lossCopulateEnergyInput.getText()))
+                .fireFrequency(Integer.parseInt(fireFrequencyInput.getText()))
+                .fireDuration(Integer.parseInt(fireDurationInput.getText()))
+                .startAnimalCount(Integer.parseInt(startAnimalCountInput.getText()))
+                .startPlantCount(Integer.parseInt(startPlantCountInput.getText()))
+                .plantVariant(plantVariant)
+                .build();
+
+        var worldMapConfiguration = WorldMapConfigurationBuilder
+                .create()
+                .width(Integer.parseInt(widthInput.getText()))
+                .height(Integer.parseInt(heightInput.getText()))
+                .mapVariant(mapVariant)
+                .build();
+
+        return ConfigurationBuilder.create()
+                .worldMapConfiguration(worldMapConfiguration)
+                .animalConfiguration(animalConfiguration)
+                .simulationConfiguration(simulationConfiguration)
+                .build();
     }
 
     private void chooseMutationVariant(MutationVariant variant) {
         mutationVariantMenuButton.setText(variant.getDisplayText());
-        configuration.getAnimalConfiguration().setMutationVariant(variant);
+        this.mutationVariant = variant;
     }
 
     private void choosePlantVariant(PlantVariant variant) {
         plantVariantMenuButton.setText(variant.getDisplayText());
-        configuration.getSimulationConfiguration().setPlantVariant(variant);
+        this.plantVariant = variant;
     }
 
     private void disableNumericInputWithZeroValue(TextField textField) {
@@ -173,54 +190,6 @@ public class ConfigurationPresenter {
         };
 
         return new TextFormatter<>(filter);
-    }
-
-    private void updateMapConfiguration() {
-        var height = Integer.parseInt(heightInput.getText());
-        var width = Integer.parseInt(widthInput.getText());
-
-        var mapConfiguration = configuration.getWorldMapConfiguration();
-        mapConfiguration.setHeight(height);
-        mapConfiguration.setWidth(width);
-
-    }
-
-    private void updateAnimalConfiguration() {
-        var startEnergy = Integer.parseInt(startEnergyInput.getText());
-        var minMutationCount = Integer.parseInt(minMutationCountInput.getText());
-        var maxMutationCount = Integer.parseInt(maxMutationCountInput.getText());
-        var genomeLength = Integer.parseInt(genomeLengthInput.getText());
-
-        var animalConfiguration = configuration.getAnimalConfiguration();
-        animalConfiguration.setStartEnergy(startEnergy);
-        animalConfiguration.setMinimumMutationCount(minMutationCount);
-        animalConfiguration.setMaximumMutationCount(maxMutationCount);
-        animalConfiguration.setGenomeLength(genomeLength);
-    }
-
-    private void updateSimulationConfiguration() {
-        System.out.println("updateSimulationConfiguration()");
-        var daysCount = Integer.parseInt(daysCountInput.getText());
-        var energyGain = Integer.parseInt(energyGainInput.getText());
-        var plantGrowth = Integer.parseInt(plantGrowthInput.getText());
-        var wellFedEnergy = Integer.parseInt(wellFedEnergyInput.getText());
-        var lossCopulateEnergy = Integer.parseInt(lossCopulateEnergyInput.getText());
-        var startAnimalCount = Integer.parseInt(startAnimalCountInput.getText());
-        var fireFrequency = Integer.parseInt(fireFrequencyInput.getText());
-        var fireDuration = Integer.parseInt(fireDurationInput.getText());
-        var startPlantCount = Integer.parseInt(startPlantCountInput.getText());
-
-
-        var simulationConfiguration = configuration.getSimulationConfiguration();
-        simulationConfiguration.setDaysCount(daysCount);
-        simulationConfiguration.setEnergyGain(energyGain);
-        simulationConfiguration.setPlantGrowth(plantGrowth);
-        simulationConfiguration.setWellFedEnergy(wellFedEnergy);
-        simulationConfiguration.setLossCopulateEnergy(lossCopulateEnergy);
-        simulationConfiguration.setFireFrequency(fireFrequency);
-        simulationConfiguration.setFireDuration(fireDuration);
-        simulationConfiguration.setStartAnimalCount(startAnimalCount);
-        simulationConfiguration.setStartPlantCount(startPlantCount);
     }
 
     private void setInputValues(Configuration configuration) {

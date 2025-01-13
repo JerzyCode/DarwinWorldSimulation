@@ -2,8 +2,7 @@ package agh.ics.oop.model.configuration;
 
 public enum WorldMapVariant {
     EARTH("Earth"),
-    FIRE("Fire Earth"),
-    GRASS_FIELD("Grass Field");
+    FIRE("Fire Earth");
 
     private final String displayText;
 

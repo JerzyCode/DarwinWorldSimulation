@@ -2,7 +2,7 @@ package agh.ics.oop.factory;
 
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.configuration.AnimalConfiguration;
+import agh.ics.oop.model.configuration.AnimalConfigurationBuilder;
 import agh.ics.oop.model.configuration.MutationVariant;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
@@ -22,13 +22,13 @@ class AnimalFactoryTest {
     @Test
     void shouldCreateAnimal() {
         //given
-        var configuration = new AnimalConfiguration(
-                10,
-                10,
-                10,
-                MutationVariant.FULL_RANDOM,
-                10
-        );
+        var configuration = AnimalConfigurationBuilder.create()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
 
         var factory = new AnimalFactory(configuration);
 
@@ -44,12 +44,13 @@ class AnimalFactoryTest {
     @Test
     void shouldBirthAnimalFirstParentDominatingTakeLeftPartNoMutation() {
         //given
-        var configuration = new AnimalConfiguration(
-                10,
-                0,
-                0,
-                MutationVariant.FULL_RANDOM,
-                3);
+        var configuration = AnimalConfigurationBuilder.create()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
 
         var parent1Genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
         var parent2Genome = new Genome(List.of(new Gen(5), new Gen(6), new Gen(7)));
