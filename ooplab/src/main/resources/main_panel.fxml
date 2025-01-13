@@ -6,7 +6,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="750.0"
             xmlns="http://javafx.com/javafx/17.0.12" fx:controller="agh.ics.oop.presenter.MainPanelPresenter">
 
-    <Button fx:id="startSimulationButton" layoutX="325.0" layoutY="460.0" onAction="#startSimulation"
+    <Button fx:id="startSimulationButton" layoutX="325.0" layoutY="460.0" onAction="#openSimulationWindow"
             text="Start Simulation"
             AnchorPane.leftAnchor="250.0"
             AnchorPane.topAnchor="460.0"

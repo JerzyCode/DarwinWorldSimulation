@@ -52,4 +52,8 @@ public class SimulationEngine {
         }
     }
 
+    public void shutDown(){
+        executor.shutdownNow();
+    }
+
 }

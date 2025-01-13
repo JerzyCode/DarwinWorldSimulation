@@ -41,6 +41,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     private WorldMap worldMap;
     private Configuration configuration;
+    private SimulationEngine simulationEngine;
 
     public void initialize() {
         System.out.println("initialize()");
@@ -83,10 +84,16 @@ public class SimulationPresenter implements MapChangeListener {
         worldMap = simulationContext.getWorldMap();
         simulationContext.setMapChangeListener(this);
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
-        var simulationEngine = new SimulationEngine(simulation);
+        simulationEngine = new SimulationEngine(simulation);
 
         simulationEngine.runAsyncInThreadPool();
         startButton.setDisable(true);
+    }
+
+    public void stopSimulation() {
+        if (simulationEngine != null) {
+            simulationEngine.shutDown();
+        }
     }
 
     public void setConfiguration(Configuration configuration) {
