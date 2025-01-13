@@ -16,7 +16,7 @@ class FireEarthTest {
 
     @BeforeEach
     void setUp() {
-        fireEarth = new FireEarth(5, 5);
+        fireEarth = new FireEarth(5, 5, 1, 1);
         try {
             fireEarth.placePlant(new Plant(new Vector2d(0, 0)));
             fireEarth.placeFire(new Fire(new Vector2d(0, 1), 3));

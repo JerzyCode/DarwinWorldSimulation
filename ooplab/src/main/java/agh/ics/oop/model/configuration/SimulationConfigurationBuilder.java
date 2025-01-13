@@ -7,8 +7,6 @@ public class SimulationConfigurationBuilder {
     private PlantVariant plantVariant;
     private int wellFedEnergy;
     private int lossCopulateEnergy;
-    private int fireFrequency;
-    private int fireDuration;
     private int startAnimalCount;
     private int startPlantCount;
 
@@ -51,15 +49,6 @@ public class SimulationConfigurationBuilder {
         return this;
     }
 
-    public SimulationConfigurationBuilder fireFrequency(int fireFrequency) {
-        this.fireFrequency = fireFrequency;
-        return this;
-    }
-
-    public SimulationConfigurationBuilder fireDuration(int fireDuration) {
-        this.fireDuration = fireDuration;
-        return this;
-    }
 
     public SimulationConfigurationBuilder startAnimalCount(int startAnimalCount) {
         this.startAnimalCount = startAnimalCount;
@@ -73,6 +62,6 @@ public class SimulationConfigurationBuilder {
 
     public SimulationConfiguration build() {
         return new SimulationConfiguration(daysCount, energyGain, plantGrowth, plantVariant, wellFedEnergy,
-                lossCopulateEnergy, fireFrequency, fireDuration, startAnimalCount, startPlantCount);
+                lossCopulateEnergy, startAnimalCount, startPlantCount);
     }
 }

@@ -29,7 +29,9 @@ public class WorldMapFactory {
     private FireEarth createFireEarth() {
         var width = worldMapConfiguration.getWidth();
         var height = worldMapConfiguration.getHeight();
-        return new FireEarth(width, height);
+        var fireDuration = worldMapConfiguration.getFireDuration();
+        var fireFrequency = worldMapConfiguration.getFireFrequency();
+        return new FireEarth(width, height, fireFrequency, fireDuration);
     }
 
 }

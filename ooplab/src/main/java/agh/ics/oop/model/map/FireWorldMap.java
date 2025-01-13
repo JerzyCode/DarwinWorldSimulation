@@ -11,11 +11,11 @@ public interface FireWorldMap extends WorldMap {
 
     void removeFire(Fire fire);
 
-    void spreadFire(int fireDuration);
+    void spreadFire();
 
     void removeBurnedFires();
 
-    void createFire(int fireDuration);
+    void createFire();
 
     void handleDayEnds(); //TODO przenieść do innego interfejsu
 

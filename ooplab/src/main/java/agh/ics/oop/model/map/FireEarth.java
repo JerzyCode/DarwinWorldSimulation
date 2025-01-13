@@ -13,9 +13,13 @@ import java.util.stream.Collectors;
 
 public class FireEarth extends Earth implements FireWorldMap {
     private final HashMap<Vector2d, Fire> fires;
+    private final int fireFrequency;
+    private final int fireDuration;
 
-    public FireEarth(int width, int height) {
+    public FireEarth(int width, int height, int fireFrequency, int fireDuration) {
         super(width, height);
+        this.fireFrequency = fireFrequency;
+        this.fireDuration = fireDuration;
         this.fires = new HashMap<>();
     }
 
@@ -56,7 +60,7 @@ public class FireEarth extends Earth implements FireWorldMap {
     }
 
     @Override
-    public void spreadFire(int fireDuration) {
+    public void spreadFire() {
         Set<Fire> newFires = new HashSet<>();
         for (Fire fire : fires.values()) {
             var newFirePositions = getNewFirePositions(fire);
@@ -82,7 +86,7 @@ public class FireEarth extends Earth implements FireWorldMap {
     }
 
     @Override
-    public void createFire(int fireDuration) {
+    public void createFire() {
         var plantsPositions = new ArrayList<>(plants.keySet());
         Collections.shuffle(plantsPositions);
 

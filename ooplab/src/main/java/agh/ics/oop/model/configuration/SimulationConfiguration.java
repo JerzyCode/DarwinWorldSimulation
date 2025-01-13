@@ -7,21 +7,17 @@ public class SimulationConfiguration {
     private final PlantVariant plantVariant;
     private final int wellFedEnergy;
     private final int lossCopulateEnergy;
-    private final int fireFrequency;
-    private final int fireDuration;
     private final int startAnimalCount;
     private final int startPlantCount;
 
     SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
-                                   int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int fireDuration, int startAnimalCount, int startPlantCount) {
+                            int wellFedEnergy, int lossCopulateEnergy, int startAnimalCount, int startPlantCount) {
         this.daysCount = daysCount;
         this.energyGain = energyGain;
         this.plantGrowth = plantGrowth;
         this.plantVariant = plantVariant;
         this.wellFedEnergy = wellFedEnergy;
         this.lossCopulateEnergy = lossCopulateEnergy;
-        this.fireFrequency = fireFrequency;
-        this.fireDuration = fireDuration;
         this.startAnimalCount = startAnimalCount;
         this.startPlantCount = startPlantCount;
     }
@@ -49,17 +45,6 @@ public class SimulationConfiguration {
         return lossCopulateEnergy;
     }
 
-
-    public int getFireFrequency() {
-        return fireFrequency;
-    }
-
-
-    public int getFireDuration() {
-        return fireDuration;
-    }
-
-
     public int getStartAnimalCount() {
         return startAnimalCount;
     }
@@ -82,7 +67,6 @@ public class SimulationConfiguration {
                 ", plantVariant=" + plantVariant +
                 ", wellFedEnergy=" + wellFedEnergy +
                 ", lossCopulateEnergy=" + lossCopulateEnergy +
-                ", fireFrequency=" + fireFrequency +
                 ", startAnimalCount=" + startAnimalCount +
                 ", startPlantCount=" + startPlantCount +
                 '}';

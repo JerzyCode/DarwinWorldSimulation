@@ -53,12 +53,6 @@ public class SimulationContext {
         currentDay++;
     }
 
-    private void handleMapChange() {
-        if (worldMap instanceof FireWorldMap fireWorldMap) {
-            fireWorldMap.spreadFire(configuration.getSimulationConfiguration().getFireDuration());
-        }
-
-    }
 
     private void handleAnimals() {
 
@@ -187,10 +181,10 @@ public class SimulationContext {
         if (worldMap instanceof FireWorldMap fireWorldMap) {
             fireWorldMap.decreaseFireRemainingLifetime();
             fireWorldMap.removeBurnedFires();
-            fireWorldMap.spreadFire(configuration.getSimulationConfiguration().getFireDuration());
-            var fireFrequency = configuration.getSimulationConfiguration().getFireFrequency();
+            fireWorldMap.spreadFire();
+            var fireFrequency = configuration.getWorldMapConfiguration().getFireFrequency();
             if (fireFrequency > 0 && currentDay % fireFrequency == 0) {
-                fireWorldMap.createFire(configuration.getSimulationConfiguration().getFireDuration());
+                fireWorldMap.createFire();
             }
         }
     }

@@ -9,6 +9,8 @@ public class Configuration {
         this.worldMapConfiguration = WorldMapConfigurationBuilder.create()
                 .height(26)
                 .width(54)
+                .fireDuration(0)
+                .fireFrequency(0)
                 .mapVariant(WorldMapVariant.EARTH)
                 .build();
 
@@ -28,8 +30,6 @@ public class Configuration {
                 .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .wellFedEnergy(10)
                 .lossCopulateEnergy(10)
-                .fireFrequency(0)
-                .fireDuration(0)
                 .startAnimalCount(45)
                 .startPlantCount(45)
                 .build();
