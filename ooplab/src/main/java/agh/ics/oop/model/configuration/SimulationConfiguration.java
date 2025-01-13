@@ -1,22 +1,18 @@
 package agh.ics.oop.model.configuration;
 
 public class SimulationConfiguration {
-    private int daysCount;
-    private int energyGain;
-    private int plantGrowth;
-    private PlantVariant plantVariant;
-    private int wellFedEnergy;
-    private int lossCopulateEnergy;
-    private int fireFrequency;
-    private int fireDuration;
-    private int startAnimalCount;
-    private int startPlantCount;
+    private final int daysCount;
+    private final int energyGain;
+    private final int plantGrowth;
+    private final PlantVariant plantVariant;
+    private final int wellFedEnergy;
+    private final int lossCopulateEnergy;
+    private final int fireFrequency;
+    private final int fireDuration;
+    private final int startAnimalCount;
+    private final int startPlantCount;
 
-    SimulationConfiguration() {
-        this(2000, 5, 7, PlantVariant.NONE, 10, 10, 0, 0, 45, 45);
-    }
-
-    public SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
+    SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
                                    int wellFedEnergy, int lossCopulateEnergy, int fireFrequency, int fireDuration, int startAnimalCount, int startPlantCount) {
         this.daysCount = daysCount;
         this.energyGain = energyGain;
@@ -34,80 +30,48 @@ public class SimulationConfiguration {
         return energyGain;
     }
 
-    public void setEnergyGain(int energyGain) {
-        this.energyGain = energyGain;
-    }
 
     public int getPlantGrowth() {
         return plantGrowth;
     }
 
-    public void setPlantGrowth(int plantGrowth) {
-        this.plantGrowth = plantGrowth;
-    }
 
     public PlantVariant getPlantVariant() {
         return plantVariant;
-    }
-
-    public void setPlantVariant(PlantVariant plantVariant) {
-        this.plantVariant = plantVariant;
     }
 
     public int getWellFedEnergy() {
         return wellFedEnergy;
     }
 
-    public void setWellFedEnergy(int wellFedEnergy) {
-        this.wellFedEnergy = wellFedEnergy;
-    }
 
     public int getLossCopulateEnergy() {
         return lossCopulateEnergy;
     }
 
-    public void setLossCopulateEnergy(int lossCopulateEnergy) {
-        this.lossCopulateEnergy = lossCopulateEnergy;
-    }
 
     public int getFireFrequency() {
         return fireFrequency;
     }
 
-    public void setFireFrequency(int fireFrequency) {
-        this.fireFrequency = fireFrequency;
-    }
 
     public int getFireDuration() {
         return fireDuration;
     }
 
-    public void setFireDuration(int fireDuration) {
-        this.fireDuration = fireDuration;
-    }
 
     public int getStartAnimalCount() {
         return startAnimalCount;
     }
 
-    public void setStartAnimalCount(int startAnimalCount) {
-        this.startAnimalCount = startAnimalCount;
-    }
 
     public int getDaysCount() {
         return daysCount;
     }
 
-    public void setDaysCount(int daysCount) {
-        this.daysCount = daysCount;
-    }
 
     public int getStartPlantCount() {
         return startPlantCount;
-    }
-
-    public void setStartPlantCount(int startPlantCount) {
-        this.startPlantCount = startPlantCount;
     }
 
     @Override

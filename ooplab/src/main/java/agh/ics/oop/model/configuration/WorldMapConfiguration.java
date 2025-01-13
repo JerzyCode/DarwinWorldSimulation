@@ -1,13 +1,9 @@
 package agh.ics.oop.model.configuration;
 
 public class WorldMapConfiguration {
-    private int height;
-    private int width;
-    private WorldMapVariant mapVariant;
-
-    WorldMapConfiguration() {
-        this(26, 54, WorldMapVariant.EARTH);
-    }
+    private final int height;
+    private final int width;
+    private final WorldMapVariant mapVariant;
 
     public WorldMapConfiguration(int height, int width, WorldMapVariant mapVariant) {
         this.height = height;
@@ -19,25 +15,14 @@ public class WorldMapConfiguration {
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     public int getWidth() {
         return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     public WorldMapVariant getMapVariant() {
         return mapVariant;
     }
 
-    public void setMapVariant(WorldMapVariant mapVariant) {
-        this.mapVariant = mapVariant;
-    }
 
     @Override
     public String toString() {
