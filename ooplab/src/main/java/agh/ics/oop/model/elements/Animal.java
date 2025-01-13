@@ -8,6 +8,9 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Animal implements WorldElement {
@@ -15,6 +18,8 @@ public class Animal implements WorldElement {
     private int energy;
     private Vector2d position;
     private MapDirection orientation;
+    private List<Animal> parents;
+    private final List<Animal> children;
 
     public Animal(int startEnergy, Vector2d position, Genome genome) {
         this(startEnergy, position, MapDirection.NORTH, genome);
@@ -26,6 +31,12 @@ public class Animal implements WorldElement {
         this.orientation = orientation;
         this.position = position;
         this.genome = genome;
+        children = new LinkedList<>();
+    }
+
+    public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2) {
+        this(energy, position, genome);
+        this.parents = Arrays.asList(parent1, parent2);
     }
 
     public boolean isAt(Vector2d position) {
@@ -54,6 +65,10 @@ public class Animal implements WorldElement {
 
     public boolean canMakeChild(int wellFedEnergy) {
         return energy >= wellFedEnergy;
+    }
+
+    public void addChild(Animal child) {
+        children.add(child);
     }
 
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {

@@ -38,7 +38,10 @@ public class AnimalFactory {
 
         try {
             var childGenome = createChildGenome(dominating, other, dominatingLeft, percentage);
-            return new Animal(startBirthEnergy, parent1.getPosition(), childGenome);
+            var newAnimal = new Animal(startBirthEnergy, parent1.getPosition(), childGenome, parent1, parent2);
+            parent1.addChild(newAnimal);
+            parent2.addChild(newAnimal);
+            return newAnimal;
         } catch (InvalidCountException e) {
             throw new AnimalNotBirthException(e.getMessage());
         }
