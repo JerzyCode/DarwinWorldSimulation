@@ -3,6 +3,7 @@ package agh.ics.oop;
 import agh.ics.oop.factory.AnimalFactory;
 import agh.ics.oop.factory.PlantFactory;
 import agh.ics.oop.factory.WorldMapFactory;
+import agh.ics.oop.model.DayCycleHandler;
 import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
@@ -178,14 +179,8 @@ public class SimulationContext {
     }
 
     private void handleFirefightings() {
-        if (worldMap instanceof FireWorldMap fireWorldMap) {
-            fireWorldMap.decreaseFireRemainingLifetime();
-            fireWorldMap.removeBurnedFires();
-            fireWorldMap.spreadFire();
-            var fireFrequency = configuration.getWorldMapConfiguration().getFireFrequency();
-            if (fireFrequency > 0 && currentDay % fireFrequency == 0) {
-                fireWorldMap.createFire();
-            }
+        if (worldMap instanceof DayCycleHandler fireWorldMap) {
+            fireWorldMap.handleDayEnds(currentDay);//TODO inaczej to zeby nie bylo instance of
         }
     }
 

@@ -1,6 +1,7 @@
 package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.DayCycleHandler;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
@@ -13,7 +14,7 @@ import agh.ics.oop.model.move.MoveDirection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Earth extends AbstractPlantMap implements MoveAdjuster {
+public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHandler {
     private final Boundary boundary;
     private final Map<Vector2d, Set<Animal>> animals;
 
@@ -112,6 +113,11 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
         }
     }
 
+    @Override
+    public void handleDayEnds(int currentDay) {
+
+    }
+
     public Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
             return animals.get(position);
@@ -123,6 +129,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
         var animalsAtPosition = animals.computeIfAbsent(animal.getPosition(), k -> new HashSet<>());
         animalsAtPosition.add(animal);
     }
+
 
 
 }
