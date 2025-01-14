@@ -182,11 +182,11 @@ public class Animal implements WorldElement {
         return getDescendants().size();
     }
 
-    public int getAnimalStartDay() {
+    public int getStartDay() {
         return startDay;
     }
 
-    public int getAnimalEndDay() {
+    public int getEndDay() throws AnimalStillAliveException {
         if (endDay == 0) {
             throw new AnimalStillAliveException(this);
         }

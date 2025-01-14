@@ -24,6 +24,7 @@ public class SimulationContext {
     private final PlantFactory plantFactory;
     private final WorldMap worldMap;
     private final Set<Animal> animals;
+    private final Set<Animal> deadAnimals;
     private final Set<Plant> plants;
     private final Set<Fire> fires;
     private int currentDay;
@@ -36,6 +37,7 @@ public class SimulationContext {
         this.worldMap = worldMapFactory.createWorldMap();
         this.plants = new HashSet<>();
         this.animals = new HashSet<>();
+        this.deadAnimals = new HashSet<>();
         this.fires = new HashSet<>();
         currentDay = 1;
 
@@ -128,6 +130,7 @@ public class SimulationContext {
             if (animal.isDead()) {
                 System.out.println("removing dead animal");
                 worldMap.removeAnimal(animal);
+                deadAnimals.add(animal);
                 return true;
             }
             return false;
@@ -266,4 +269,28 @@ public class SimulationContext {
     public WorldMap getWorldMap() {
         return worldMap;
     }
+
+    public int getAnimalCount() {
+        return animals.size();
+    }
+
+    public OptionalDouble getAverageAnimalEnergy() {
+        return animals.stream()
+                .mapToDouble(Animal::getEnergy)
+                .average();
+    }
+
+    public OptionalDouble getAverageDeadAnimalTimeLife() {
+        return deadAnimals.stream()
+                .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
+                .average();
+    }
+
+    public OptionalDouble getAverageAnimalCountOfChildren() {
+        return animals.stream()
+                .mapToInt(Animal::getCountOfChildren)
+                .average();
+    }
+
+    //TODO: getMostPopularGenotype
 }

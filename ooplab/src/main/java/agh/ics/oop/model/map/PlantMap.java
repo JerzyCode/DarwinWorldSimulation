@@ -12,4 +12,6 @@ public interface PlantMap extends WorldMap {
     Plant getPlantAtPosition(Vector2d position);
 
     boolean isPlantAtPosition(Vector2d position);
+
+    int getPlantCount();
 }
