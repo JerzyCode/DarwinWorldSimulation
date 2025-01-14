@@ -65,9 +65,10 @@ public class SimulationContext {
             animals.forEach(animal -> {
                 var position = animal.getPosition();
                 if (plantMap.isPlantAtPosition(position)) {
-                    plants.remove(plantMap.getPlantAtPosition(position));
+                    var plant = plantMap.getPlantAtPosition(position);
+                    plants.remove(plant);
                     plantMap.removePlant(position);
-                    animal.increaseEnergy(configuration.getSimulationConfiguration().getEnergyGain());
+                    animal.eat(plant);
                 }
             });
     }
@@ -147,7 +148,7 @@ public class SimulationContext {
 
         while (placedPlantsCount < plantCount) {
             try {
-                var plant = plantFactory.createPlant(worldMap.getCurrentBounds());
+                var plant = plantFactory.createPlant(worldMap.getCurrentBounds(), configuration.getSimulationConfiguration().getEnergyGain());
                 ((PlantMap) worldMap).placePlant(plant);
                 plants.add(plant);
                 placedPlantsCount++;

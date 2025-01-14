@@ -12,15 +12,15 @@ public class PlantFactory {
         this.variant = variant;
     }
 
-    public Plant createPlant(Boundary boundary) {
+    public Plant createPlant(Boundary boundary, int energyGain) {
         return switch (variant) {
-            case PlantVariant.FORESTED_EQUATORS -> createPlantForestedEquators(boundary);
+            case PlantVariant.FORESTED_EQUATORS -> createPlantForestedEquators(boundary, energyGain);
             case PlantVariant.NONE -> null;
         };
     }
 
     //TODO: zapytać o to
-    private Plant createPlantForestedEquators(Boundary boundary) {
+    private Plant createPlantForestedEquators(Boundary boundary, int energyGain) {
         var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY() + 1;
         var countOfColumns = boundary.rightTopCorner().getX() - boundary.leftBottomCorner().getX() + 1;
 
@@ -40,7 +40,7 @@ public class PlantFactory {
         int col = (int) (Math.random() * countOfColumns);
         // TODO: z jakiejś przyczny tutaj col i row musi być tutaj odwrotnie żeby działało
         Vector2d position = new Vector2d(col, row);
-        return new Plant(position);
+        return new Plant(position, energyGain);
     }
 
 }

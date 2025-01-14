@@ -17,6 +17,7 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Set<Animal> parents;
     private final Set<Animal> children;
+    private int amountOfEatenPlants;
 
     public Animal(int startEnergy, Vector2d position, Genome genome) {
         this(startEnergy, position, MapDirection.NORTH, genome);
@@ -29,6 +30,7 @@ public class Animal implements WorldElement {
         this.position = position;
         this.genome = genome;
         children = new HashSet<>();
+        amountOfEatenPlants = 0;
     }
 
     public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2) {
@@ -49,8 +51,8 @@ public class Animal implements WorldElement {
         this.energy -= amount;
     }
 
-    public void increaseEnergy(int amount) {
-        this.energy += amount;
+    public void eat(Eatable food) {
+        this.energy += food.getEnergyGain();
     }
 
     public boolean isDead() {
@@ -59,10 +61,6 @@ public class Animal implements WorldElement {
 
     public void kill() {
         energy = 0;
-    }
-
-    public int getEnergy() {
-        return energy;
     }
 
     public boolean canMakeChild(int wellFedEnergy) {
@@ -81,6 +79,8 @@ public class Animal implements WorldElement {
         return Collections.unmodifiableSet(parents);
     }
 
+    // TODO: Możliwe, że to jednak nie będzie potrzebne, bo wystarczy pamiętać liczbę potomków, a nie potomków
+
     public Set<Animal> getDescendants() {
         Set<Animal> descendants = new HashSet<>(children);
 
@@ -89,7 +89,6 @@ public class Animal implements WorldElement {
         }
         return Collections.unmodifiableSet(descendants);
     }
-
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
         if (count < 0) {
             throw new InvalidCountException();
@@ -144,5 +143,19 @@ public class Animal implements WorldElement {
     public MapDirection getOrientation() {
         return orientation;
     }
+
+    public Genome getGenome() {
+        return genome;
+    }
+
+    public Gen getActivatedGen() {
+        return genome.getActivatedGen();
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+
 
 }
