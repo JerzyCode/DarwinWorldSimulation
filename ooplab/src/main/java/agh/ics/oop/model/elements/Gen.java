@@ -6,7 +6,6 @@ import agh.ics.oop.model.configuration.MutationVariant;
 import java.util.Objects;
 import java.util.Random;
 
-// TODO: Moim zdaniem gen powinien być niemutowalny
 public class Gen {
     private int index;
 
