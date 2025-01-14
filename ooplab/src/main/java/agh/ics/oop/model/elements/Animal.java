@@ -77,9 +77,19 @@ public class Animal implements WorldElement {
         return Collections.unmodifiableSet(parents);
     }
 
-//    public List<Animal> getAncestors() {
-//        List<Animal>
-//    }
+    public Set<Animal> getAncestors() {
+        Set<Animal> ancestors = new HashSet<>(children);
+
+        while (!children.isEmpty()) {
+            for (Animal child : children) {
+                var childAncestors = child.getAncestors();
+                if (!childAncestors.isEmpty()) {
+                    ancestors.addAll(childAncestors);
+                }
+            }
+        }
+        return ancestors;
+    }
 
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
         if (count < 0) {
