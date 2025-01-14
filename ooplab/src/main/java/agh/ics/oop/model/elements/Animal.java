@@ -7,7 +7,6 @@ import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
-import com.sun.javafx.UnmodifiableArrayList;
 
 import java.util.*;
 
@@ -34,6 +33,11 @@ public class Animal implements WorldElement {
 
     public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2) {
         this(energy, position, genome);
+        this.parents = Set.of(parent1, parent2);
+    }
+
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, Animal parent1, Animal parent2) {
+        this(energy, position, orientation, genome);
         this.parents = Set.of(parent1, parent2);
     }
 
@@ -77,18 +81,18 @@ public class Animal implements WorldElement {
         return Collections.unmodifiableSet(parents);
     }
 
-    public Set<Animal> getAncestors() {
+    public Set<Animal> getDescendants() {
         Set<Animal> ancestors = new HashSet<>(children);
 
-        while (!children.isEmpty()) {
+        if (!children.isEmpty()) {
             for (Animal child : children) {
-                var childAncestors = child.getAncestors();
+                var childAncestors = child.getDescendants();
                 if (!childAncestors.isEmpty()) {
                     ancestors.addAll(childAncestors);
                 }
             }
         }
-        return ancestors;
+        return Collections.unmodifiableSet(ancestors);
     }
 
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {

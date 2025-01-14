@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -509,6 +510,54 @@ class AnimalTest {
         assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-5, true));
         assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-10, false));
         assertThrows(InvalidCountException.class, () -> animal.getPartOfGens(-1, false));
+    }
+
+    @Test
+    void getDescendants() {
+        // given
+
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
+        var position = new Vector2d(2, 2);
+        var animal1 = new Animal(10, position, MapDirection.NORTH, genome);
+        var animal2 = new Animal(10, position, MapDirection.NORTH_EAST, genome);
+        var animal3 = new Animal(10, position, MapDirection.EAST, genome);
+
+        var animal4 = new Animal(10, position, MapDirection.SOUTH_EAST, genome, animal1, animal2);
+        animal1.addChild(animal4);
+        animal2.addChild(animal4);
+
+        var animal5 = new Animal(10, position, MapDirection.SOUTH, genome, animal2, animal3);
+        animal2.addChild(animal5);
+        animal3.addChild(animal5);
+
+        var animal6 = new Animal(10, position, MapDirection.SOUTH_WEST, genome, animal4, animal5);
+        animal4.addChild(animal6);
+        animal5.addChild(animal6);
+
+        var expectedAncestorsOfAnimal5 = Set.of(animal6);
+        var expectedAncestorsOfAnimal4 = Set.of(animal6);
+        var expectedAncestorsOfAnimal3 = Set.of(animal6, animal5);
+        var expectedAncestorsOfAnimal2 = Set.of(animal6, animal5, animal4);
+        var expectedAncestorsOfAnimal1 = Set.of(animal6, animal4);
+
+        // when
+
+        var ancestorsOfAnimal6 = animal6.getDescendants();
+        var ancestorsOfAnimal5 = animal5.getDescendants();
+        var ancestorsOfAnimal4 = animal4.getDescendants();
+        var ancestorsOfAnimal3 = animal3.getDescendants();
+        var ancestorsOfAnimal2 = animal2.getDescendants();
+        var ancestorsOfAnimal1 = animal1.getDescendants();
+
+        // then
+
+        assertTrue(ancestorsOfAnimal6.isEmpty());
+        assertEquals(expectedAncestorsOfAnimal5, ancestorsOfAnimal5);
+        assertEquals(expectedAncestorsOfAnimal4, ancestorsOfAnimal4);
+        assertEquals(expectedAncestorsOfAnimal3, ancestorsOfAnimal3);
+        assertEquals(expectedAncestorsOfAnimal2, ancestorsOfAnimal2);
+        assertEquals(expectedAncestorsOfAnimal1, ancestorsOfAnimal1);
+
     }
 
 }
