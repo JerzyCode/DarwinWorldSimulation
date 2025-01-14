@@ -82,17 +82,12 @@ public class Animal implements WorldElement {
     }
 
     public Set<Animal> getDescendants() {
-        Set<Animal> ancestors = new HashSet<>(children);
+        Set<Animal> descendants = new HashSet<>(children);
 
-        if (!children.isEmpty()) {
-            for (Animal child : children) {
-                var childAncestors = child.getDescendants();
-                if (!childAncestors.isEmpty()) {
-                    ancestors.addAll(childAncestors);
-                }
-            }
+        for (Animal child : children) {
+            descendants.addAll(child.getDescendants());
         }
-        return Collections.unmodifiableSet(ancestors);
+        return Collections.unmodifiableSet(descendants);
     }
 
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
