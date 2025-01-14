@@ -94,7 +94,7 @@ public class SimulationContext {
                                 var iterator = animalsAt.iterator();
                                 var parent1 = iterator.next();
                                 var parent2 = iterator.next();
-                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy);
+                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy, currentDay);
                                 newAnimals.add(child);
 
                                 parent1.decreaseEnergy(lossCopulateEnergy);
@@ -119,7 +119,7 @@ public class SimulationContext {
         if (worldMap instanceof FireWorldMap fireWorldMap) {
             animals.stream()
                     .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
-                    .forEach(Animal::kill);
+                    .forEach(animal -> animal.kill(currentDay));
         }
     }
 
@@ -166,7 +166,7 @@ public class SimulationContext {
                 boundary.rightTopCorner().getY());
 
         for (Vector2d position : randomizer) {
-            var animal = animalFactory.createAnimal(position);
+            var animal = animalFactory.createAnimal(position, currentDay);
             try {
                 worldMap.place(animal);
                 animals.add(animal);

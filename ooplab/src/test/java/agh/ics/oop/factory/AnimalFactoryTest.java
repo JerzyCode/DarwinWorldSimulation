@@ -33,7 +33,7 @@ class AnimalFactoryTest {
         var factory = new AnimalFactory(configuration);
 
         //when
-        var animal = factory.createAnimal(new Vector2d(1, 1));
+        var animal = factory.createAnimal(new Vector2d(1, 1), 1);
 
         //then
         assertEquals(new Vector2d(1, 1), animal.getPosition());
@@ -75,8 +75,8 @@ class AnimalFactoryTest {
         Animal newAnimalLeftDominating = null;
         Animal newAnimalRightDominating = null;
         try {
-            newAnimalLeftDominating = factory.birthAnimal(leftParent, rightParent, 20);
-            newAnimalRightDominating = factory.birthAnimal(rightParent, leftParent, 20);
+            newAnimalLeftDominating = factory.birthAnimal(leftParent, rightParent, 20, 1);
+            newAnimalRightDominating = factory.birthAnimal(rightParent, leftParent, 20, 1);
         } catch (AnimalNotBirthException e) {
             fail("Test shouldBirthAnimalFirstParentDominating should not fail: e=" + e.getMessage());
         }

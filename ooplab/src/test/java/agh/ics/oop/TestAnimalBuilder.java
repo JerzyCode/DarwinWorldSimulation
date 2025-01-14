@@ -42,6 +42,6 @@ public class TestAnimalBuilder {
     }
 
     public Animal build() {
-        return new Animal(energy, position, orientation, genome);
+        return new Animal(energy, position, orientation, genome, 1);
     }
 }

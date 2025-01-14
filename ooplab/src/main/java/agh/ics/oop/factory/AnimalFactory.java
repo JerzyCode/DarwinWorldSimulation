@@ -25,12 +25,12 @@ public class AnimalFactory {
         this(animalConfiguration, new RandomWrapper());
     }
 
-    public Animal createAnimal(Vector2d position) {
+    public Animal createAnimal(Vector2d position, int birthDay) {
         var genome = createGenome();
-        return new Animal(animalConfiguration.getStartEnergy(), position, genome);
+        return new Animal(animalConfiguration.getStartEnergy(), position, genome, birthDay);
     }
 
-    public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy) throws AnimalNotBirthException {
+    public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy, int birthDay) throws AnimalNotBirthException {
         var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
         var other = dominating == parent1 ? parent2 : parent1;
         var percentage = ((double) dominating.getEnergy()) / (other.getEnergy() + dominating.getEnergy());
@@ -38,7 +38,7 @@ public class AnimalFactory {
 
         try {
             var childGenome = createChildGenome(dominating, other, dominatingLeft, percentage);
-            var newAnimal = new Animal(startBirthEnergy, parent1.getPosition(), childGenome, parent1, parent2);
+            var newAnimal = new Animal(startBirthEnergy, parent1.getPosition(), childGenome, parent1, parent2, birthDay);
             parent1.addChild(newAnimal);
             parent2.addChild(newAnimal);
             return newAnimal;

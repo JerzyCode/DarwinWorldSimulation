@@ -522,15 +522,15 @@ class AnimalTest {
         var animal2 = new Animal(10, position, MapDirection.NORTH_EAST, genome);
         var animal3 = new Animal(10, position, MapDirection.EAST, genome);
 
-        var animal4 = new Animal(10, position, MapDirection.SOUTH_EAST, genome, animal1, animal2);
+        var animal4 = new Animal(10, position, MapDirection.SOUTH_EAST, genome, animal1, animal2, 1);
         animal1.addChild(animal4);
         animal2.addChild(animal4);
 
-        var animal5 = new Animal(10, position, MapDirection.SOUTH, genome, animal2, animal3);
+        var animal5 = new Animal(10, position, MapDirection.SOUTH, genome, animal2, animal3, 1);
         animal2.addChild(animal5);
         animal3.addChild(animal5);
 
-        var animal6 = new Animal(10, position, MapDirection.SOUTH_WEST, genome, animal4, animal5);
+        var animal6 = new Animal(10, position, MapDirection.SOUTH_WEST, genome, animal4, animal5, 1);
         animal4.addChild(animal6);
         animal5.addChild(animal6);
 

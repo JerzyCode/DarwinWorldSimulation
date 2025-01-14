@@ -2,6 +2,7 @@ package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.exceptions.AnimalStillAliveException;
 import agh.ics.oop.model.exceptions.InvalidCountException;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
@@ -17,29 +18,41 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Set<Animal> parents;
     private final Set<Animal> children;
-    private int amountOfEatenPlants;
+    private int countOfEatenPlants;
+    private final int startDay;
+    private int endDay;
 
     public Animal(int startEnergy, Vector2d position, Genome genome) {
-        this(startEnergy, position, MapDirection.NORTH, genome);
+        this(startEnergy, position, MapDirection.NORTH, genome, 1);
+    }
+
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome){
+        this(energy, position, orientation, genome, 1);
+    }
+
+    public Animal(int startEnergy, Vector2d position, Genome genome, int startDay) {
+        this(startEnergy, position, MapDirection.NORTH, genome, startDay);
     }
 
 
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, int startDay) {
         this.energy = energy;
         this.orientation = orientation;
         this.position = position;
         this.genome = genome;
-        children = new HashSet<>();
-        amountOfEatenPlants = 0;
+        this.children = new HashSet<>();
+        this.countOfEatenPlants = 0;
+        this.startDay = startDay;
+        this.endDay = 0;
     }
 
-    public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2) {
-        this(energy, position, genome);
+    public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2, int startDay) {
+        this(energy, position, genome, startDay);
         this.parents = Set.of(parent1, parent2);
     }
 
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, Animal parent1, Animal parent2) {
-        this(energy, position, orientation, genome);
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, Animal parent1, Animal parent2, int startDay) {
+        this(energy, position, orientation, genome, startDay);
         this.parents = Set.of(parent1, parent2);
     }
 
@@ -53,14 +66,16 @@ public class Animal implements WorldElement {
 
     public void eat(Eatable food) {
         this.energy += food.getEnergyGain();
+        this.countOfEatenPlants++;
     }
 
     public boolean isDead() {
         return energy <= 0;
     }
 
-    public void kill() {
+    public void kill(int endDay) {
         energy = 0;
+        this.endDay = endDay;
     }
 
     public boolean canMakeChild(int wellFedEnergy) {
@@ -80,7 +95,6 @@ public class Animal implements WorldElement {
     }
 
     // TODO: Możliwe, że to jednak nie będzie potrzebne, bo wystarczy pamiętać liczbę potomków, a nie potomków
-
     public Set<Animal> getDescendants() {
         Set<Animal> descendants = new HashSet<>(children);
 
@@ -155,6 +169,30 @@ public class Animal implements WorldElement {
     public int getEnergy() {
         return energy;
     }
+
+    public int getCountOfEatenPlants() {
+        return countOfEatenPlants;
+    }
+
+    public int getCountOfChildren() {
+        return children.size();
+    }
+
+    public int getCountOfDescendants() {
+        return getDescendants().size();
+    }
+
+    public int getAnimalStartDay() {
+        return startDay;
+    }
+
+    public int getAnimalEndDay() {
+        if (endDay == 0) {
+            throw new AnimalStillAliveException(this);
+        }
+        return endDay;
+    }
+
 
 
 
