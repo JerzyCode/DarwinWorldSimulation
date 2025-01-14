@@ -45,7 +45,7 @@ public class SimulationContext {
         System.out.println("Current day: " + currentDay + ", animalsCount=" + animals.size());
         clearDeadAnimals();
         handleAnimalsMove();
-        handlePlantEating();
+//        handlePlantEating();
         handleCopulate();
         handleAnimalLossEnergy();
         handlePlantGrowth();
@@ -61,18 +61,6 @@ public class SimulationContext {
 
     private void handleAnimalsMove() {
         animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
-    }
-
-    private void handlePlantEating() {
-        if (worldMap instanceof PlantMap plantMap)
-            animals.forEach(animal -> {
-                var position = animal.getPosition();
-                if (plantMap.isPlantAtPosition(position)) {
-                    plants.remove(plantMap.getPlantAtPosition(position));
-                    plantMap.removePlant(position);
-                    animal.increaseEnergy(configuration.getSimulationConfiguration().getEnergyGain());
-                }
-            });
     }
 
     private void handlePlantGrowth() {

@@ -23,10 +23,12 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHan
         animals = new ConcurrentHashMap<>();
     }
 
-    // TODO: remove unused constructor
-    public Earth() {
-        this(1, 1);
-    }
+    //TODO coś w stylu FireEarth
+    //klasa PlantGrower, i w konstuktorze do Earth przyjąc plantvariant,
+    // czyli plant variant do worldMapConfiguration
+    //wtedy plant factory do wywalenia - plantGrower robi za to
+    //i w mapie przez grower tworzymy nowe rośliny
+
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException {
@@ -111,6 +113,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHan
             placeAnimalAtNewPosition(animal);
             notifyListeners("Animal moved to position: " + animal.getPosition());
         }
+
+        handleAnimalStepOnPlant(animal);
     }
 
     @Override
@@ -130,6 +134,18 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHan
         animalsAtPosition.add(animal);
     }
 
+
+    private void handleAnimalStepOnPlant(Animal animal) {
+        var position = animal.getPosition();
+        if (isPlantAtPosition(position)) {
+            animal.increaseEnergy(10); //TODO po poprawkach mateusza git bedzie
+            removePlant(position);
+        }
+    }
+
+    private void growNewPlants(int plantCount) {
+        //TODO mapy powinny mieć factory
+    }
 
 
 }
