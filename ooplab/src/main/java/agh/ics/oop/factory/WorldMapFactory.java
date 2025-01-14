@@ -1,9 +1,9 @@
 package agh.ics.oop.factory;
 
 import agh.ics.oop.model.configuration.WorldMapConfiguration;
-import agh.ics.oop.model.map.Earth;
-import agh.ics.oop.model.map.fire.FireEarth;
 import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.fire.FireEarth;
+import agh.ics.oop.model.map.Earth;
 
 public class WorldMapFactory {
     private final WorldMapConfiguration worldMapConfiguration;

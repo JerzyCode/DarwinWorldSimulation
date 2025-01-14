@@ -19,7 +19,6 @@ public class PlantFactory {
         };
     }
 
-    //TODO: zapytać o to
     private Plant createPlantForestedEquators(Boundary boundary) {
         var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY() + 1;
         var countOfColumns = boundary.rightTopCorner().getX() - boundary.leftBottomCorner().getX() + 1;
@@ -38,7 +37,6 @@ public class PlantFactory {
             }
         }
         int col = (int) (Math.random() * countOfColumns);
-        // TODO: z jakiejś przyczny tutaj col i row musi być tutaj odwrotnie żeby działało
         Vector2d position = new Vector2d(col, row);
         return new Plant(position);
     }
