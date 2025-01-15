@@ -51,7 +51,7 @@ public class MainPanelPresenter {
         configurationPresenter.switchWorldMapVariant(mapVariant);
     }
 
-    public void startSimulation() throws IOException {
+    public void openSimulationWindow() throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
@@ -64,6 +64,7 @@ public class MainPanelPresenter {
         presenter.setConfiguration(configuration);
 
         configureStage(stage, viewRoot);
+        stage.setOnCloseRequest(event -> presenter.stopSimulation());
         stage.show();
     }
 

@@ -24,6 +24,7 @@ public class SimulationContext {
     private final PlantFactory plantFactory;
     private final WorldMap worldMap;
     private final Set<Animal> animals;
+    private final Set<Animal> deadAnimals;
     private final Set<Plant> plants;
     private final Set<Fire> fires;
     private int currentDay;
@@ -36,6 +37,7 @@ public class SimulationContext {
         this.worldMap = worldMapFactory.createWorldMap();
         this.plants = new HashSet<>();
         this.animals = new HashSet<>();
+        this.deadAnimals = new HashSet<>();
         this.fires = new HashSet<>();
         currentDay = 1;
 
@@ -65,9 +67,10 @@ public class SimulationContext {
             animals.forEach(animal -> {
                 var position = animal.getPosition();
                 if (plantMap.isPlantAtPosition(position)) {
-                    plants.remove(plantMap.getPlantAtPosition(position));
+                    var plant = plantMap.getPlantAtPosition(position);
+                    plants.remove(plant);
                     plantMap.removePlant(position);
-                    animal.increaseEnergy(configuration.getSimulationConfiguration().getEnergyGain());
+                    animal.eat(plant);
                 }
             });
     }
@@ -93,7 +96,7 @@ public class SimulationContext {
                                 var iterator = animalsAt.iterator();
                                 var parent1 = iterator.next();
                                 var parent2 = iterator.next();
-                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy);
+                                var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy, currentDay);
                                 newAnimals.add(child);
 
                                 parent1.decreaseEnergy(lossCopulateEnergy);
@@ -118,7 +121,7 @@ public class SimulationContext {
         if (worldMap instanceof FireWorldMap fireWorldMap) {
             animals.stream()
                     .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
-                    .forEach(Animal::kill);
+                    .forEach(animal -> animal.kill(currentDay));
         }
     }
 
@@ -127,6 +130,7 @@ public class SimulationContext {
             if (animal.isDead()) {
                 System.out.println("removing dead animal");
                 worldMap.removeAnimal(animal);
+                deadAnimals.add(animal);
                 return true;
             }
             return false;
@@ -147,7 +151,7 @@ public class SimulationContext {
 
         while (placedPlantsCount < plantCount) {
             try {
-                var plant = plantFactory.createPlant(worldMap.getCurrentBounds());
+                var plant = plantFactory.createPlant(worldMap.getCurrentBounds(), configuration.getSimulationConfiguration().getEnergyGain());
                 ((PlantMap) worldMap).placePlant(plant);
                 plants.add(plant);
                 placedPlantsCount++;
@@ -165,7 +169,7 @@ public class SimulationContext {
                 boundary.rightTopCorner().getY());
 
         for (Vector2d position : randomizer) {
-            var animal = animalFactory.createAnimal(position);
+            var animal = animalFactory.createAnimal(position, currentDay);
             try {
                 worldMap.place(animal);
                 animals.add(animal);
@@ -265,4 +269,28 @@ public class SimulationContext {
     public WorldMap getWorldMap() {
         return worldMap;
     }
+
+    public int getAnimalCount() {
+        return animals.size();
+    }
+
+    public OptionalDouble getAverageAnimalEnergy() {
+        return animals.stream()
+                .mapToDouble(Animal::getEnergy)
+                .average();
+    }
+
+    public OptionalDouble getAverageDeadAnimalTimeLife() {
+        return deadAnimals.stream()
+                .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
+                .average();
+    }
+
+    public OptionalDouble getAverageAnimalCountOfChildren() {
+        return animals.stream()
+                .mapToInt(Animal::getCountOfChildren)
+                .average();
+    }
+
+    //TODO: getMostPopularGenotype
 }

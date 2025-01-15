@@ -124,6 +124,19 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
         animalsAtPosition.add(animal);
     }
 
+    public int getPlantCount() {
+        return plants.size();
+    }
+
+    public int getCountOfEmptyFields() {
+        long countOfOccupiedFields = getElements().stream()
+                .map(WorldElement::getPosition)
+                .distinct()
+                .count();
+
+        return getSize() - (int) countOfOccupiedFields;
+    }
+
 
 }
 
