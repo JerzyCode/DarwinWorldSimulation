@@ -38,6 +38,7 @@ class AnimalFactoryTest {
         //then
         assertEquals(new Vector2d(1, 1), animal.getPosition());
         assertEquals(configuration.getStartEnergy(), animal.getEnergy());
+        assertEquals(1, animal.getStartDay());
     }
 
 

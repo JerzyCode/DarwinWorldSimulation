@@ -10,6 +10,8 @@ import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Animal implements WorldElement {
     private final Genome genome;
@@ -96,12 +98,9 @@ public class Animal implements WorldElement {
 
     // TODO: Możliwe, że to jednak nie będzie potrzebne, bo wystarczy pamiętać liczbę potomków, a nie potomków
     public Set<Animal> getDescendants() {
-        Set<Animal> descendants = new HashSet<>(children);
-
-        for (Animal child : children) {
-            descendants.addAll(child.getDescendants());
-        }
-        return Collections.unmodifiableSet(descendants);
+        return children.stream()
+                .flatMap(child -> Stream.concat(Stream.of(child), child.getDescendants().stream()))
+                .collect(Collectors.toUnmodifiableSet());
     }
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
         if (count < 0) {

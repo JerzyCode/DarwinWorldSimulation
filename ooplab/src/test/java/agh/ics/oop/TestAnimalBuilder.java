@@ -13,6 +13,7 @@ public class TestAnimalBuilder {
     private Vector2d position;
     private MapDirection orientation = MapDirection.NORTH;
     private Genome genome = new Genome(List.of(new Gen(1)));
+    private int startDay = 1;
 
     private TestAnimalBuilder() {
     }
@@ -38,6 +39,11 @@ public class TestAnimalBuilder {
 
     public TestAnimalBuilder genome(Genome genome) {
         this.genome = genome;
+        return this;
+    }
+
+    public TestAnimalBuilder startDay(int startDay) {
+        this.startDay = 1;
         return this;
     }
 
