@@ -6,6 +6,7 @@ public class WorldMapConfigurationBuilder {
     private int fireFrequency;
     private int fireDuration;
     private WorldMapVariant mapVariant;
+    private PlantVariant plantVariant;
 
     private WorldMapConfigurationBuilder() {
 
@@ -40,7 +41,12 @@ public class WorldMapConfigurationBuilder {
         return this;
     }
 
+    public WorldMapConfigurationBuilder plantVariant(PlantVariant plantVariant) {
+        this.plantVariant = plantVariant;
+        return this;
+    }
+
     public WorldMapConfiguration build() {
-        return new WorldMapConfiguration(height, width, fireFrequency, fireDuration, mapVariant);
+        return new WorldMapConfiguration(height, width, fireFrequency, fireDuration, mapVariant, plantVariant);
     }
 }

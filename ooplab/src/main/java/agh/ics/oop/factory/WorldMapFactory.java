@@ -3,7 +3,7 @@ package agh.ics.oop.factory;
 import agh.ics.oop.model.configuration.WorldMapConfiguration;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.fire.FireEarth;
-import agh.ics.oop.model.map.Earth;
+import agh.ics.oop.model.map.plant.Earth;
 
 public class WorldMapFactory {
     private final WorldMapConfiguration worldMapConfiguration;
@@ -23,7 +23,9 @@ public class WorldMapFactory {
     private Earth createEarth() {
         var width = worldMapConfiguration.getWidth();
         var height = worldMapConfiguration.getHeight();
-        return new Earth(width, height);
+        var plantVariant = worldMapConfiguration.getPlantVariant();
+
+        return new Earth(width, height, plantVariant);
     }
 
     private FireEarth createFireEarth() {
@@ -31,7 +33,8 @@ public class WorldMapFactory {
         var height = worldMapConfiguration.getHeight();
         var fireDuration = worldMapConfiguration.getFireDuration();
         var fireFrequency = worldMapConfiguration.getFireFrequency();
-        return new FireEarth(width, height, fireFrequency, fireDuration);
+        var plantVariant = worldMapConfiguration.getPlantVariant();
+        return new FireEarth(width, height, fireFrequency, fireDuration, plantVariant);
     }
 
 }

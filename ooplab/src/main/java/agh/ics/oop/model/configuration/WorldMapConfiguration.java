@@ -6,13 +6,15 @@ public class WorldMapConfiguration {
     private final int fireFrequency;
     private final int fireDuration;
     private final WorldMapVariant mapVariant;
+    private final PlantVariant plantVariant;
 
-    public WorldMapConfiguration(int height, int width, int fireFrequency, int fireDuration, WorldMapVariant mapVariant) {
+    public WorldMapConfiguration(int height, int width, int fireFrequency, int fireDuration, WorldMapVariant mapVariant, PlantVariant plantVariant) {
         this.height = height;
         this.width = width;
         this.fireFrequency = fireFrequency;
         this.fireDuration = fireDuration;
         this.mapVariant = mapVariant;
+        this.plantVariant = plantVariant;
     }
 
     public int getHeight() {
@@ -35,6 +37,9 @@ public class WorldMapConfiguration {
         return mapVariant;
     }
 
+    public PlantVariant getPlantVariant() {
+        return plantVariant;
+    }
 
     @Override
     public String toString() {

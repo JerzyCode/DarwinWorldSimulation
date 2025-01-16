@@ -121,7 +121,6 @@ public class ConfigurationPresenter {
                 .lossCopulateEnergy(Integer.parseInt(lossCopulateEnergyInput.getText()))
                 .startAnimalCount(Integer.parseInt(startAnimalCountInput.getText()))
                 .startPlantCount(Integer.parseInt(startPlantCountInput.getText()))
-                .plantVariant(plantVariant)
                 .build();
 
         var worldMapConfiguration = WorldMapConfigurationBuilder
@@ -131,6 +130,7 @@ public class ConfigurationPresenter {
                 .fireFrequency(Integer.parseInt(fireFrequencyInput.getText()))
                 .fireDuration(Integer.parseInt(fireDurationInput.getText()))
                 .mapVariant(mapVariant)
+                .plantVariant(plantVariant)
                 .build();
 
         return ConfigurationBuilder.create()

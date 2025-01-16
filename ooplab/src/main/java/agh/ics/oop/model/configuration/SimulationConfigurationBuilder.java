@@ -4,7 +4,6 @@ public class SimulationConfigurationBuilder {
     private int daysCount;
     private int energyGain;
     private int plantGrowth;
-    private PlantVariant plantVariant;
     private int wellFedEnergy;
     private int lossCopulateEnergy;
     private int startAnimalCount;
@@ -34,11 +33,6 @@ public class SimulationConfigurationBuilder {
         return this;
     }
 
-    public SimulationConfigurationBuilder plantVariant(PlantVariant plantVariant) {
-        this.plantVariant = plantVariant;
-        return this;
-    }
-
     public SimulationConfigurationBuilder wellFedEnergy(int wellFedEnergy) {
         this.wellFedEnergy = wellFedEnergy;
         return this;
@@ -61,7 +55,7 @@ public class SimulationConfigurationBuilder {
     }
 
     public SimulationConfiguration build() {
-        return new SimulationConfiguration(daysCount, energyGain, plantGrowth, plantVariant, wellFedEnergy,
+        return new SimulationConfiguration(daysCount, energyGain, plantGrowth, wellFedEnergy,
                 lossCopulateEnergy, startAnimalCount, startPlantCount);
     }
 }

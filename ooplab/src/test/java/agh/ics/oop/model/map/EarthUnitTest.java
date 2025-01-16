@@ -3,12 +3,14 @@ package agh.ics.oop.model.map;
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
+import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +30,7 @@ class EarthUnitTest {
 
     @BeforeEach
     void setUp() {
-        map = new Earth(5, 5);
+        map = new Earth(5, 5, PlantVariant.FORESTED_EQUATORS);
     }
 
     @Test
@@ -329,8 +331,8 @@ class EarthUnitTest {
 
     @Test
     void getSizeShouldReturn() {
-        var map1 = new Earth(4, 10);
-        var map2 = new Earth(14, 5);
+        var map1 = new Earth(4, 10, PlantVariant.FORESTED_EQUATORS);
+        var map2 = new Earth(14, 5, PlantVariant.FORESTED_EQUATORS);
         assertEquals(4 * 10, map1.getSize());
         assertEquals(14 * 5, map2.getSize());
     }

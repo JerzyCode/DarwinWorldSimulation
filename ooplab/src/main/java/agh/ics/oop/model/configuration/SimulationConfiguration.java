@@ -4,18 +4,16 @@ public class SimulationConfiguration {
     private final int daysCount;
     private final int energyGain;
     private final int plantGrowth;
-    private final PlantVariant plantVariant;
     private final int wellFedEnergy;
     private final int lossCopulateEnergy;
     private final int startAnimalCount;
     private final int startPlantCount;
 
-    SimulationConfiguration(int daysCount, int energyGain, int plantGrowth, PlantVariant plantVariant,
+    SimulationConfiguration(int daysCount, int energyGain, int plantGrowth,
                             int wellFedEnergy, int lossCopulateEnergy, int startAnimalCount, int startPlantCount) {
         this.daysCount = daysCount;
         this.energyGain = energyGain;
         this.plantGrowth = plantGrowth;
-        this.plantVariant = plantVariant;
         this.wellFedEnergy = wellFedEnergy;
         this.lossCopulateEnergy = lossCopulateEnergy;
         this.startAnimalCount = startAnimalCount;
@@ -29,11 +27,6 @@ public class SimulationConfiguration {
 
     public int getPlantGrowth() {
         return plantGrowth;
-    }
-
-
-    public PlantVariant getPlantVariant() {
-        return plantVariant;
     }
 
     public int getWellFedEnergy() {
@@ -64,7 +57,6 @@ public class SimulationConfiguration {
         return "SimulationConfiguration{" +
                 "energyGain=" + energyGain +
                 ", plantGrowth=" + plantGrowth +
-                ", plantVariant=" + plantVariant +
                 ", wellFedEnergy=" + wellFedEnergy +
                 ", lossCopulateEnergy=" + lossCopulateEnergy +
                 ", startAnimalCount=" + startAnimalCount +

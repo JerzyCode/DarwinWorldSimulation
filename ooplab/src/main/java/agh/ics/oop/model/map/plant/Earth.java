@@ -1,12 +1,14 @@
-package agh.ics.oop.model.map;
+package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.DayCycleHandler;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
+import agh.ics.oop.model.map.AbstractPlantMap;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
@@ -17,10 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHandler {
     private final Boundary boundary;
     private final Map<Vector2d, Set<Animal>> animals;
+    private final Gardener gardener;
 
-    public Earth(int width, int height) {
+    public Earth(int width, int height, PlantVariant plantVariant) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
         animals = new ConcurrentHashMap<>();
+        gardener = new Gardener(plantVariant);
     }
 
     //TODO coś w stylu FireEarth

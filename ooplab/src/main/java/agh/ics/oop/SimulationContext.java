@@ -11,7 +11,11 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.map.*;
+import agh.ics.oop.model.map.AbstractWorldMap;
+import agh.ics.oop.model.map.FireWorldMap;
+import agh.ics.oop.model.map.PlantMap;
+import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -31,7 +35,7 @@ public class SimulationContext {
         this.configuration = configuration;
         this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
         WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
-        this.plantFactory = new PlantFactory(configuration.getSimulationConfiguration().getPlantVariant());
+        this.plantFactory = new PlantFactory(configuration.getWorldMapConfiguration().getPlantVariant());
         this.worldMap = worldMapFactory.createWorldMap();
         this.plants = new HashSet<>();
         this.animals = new HashSet<>();

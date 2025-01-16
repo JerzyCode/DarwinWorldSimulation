@@ -1,13 +1,14 @@
 package agh.ics.oop.model.map.fire;
 
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
-import agh.ics.oop.model.map.Earth;
 import agh.ics.oop.model.map.FireWorldMap;
+import agh.ics.oop.model.map.plant.Earth;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,8 +20,8 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
     private final int fireFrequency;
     private final FireSpreader fireSpreader;
 
-    public FireEarth(int width, int height, int fireFrequency, int fireDuration) {
-        super(width, height);
+    public FireEarth(int width, int height, int fireFrequency, int fireDuration, PlantVariant plantVariant) {
+        super(width, height, plantVariant);
         this.fireFrequency = fireFrequency;
         this.fires = new HashMap<>();
         this.fireSpreader = new FireSpreader(fireDuration);

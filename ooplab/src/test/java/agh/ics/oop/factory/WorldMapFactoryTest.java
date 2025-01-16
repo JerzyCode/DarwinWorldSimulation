@@ -2,8 +2,8 @@ package agh.ics.oop.factory;
 
 import agh.ics.oop.model.configuration.WorldMapConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapVariant;
-import agh.ics.oop.model.map.Earth;
 import agh.ics.oop.model.map.fire.FireEarth;
+import agh.ics.oop.model.map.plant.Earth;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
