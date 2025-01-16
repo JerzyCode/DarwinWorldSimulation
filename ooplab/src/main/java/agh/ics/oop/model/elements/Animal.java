@@ -9,7 +9,10 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +31,7 @@ public class Animal implements WorldElement {
         this(startEnergy, position, MapDirection.NORTH, genome, 1);
     }
 
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome){
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
         this(energy, position, orientation, genome, 1);
     }
 
@@ -75,9 +78,8 @@ public class Animal implements WorldElement {
         return energy <= 0;
     }
 
-    public void kill(int endDay) {
+    public void kill() {
         energy = 0;
-        this.endDay = endDay;
     }
 
     public boolean canMakeChild(int wellFedEnergy) {
@@ -96,12 +98,12 @@ public class Animal implements WorldElement {
         return Collections.unmodifiableSet(parents);
     }
 
-    // TODO: Możliwe, że to jednak nie będzie potrzebne, bo wystarczy pamiętać liczbę potomków, a nie potomków
     public Set<Animal> getDescendants() {
         return children.stream()
                 .flatMap(child -> Stream.concat(Stream.of(child), child.getDescendants().stream()))
                 .collect(Collectors.toUnmodifiableSet());
     }
+
     public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
         if (count < 0) {
             throw new InvalidCountException();
@@ -192,7 +194,7 @@ public class Animal implements WorldElement {
         return endDay;
     }
 
-
-
-
+    public void setEndDay(int endDay) {
+        this.endDay = endDay;
+    }
 }

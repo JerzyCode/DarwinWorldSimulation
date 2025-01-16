@@ -21,7 +21,7 @@ class FireEarthTest {
     void placePlantShouldSucceed() {
         // given
         var plant = new Plant(new Vector2d(0, 0));
-        var fireEarth = new FireEarth(1, 1, 1, 10, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(1, 1, 1, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
 
         //when & then
         try {
@@ -37,7 +37,7 @@ class FireEarthTest {
     void placePlantShouldThrowExceptionWhenPlacePlantAtFire() {
         // given
         var plant = new Plant(new Vector2d(0, 0));
-        var fireEarth = new FireEarth(1, 1, 1, 10, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(1, 1, 1, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         try {
             fireEarth.placePlant(plant);
             assertTrue(fireEarth.isPlantAtPosition(new Vector2d(0, 0)));
@@ -56,7 +56,7 @@ class FireEarthTest {
     @Test
     void placeFireShouldSucceed() {
         //given
-        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var position = new Vector2d(5, 5);
 
         try {
@@ -77,7 +77,7 @@ class FireEarthTest {
     @Test
     void placeFireShouldFail() {
         //given
-        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var fireOutsideMap = new Fire(new Vector2d(-1, 10), 2);
         var fireNotAtPlant = new Fire(new Vector2d(2, 2), 2);
 
@@ -94,7 +94,7 @@ class FireEarthTest {
     @Test
     void canPlaceFireShouldReturnTrue() {
         //given
-        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var position = new Vector2d(5, 5);
 
         try {
@@ -113,7 +113,7 @@ class FireEarthTest {
     @Test
     void canPLaceFireShouldReturnFalseWhenPlaceNotAtPlant() {
         //given
-        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var position = new Vector2d(5, 5);
 
         try {
@@ -135,7 +135,7 @@ class FireEarthTest {
     @Test
     void canPLaceFireShouldReturnFalseWhenPlaceAtOtherFire() {
         //given
-        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var position = new Vector2d(5, 5);
         //when
         var result = fireEarth.canPlaceFire(position);
@@ -148,7 +148,7 @@ class FireEarthTest {
     @Test
     void canPLaceFireShouldReturnFalseWhenOutsideMap() {
         //given
-        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
 
         //when & then
         assertFalse(fireEarth.canPlaceFire(new Vector2d(-1, -1)));
@@ -163,7 +163,7 @@ class FireEarthTest {
     @Test
     void handleDayEndsShouldCreateNewFire() {
         // given
-        var fireEarth = new FireEarth(10, 10, 1, 10, 0, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 1, 10, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var animal = TestAnimalBuilder.create()
                 .position(new Vector2d(8, 8))
                 .build();
@@ -206,7 +206,7 @@ class FireEarthTest {
     @Test
     void handleDayEndsShouldSpreadFire() {
         // given
-        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var fireCenter = new Vector2d(3, 3);
 
         try {
@@ -250,7 +250,7 @@ class FireEarthTest {
     @Test
     void handleDayEndsShouldBurnRemoveFires() {
         //given
-        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
 
         try {
             fireEarth.placePlant(new Plant(new Vector2d(3, 3)));
@@ -287,7 +287,7 @@ class FireEarthTest {
     @Test
     void animalStepOnFireShouldKill() {
         //given
-        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, PlantVariant.FORESTED_EQUATORS);
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
         var animal = TestAnimalBuilder.create()
                 .position(new Vector2d(2, 3))
                 .genome(new Genome(List.of(new Gen(4))))

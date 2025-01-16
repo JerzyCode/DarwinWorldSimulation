@@ -29,8 +29,9 @@ public class WorldMapFactory {
         var plantVariant = worldMapConfiguration.getPlantVariant();
         var plantGrowth = simulationConfiguration.getPlantGrowth();
         var startPlantCount = simulationConfiguration.getStartPlantCount();
+        var energyGain = simulationConfiguration.getEnergyGain();
 
-        return new Earth(width, height, plantGrowth, startPlantCount, plantVariant);
+        return new Earth(width, height, plantGrowth, startPlantCount, energyGain, plantVariant);
     }
 
     private FireEarth createFireEarth() {
@@ -41,8 +42,10 @@ public class WorldMapFactory {
         var plantVariant = worldMapConfiguration.getPlantVariant();
         var plantGrowth = simulationConfiguration.getPlantGrowth();
         var startPlantCount = simulationConfiguration.getStartPlantCount();
+        var energyGain = simulationConfiguration.getEnergyGain();
 
-        return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, plantVariant);
+
+        return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, energyGain, plantVariant);
     }
 
 }

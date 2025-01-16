@@ -21,10 +21,10 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     private final Map<Vector2d, Set<Animal>> animals;
     private final Gardener gardener;
 
-    public Earth(int width, int height, int plantGrowth, int startPlantCount, PlantVariant plantVariant) {
+    public Earth(int width, int height, int plantGrowth, int startPlantCount, int energyGain, PlantVariant plantVariant) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
         animals = new ConcurrentHashMap<>();
-        gardener = new Gardener(plantVariant, plantGrowth);
+        gardener = new Gardener(plantVariant, plantGrowth, energyGain);
         growPlantsStart(startPlantCount);
     }
 
@@ -150,7 +150,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     private void handleAnimalStepOnPlant(Animal animal) {
         var position = animal.getPosition();
         if (isPlantAtPosition(position)) {
-            animal.increaseEnergy(10); //TODO po poprawkach mateusza git bedzie
+            animal.eat(plants.get(position));
             removePlant(position);
         }
     }

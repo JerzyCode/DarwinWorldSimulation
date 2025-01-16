@@ -16,6 +16,7 @@ import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.HashSet;
+import java.util.OptionalDouble;
 import java.util.Set;
 
 public class SimulationContext {
@@ -23,7 +24,8 @@ public class SimulationContext {
     private final AnimalFactory animalFactory;
     private final SimulationWorldMap worldMap;
     private final Set<Animal> animals;
-    private final Set<Animal> deadAnimals;private int currentDay;
+    private final Set<Animal> deadAnimals;
+    private int currentDay;
 
     public SimulationContext(Configuration configuration) {
         this.configuration = configuration;
@@ -99,6 +101,7 @@ public class SimulationContext {
                 System.out.println("removing dead animal");
                 worldMap.removeAnimal(animal);
                 deadAnimals.add(animal);
+                animal.setEndDay(currentDay);
                 return true;
             }
             return false;

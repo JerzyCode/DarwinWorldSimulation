@@ -30,7 +30,7 @@ class EarthUnitTest {
 
     @BeforeEach
     void setUp() {
-        map = new Earth(5, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        map = new Earth(5, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
     }
 
     @Test
@@ -331,8 +331,8 @@ class EarthUnitTest {
 
     @Test
     void getSizeShouldReturn() {
-        var map1 = new Earth(4, 10, 5, 0, PlantVariant.FORESTED_EQUATORS);
-        var map2 = new Earth(14, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var map1 = new Earth(4, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var map2 = new Earth(14, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         assertEquals(4 * 10, map1.getSize());
         assertEquals(14 * 5, map2.getSize());
     }
@@ -385,8 +385,8 @@ class EarthUnitTest {
     @Test
     void animalStepOnPlantShouldIncreaseEnergy() {
         // given
-        var earth = new Earth(10, 10, 10, 0, PlantVariant.FORESTED_EQUATORS);
-        var plant = new Plant(new Vector2d(2, 2));
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var plant = new Plant(new Vector2d(2, 2), 5);
         var animal = TestAnimalBuilder.create()
                 .position(new Vector2d(2, 3))
                 .genome(new Genome(List.of(new Gen(4))))
@@ -406,14 +406,14 @@ class EarthUnitTest {
 
         //then
         assertEquals(new Vector2d(2, 2), animal.getPosition());
-        assertEquals(20, animal.getEnergy());
+        assertEquals(15, animal.getEnergy());
         assertFalse(earth.isPlantAtPosition(new Vector2d(2, 2)));
     }
 
-//    @Test TODO poprawić gardenera tak że ma działać
+    //    @Test TODO poprawić gardenera tak że ma działać
     void handleDayEndsShouldGrowNewPlants() {
         // given
-        var earth = new Earth(10, 10, 10, 0, PlantVariant.FORESTED_EQUATORS);
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS);
 
         // when
         earth.handleDayEnds(1);
