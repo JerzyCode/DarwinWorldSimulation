@@ -1,4 +1,4 @@
-package agh.ics.oop.model.map;
+package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
@@ -10,7 +10,6 @@ import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
-import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.BeforeEach;

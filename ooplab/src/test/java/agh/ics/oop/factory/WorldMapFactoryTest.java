@@ -47,8 +47,8 @@ class WorldMapFactoryTest {
     void should_create_fire_earth() {
         //given
         var configuration = WorldMapConfigurationBuilder.create()
-                .height(100)
-                .width(100)
+                .height(500)
+                .width(500)
                 .mapVariant(WorldMapVariant.FIRE)
                 .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
@@ -65,8 +65,8 @@ class WorldMapFactoryTest {
 
         //then
         assertInstanceOf(FireEarth.class, map);
-        assertEquals(100 * 100, map.getSize());
-        assertEquals(new Boundary(new Vector2d(0, 0), new Vector2d(99, 99)), map.getCurrentBounds());
+        assertEquals(500 * 500, map.getSize());
+        assertEquals(new Boundary(new Vector2d(0, 0), new Vector2d(499, 499)), map.getCurrentBounds());
         assertEquals(10, calculatePlantCount(map));
     }
 
