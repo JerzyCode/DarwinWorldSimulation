@@ -82,7 +82,7 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
 
     @Override
     public boolean isFireAtPosition(Vector2d position) {
-        return fires.containsKey(position);
+        return fires != null && fires.containsKey(position);
     }
 
 

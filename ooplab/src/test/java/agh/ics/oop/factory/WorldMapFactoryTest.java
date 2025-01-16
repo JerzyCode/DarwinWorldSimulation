@@ -1,8 +1,13 @@
 package agh.ics.oop.factory;
 
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.configuration.SimulationConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapVariant;
+import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.fire.FireEarth;
 import agh.ics.oop.model.map.plant.Earth;
 import org.junit.jupiter.api.Test;
@@ -19,9 +24,12 @@ class WorldMapFactoryTest {
                 .height(100)
                 .width(100)
                 .mapVariant(WorldMapVariant.EARTH)
+                .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
-        var simulationConfiguration = SimulationConfigurationBuilder.create().build();
+        var simulationConfiguration = SimulationConfigurationBuilder.create()
+                .startPlantCount(10)
+                .build();
 
         var factory = new WorldMapFactory(configuration, simulationConfiguration);
 
@@ -31,6 +39,8 @@ class WorldMapFactoryTest {
         //then
         assertInstanceOf(Earth.class, map);
         assertEquals(100 * 100, map.getSize());
+        assertEquals(new Boundary(new Vector2d(0, 0), new Vector2d(99, 99)), map.getCurrentBounds());
+        assertEquals(10, calculatePlantCount(map));
     }
 
     @Test
@@ -40,9 +50,12 @@ class WorldMapFactoryTest {
                 .height(100)
                 .width(100)
                 .mapVariant(WorldMapVariant.FIRE)
+                .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
-        var simulationConfiguration = SimulationConfigurationBuilder.create().build();
+        var simulationConfiguration = SimulationConfigurationBuilder.create()
+                .startPlantCount(10)
+                .build();
 
 
         var factory = new WorldMapFactory(configuration, simulationConfiguration);
@@ -53,6 +66,15 @@ class WorldMapFactoryTest {
         //then
         assertInstanceOf(FireEarth.class, map);
         assertEquals(100 * 100, map.getSize());
+        assertEquals(new Boundary(new Vector2d(0, 0), new Vector2d(99, 99)), map.getCurrentBounds());
+        assertEquals(10, calculatePlantCount(map));
+    }
+
+
+    private int calculatePlantCount(WorldMap worldMap) {
+        return (int) worldMap.getElements().stream()
+                .filter(element -> element instanceof Plant)
+                .count();
     }
 
 }
