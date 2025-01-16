@@ -12,10 +12,12 @@ import java.util.Set;
 class Gardener {
     private final PlantVariant plantVariant;
     private final int plantGrowth;
+    private final int plantEnergyGain;
 
-    Gardener(PlantVariant plantVariant, int plantGrowth) {
+    Gardener(PlantVariant plantVariant, int plantGrowth, int energyGain) {
         this.plantVariant = plantVariant;
         this.plantGrowth = plantGrowth;
+        this.plantEnergyGain = energyGain;
     }
 
     Set<Plant> createPlantsDaily(int currentPlantsCount, int mapCellsCount, Boundary boundary) {
@@ -66,6 +68,6 @@ class Gardener {
         }
         int col = (int) (Math.random() * countOfColumns);
         Vector2d position = new Vector2d(col, row);
-        return new Plant(position);
+        return new Plant(position, plantEnergyGain);
     }
 }
