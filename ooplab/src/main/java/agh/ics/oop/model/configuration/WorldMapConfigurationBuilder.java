@@ -3,6 +3,9 @@ package agh.ics.oop.model.configuration;
 public class WorldMapConfigurationBuilder {
     private int height;
     private int width;
+    private int energyGain;
+    private int plantGrowth;
+    private int startPlantCount;
     private int fireFrequency;
     private int fireDuration;
     private WorldMapVariant mapVariant;
@@ -23,6 +26,21 @@ public class WorldMapConfigurationBuilder {
 
     public WorldMapConfigurationBuilder width(int width) {
         this.width = width;
+        return this;
+    }
+
+    public WorldMapConfigurationBuilder energyGain(int energyGain) {
+        this.energyGain = energyGain;
+        return this;
+    }
+
+    public WorldMapConfigurationBuilder plantGrowth(int plantGrowth) {
+        this.plantGrowth = plantGrowth;
+        return this;
+    }
+
+    public WorldMapConfigurationBuilder startPlantCount(int startPlantCount) {
+        this.startPlantCount = startPlantCount;
         return this;
     }
 
@@ -47,6 +65,6 @@ public class WorldMapConfigurationBuilder {
     }
 
     public WorldMapConfiguration build() {
-        return new WorldMapConfiguration(height, width, fireFrequency, fireDuration, mapVariant, plantVariant);
+        return new WorldMapConfiguration(height, width, energyGain, plantGrowth, startPlantCount, fireFrequency, fireDuration, mapVariant, plantVariant);
     }
 }

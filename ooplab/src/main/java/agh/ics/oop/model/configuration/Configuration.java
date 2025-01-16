@@ -9,6 +9,9 @@ public class Configuration {
         this.worldMapConfiguration = WorldMapConfigurationBuilder.create()
                 .height(26)
                 .width(54)
+                .energyGain(5)
+                .plantGrowth(7)
+                .startPlantCount(45)
                 .fireDuration(0)
                 .fireFrequency(0)
                 .mapVariant(WorldMapVariant.EARTH)
@@ -26,12 +29,9 @@ public class Configuration {
 
         this.simulationConfiguration = SimulationConfigurationBuilder.create()
                 .daysCount(2000)
-                .energyGain(5)
-                .plantGrowth(7)
                 .wellFedEnergy(10)
                 .lossCopulateEnergy(10)
                 .startAnimalCount(45)
-                .startPlantCount(45)
                 .build();
     }
 

@@ -115,20 +115,20 @@ public class ConfigurationPresenter {
         var simulationConfiguration = SimulationConfigurationBuilder
                 .create()
                 .daysCount(Integer.parseInt(daysCountInput.getText()))
-                .energyGain(Integer.parseInt(energyGainInput.getText()))
-                .plantGrowth(Integer.parseInt(plantGrowthInput.getText()))
                 .wellFedEnergy(Integer.parseInt(wellFedEnergyInput.getText()))
                 .lossCopulateEnergy(Integer.parseInt(lossCopulateEnergyInput.getText()))
                 .startAnimalCount(Integer.parseInt(startAnimalCountInput.getText()))
-                .startPlantCount(Integer.parseInt(startPlantCountInput.getText()))
                 .build();
 
         var worldMapConfiguration = WorldMapConfigurationBuilder
                 .create()
                 .width(Integer.parseInt(widthInput.getText()))
                 .height(Integer.parseInt(heightInput.getText()))
+                .energyGain(Integer.parseInt(energyGainInput.getText()))
+                .plantGrowth(Integer.parseInt(plantGrowthInput.getText()))
                 .fireFrequency(Integer.parseInt(fireFrequencyInput.getText()))
                 .fireDuration(Integer.parseInt(fireDurationInput.getText()))
+                .startPlantCount(Integer.parseInt(startPlantCountInput.getText()))
                 .mapVariant(mapVariant)
                 .plantVariant(plantVariant)
                 .build();
@@ -196,6 +196,9 @@ public class ConfigurationPresenter {
         var mapConfiguration = configuration.getWorldMapConfiguration();
         heightInput.setText(String.valueOf(mapConfiguration.getHeight()));
         widthInput.setText(String.valueOf(mapConfiguration.getWidth()));
+        energyGainInput.setText(String.valueOf(mapConfiguration.getEnergyGain()));
+        plantGrowthInput.setText(String.valueOf(mapConfiguration.getPlantGrowth()));
+        startPlantCountInput.setText(String.valueOf(mapConfiguration.getStartPlantCount()));
         fireFrequencyInput.setText(String.valueOf(mapConfiguration.getFireFrequency()));
         fireDurationInput.setText(String.valueOf(mapConfiguration.getFireDuration()));
 
@@ -208,11 +211,8 @@ public class ConfigurationPresenter {
 
         var simulationConfiguration = configuration.getSimulationConfiguration();
         daysCountInput.setText(String.valueOf(simulationConfiguration.getDaysCount()));
-        energyGainInput.setText(String.valueOf(simulationConfiguration.getEnergyGain()));
-        plantGrowthInput.setText(String.valueOf(simulationConfiguration.getPlantGrowth()));
         wellFedEnergyInput.setText(String.valueOf(simulationConfiguration.getWellFedEnergy()));
         lossCopulateEnergyInput.setText(String.valueOf(simulationConfiguration.getLossCopulateEnergy()));
         startAnimalCountInput.setText(String.valueOf(simulationConfiguration.getStartAnimalCount()));
-        startPlantCountInput.setText(String.valueOf(simulationConfiguration.getStartPlantCount()));
     }
 }

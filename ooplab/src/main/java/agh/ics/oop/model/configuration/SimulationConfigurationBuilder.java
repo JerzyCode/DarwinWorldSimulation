@@ -2,12 +2,9 @@ package agh.ics.oop.model.configuration;
 
 public class SimulationConfigurationBuilder {
     private int daysCount;
-    private int energyGain;
-    private int plantGrowth;
     private int wellFedEnergy;
     private int lossCopulateEnergy;
     private int startAnimalCount;
-    private int startPlantCount;
 
 
     private SimulationConfigurationBuilder() {
@@ -23,15 +20,6 @@ public class SimulationConfigurationBuilder {
         return this;
     }
 
-    public SimulationConfigurationBuilder energyGain(int energyGain) {
-        this.energyGain = energyGain;
-        return this;
-    }
-
-    public SimulationConfigurationBuilder plantGrowth(int plantGrowth) {
-        this.plantGrowth = plantGrowth;
-        return this;
-    }
 
     public SimulationConfigurationBuilder wellFedEnergy(int wellFedEnergy) {
         this.wellFedEnergy = wellFedEnergy;
@@ -49,13 +37,8 @@ public class SimulationConfigurationBuilder {
         return this;
     }
 
-    public SimulationConfigurationBuilder startPlantCount(int startPlantCount) {
-        this.startPlantCount = startPlantCount;
-        return this;
-    }
 
     public SimulationConfiguration build() {
-        return new SimulationConfiguration(daysCount, energyGain, plantGrowth, wellFedEnergy,
-                lossCopulateEnergy, startAnimalCount, startPlantCount);
+        return new SimulationConfiguration(daysCount, wellFedEnergy, lossCopulateEnergy, startAnimalCount);
     }
 }

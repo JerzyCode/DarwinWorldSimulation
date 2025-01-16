@@ -30,7 +30,7 @@ public class SimulationContext {
     public SimulationContext(Configuration configuration) {
         this.configuration = configuration;
         this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
-        WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration(), configuration.getSimulationConfiguration());
+        WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
         this.worldMap = worldMapFactory.createWorldMap();
         this.animals = new HashSet<>();
         this.deadAnimals = new HashSet<>();

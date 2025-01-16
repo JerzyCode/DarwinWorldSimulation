@@ -3,7 +3,6 @@ package agh.ics.oop.factory;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
-import agh.ics.oop.model.configuration.SimulationConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapVariant;
 import agh.ics.oop.model.elements.Plant;
@@ -23,15 +22,12 @@ class WorldMapFactoryTest {
         var configuration = WorldMapConfigurationBuilder.create()
                 .height(100)
                 .width(100)
+                .startPlantCount(10)
                 .mapVariant(WorldMapVariant.EARTH)
                 .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
-        var simulationConfiguration = SimulationConfigurationBuilder.create()
-                .startPlantCount(10)
-                .build();
-
-        var factory = new WorldMapFactory(configuration, simulationConfiguration);
+        var factory = new WorldMapFactory(configuration);
 
         //when
         var map = factory.createWorldMap();
@@ -49,16 +45,12 @@ class WorldMapFactoryTest {
         var configuration = WorldMapConfigurationBuilder.create()
                 .height(500)
                 .width(500)
+                .startPlantCount(10)
                 .mapVariant(WorldMapVariant.FIRE)
                 .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
-        var simulationConfiguration = SimulationConfigurationBuilder.create()
-                .startPlantCount(10)
-                .build();
-
-
-        var factory = new WorldMapFactory(configuration, simulationConfiguration);
+        var factory = new WorldMapFactory(configuration);
 
         //when
         var map = factory.createWorldMap();

@@ -1,18 +1,15 @@
 package agh.ics.oop.factory;
 
 import agh.ics.oop.model.SimulationWorldMap;
-import agh.ics.oop.model.configuration.SimulationConfiguration;
 import agh.ics.oop.model.configuration.WorldMapConfiguration;
 import agh.ics.oop.model.map.fire.FireEarth;
 import agh.ics.oop.model.map.plant.Earth;
 
 public class WorldMapFactory {
     private final WorldMapConfiguration worldMapConfiguration;
-    private final SimulationConfiguration simulationConfiguration;
 
-    public WorldMapFactory(WorldMapConfiguration worldMapConfiguration, SimulationConfiguration simulationConfiguration) {
+    public WorldMapFactory(WorldMapConfiguration worldMapConfiguration) {
         this.worldMapConfiguration = worldMapConfiguration;
-        this.simulationConfiguration = simulationConfiguration;
     }
 
     public SimulationWorldMap createWorldMap() {
@@ -27,9 +24,9 @@ public class WorldMapFactory {
         var width = worldMapConfiguration.getWidth();
         var height = worldMapConfiguration.getHeight();
         var plantVariant = worldMapConfiguration.getPlantVariant();
-        var plantGrowth = simulationConfiguration.getPlantGrowth();
-        var startPlantCount = simulationConfiguration.getStartPlantCount();
-        var energyGain = simulationConfiguration.getEnergyGain();
+        var plantGrowth = worldMapConfiguration.getPlantGrowth();
+        var startPlantCount = worldMapConfiguration.getStartPlantCount();
+        var energyGain = worldMapConfiguration.getEnergyGain();
 
         return new Earth(width, height, plantGrowth, startPlantCount, energyGain, plantVariant);
     }
@@ -40,9 +37,9 @@ public class WorldMapFactory {
         var fireDuration = worldMapConfiguration.getFireDuration();
         var fireFrequency = worldMapConfiguration.getFireFrequency();
         var plantVariant = worldMapConfiguration.getPlantVariant();
-        var plantGrowth = simulationConfiguration.getPlantGrowth();
-        var startPlantCount = simulationConfiguration.getStartPlantCount();
-        var energyGain = simulationConfiguration.getEnergyGain();
+        var plantGrowth = worldMapConfiguration.getPlantGrowth();
+        var startPlantCount = worldMapConfiguration.getStartPlantCount();
+        var energyGain = worldMapConfiguration.getEnergyGain();
 
 
         return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, energyGain, plantVariant);
