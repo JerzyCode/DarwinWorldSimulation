@@ -10,7 +10,6 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
-import agh.ics.oop.model.map.FireWorldMap;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.move.MoveDirection;
@@ -22,7 +21,7 @@ import java.util.Set;
 public class SimulationContext {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
-    private final WorldMap worldMap;
+    private final SimulationWorldMap worldMap;
     private final Set<Animal> animals;
     private int currentDay;
 
@@ -43,15 +42,11 @@ public class SimulationContext {
         handleAnimalsMove();
         handleCopulate();
         handleAnimalLossEnergy();
-        handleFirefightings();
-        handleAnimalsOnFire();
+
+        worldMap.handleDayEnds(currentDay);
         currentDay++;
     }
 
-
-    private void handleAnimals() {
-
-    }
 
     private void handleAnimalsMove() {
         animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
@@ -96,13 +91,6 @@ public class SimulationContext {
         }
     }
 
-    private void handleAnimalsOnFire() {
-        if (worldMap instanceof FireWorldMap fireWorldMap) {
-            animals.stream()
-                    .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
-                    .forEach(Animal::kill);
-        }
-    }
 
     private void clearDeadAnimals() {
         animals.removeIf(animal -> {
@@ -138,11 +126,6 @@ public class SimulationContext {
         }
     }
 
-    private void handleFirefightings() {
-        if (worldMap instanceof SimulationWorldMap fireWorldMap) {
-            fireWorldMap.handleDayEnds(currentDay);//TODO inaczej to zeby nie bylo instance of
-        }
-    }
 
     public void setMapChangeListener(MapChangeListener listener) {
         ((AbstractWorldMap) worldMap).addListener(listener);

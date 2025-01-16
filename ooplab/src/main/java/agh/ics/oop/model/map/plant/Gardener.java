@@ -8,6 +8,7 @@ import agh.ics.oop.model.elements.Plant;
 import java.util.HashSet;
 import java.util.Set;
 
+//TODO otestować
 class Gardener {
     private final PlantVariant plantVariant;
     private final int plantGrowth;

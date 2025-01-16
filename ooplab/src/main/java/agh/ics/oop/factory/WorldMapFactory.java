@@ -1,8 +1,8 @@
 package agh.ics.oop.factory;
 
+import agh.ics.oop.model.SimulationWorldMap;
 import agh.ics.oop.model.configuration.SimulationConfiguration;
 import agh.ics.oop.model.configuration.WorldMapConfiguration;
-import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.fire.FireEarth;
 import agh.ics.oop.model.map.plant.Earth;
 
@@ -15,7 +15,7 @@ public class WorldMapFactory {
         this.simulationConfiguration = simulationConfiguration;
     }
 
-    public WorldMap createWorldMap() {
+    public SimulationWorldMap createWorldMap() {
         return switch (worldMapConfiguration.getMapVariant()) {
             case EARTH -> createEarth();
             case FIRE -> createFireEarth();

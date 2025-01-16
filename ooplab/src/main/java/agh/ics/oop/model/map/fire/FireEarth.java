@@ -2,6 +2,7 @@ package agh.ics.oop.model.map.fire;
 
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.WorldElement;
@@ -9,6 +10,7 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.map.FireWorldMap;
 import agh.ics.oop.model.map.plant.Earth;
+import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +40,13 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
         }
     }
 
+    @Override
+    public void move(Animal animal, MoveDirection direction) {
+        super.move(animal, direction);
+        if (isFireAtPosition(animal.getPosition())) {
+            animal.kill();
+        }
+    }
 
     @Override
     public boolean placeFire(Fire fire) {

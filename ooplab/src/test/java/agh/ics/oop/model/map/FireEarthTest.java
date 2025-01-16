@@ -1,15 +1,17 @@
 package agh.ics.oop.model.map;
 
 import agh.ics.oop.TestAnimalBuilder;
+import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
-import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Fire;
-import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.elements.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.map.fire.FireEarth;
+import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -279,6 +281,37 @@ class FireEarthTest {
 
         assertEquals(0, plantCount);
         assertEquals(0, fireCount);
+    }
+
+
+    @Test
+    void animalStepOnFireShouldKill() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, PlantVariant.FORESTED_EQUATORS);
+        var animal = TestAnimalBuilder.create()
+                .position(new Vector2d(2, 3))
+                .genome(new Genome(List.of(new Gen(4))))
+                .energy(10)
+                .orientation(MapDirection.NORTH)
+                .build();
+        var plant = new Plant(new Vector2d(2, 2));
+        var fire = new Fire(new Vector2d(2, 2), 2);
+
+        try {
+            fireEarth.place(animal);
+            fireEarth.placePlant(plant);
+            fireEarth.placeFire(fire);
+        } catch (IncorrectPositionException e) {
+            fail("Placing element not throw exception");
+        }
+
+        //when
+        fireEarth.move(animal, MoveDirection.FORWARD);
+
+        //then
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(2, 2)));
+        assertFalse(fireEarth.isPlantAtPosition(new Vector2d(2, 2)));
+        assertTrue(animal.isDead());
     }
 
 }
