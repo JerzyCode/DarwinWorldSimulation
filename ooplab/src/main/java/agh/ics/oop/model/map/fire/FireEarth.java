@@ -20,8 +20,8 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
     private final int fireFrequency;
     private final FireSpreader fireSpreader;
 
-    public FireEarth(int width, int height, int fireFrequency, int fireDuration, PlantVariant plantVariant) {
-        super(width, height, plantVariant);
+    public FireEarth(int width, int height, int fireFrequency, int fireDuration, int plantGrowth, int startPlantCount, PlantVariant plantVariant) {
+        super(width, height, plantGrowth, startPlantCount, plantVariant);
         this.fireFrequency = fireFrequency;
         this.fires = new HashMap<>();
         this.fireSpreader = new FireSpreader(fireDuration);

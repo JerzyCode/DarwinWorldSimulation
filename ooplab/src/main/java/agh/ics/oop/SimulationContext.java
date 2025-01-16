@@ -1,19 +1,16 @@
 package agh.ics.oop;
 
 import agh.ics.oop.factory.AnimalFactory;
-import agh.ics.oop.factory.PlantFactory;
 import agh.ics.oop.factory.WorldMapFactory;
-import agh.ics.oop.model.DayCycleHandler;
 import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.model.SimulationWorldMap;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.FireWorldMap;
-import agh.ics.oop.model.map.PlantMap;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.move.MoveDirection;
@@ -25,23 +22,18 @@ import java.util.Set;
 public class SimulationContext {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
-    private final PlantFactory plantFactory;
     private final WorldMap worldMap;
     private final Set<Animal> animals;
-    private final Set<Plant> plants; //TODO wywalić - mapa tym będzie zarządzać
     private int currentDay;
 
     public SimulationContext(Configuration configuration) {
         this.configuration = configuration;
         this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
-        WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
-        this.plantFactory = new PlantFactory(configuration.getWorldMapConfiguration().getPlantVariant());
+        WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration(), configuration.getSimulationConfiguration());
         this.worldMap = worldMapFactory.createWorldMap();
-        this.plants = new HashSet<>();
         this.animals = new HashSet<>();
         currentDay = 1;
 
-        createPlants(configuration.getSimulationConfiguration().getStartPlantCount());
         createAnimals();
     }
 
@@ -49,10 +41,8 @@ public class SimulationContext {
         System.out.println("Current day: " + currentDay + ", animalsCount=" + animals.size());
         clearDeadAnimals();
         handleAnimalsMove();
-//        handlePlantEating();
         handleCopulate();
         handleAnimalLossEnergy();
-        handlePlantGrowth();
         handleFirefightings();
         handleAnimalsOnFire();
         currentDay++;
@@ -67,9 +57,6 @@ public class SimulationContext {
         animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
     }
 
-    private void handlePlantGrowth() {
-        createPlants(configuration.getSimulationConfiguration().getPlantGrowth());
-    }
 
     private void handleCopulate() {
         if (worldMap instanceof Earth earth) {
@@ -133,25 +120,6 @@ public class SimulationContext {
     }
 
 
-    private void createPlants(int plantCount) {
-        int countOfPlantsBeforeCreating = plants.size();
-        var countOfAvailablePlacesForPlants = worldMap.getSize() - countOfPlantsBeforeCreating;
-        plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
-
-        int placedPlantsCount = 0;
-
-        while (placedPlantsCount < plantCount) {
-            try {
-                var plant = plantFactory.createPlant(worldMap.getCurrentBounds());
-                ((PlantMap) worldMap).placePlant(plant);
-                plants.add(plant);
-                placedPlantsCount++;
-            } catch (IncorrectPositionException ignored) {
-                //        System.out.println("Couldn't create plant: " + e.getMessage());
-            }
-        }
-    }
-
     private void createAnimals() {
         var boundary = worldMap.getCurrentBounds();
         var randomizer = new RandomPositionGenerator(
@@ -171,7 +139,7 @@ public class SimulationContext {
     }
 
     private void handleFirefightings() {
-        if (worldMap instanceof DayCycleHandler fireWorldMap) {
+        if (worldMap instanceof SimulationWorldMap fireWorldMap) {
             fireWorldMap.handleDayEnds(currentDay);//TODO inaczej to zeby nie bylo instance of
         }
     }

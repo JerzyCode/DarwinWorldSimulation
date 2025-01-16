@@ -1,7 +1,7 @@
 package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.model.Boundary;
-import agh.ics.oop.model.DayCycleHandler;
+import agh.ics.oop.model.SimulationWorldMap;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Animal;
@@ -16,23 +16,22 @@ import agh.ics.oop.model.move.MoveDirection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHandler {
+public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationWorldMap {
     private final Boundary boundary;
     private final Map<Vector2d, Set<Animal>> animals;
     private final Gardener gardener;
 
-    public Earth(int width, int height, PlantVariant plantVariant) {
+    public Earth(int width, int height, int plantGrowth, int startPlantCount, PlantVariant plantVariant) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
         animals = new ConcurrentHashMap<>();
-        gardener = new Gardener(plantVariant);
+        gardener = new Gardener(plantVariant, plantGrowth);
+        growPlantsStart(startPlantCount);
     }
 
-    //TODO coś w stylu FireEarth
-    //klasa PlantGrower, i w konstuktorze do Earth przyjąc plantvariant,
-    // czyli plant variant do worldMapConfiguration
-    //wtedy plant factory do wywalenia - plantGrower robi za to
-    //i w mapie przez grower tworzymy nowe rośliny
-
+    @Override
+    public void handleDayEnds(int currentDay) {
+        growPlantsDaily();
+    }
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException {
@@ -121,10 +120,6 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHan
         handleAnimalStepOnPlant(animal);
     }
 
-    @Override
-    public void handleDayEnds(int currentDay) {
-
-    }
 
     public Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
@@ -147,8 +142,26 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, DayCycleHan
         }
     }
 
-    private void growNewPlants(int plantCount) {
-        //TODO mapy powinny mieć factory
+    private void growPlantsStart(int startPlantCount) {
+        gardener.createPlants(plants.size(), getSize(), boundary, startPlantCount)
+                .forEach(plant -> {
+                    try {
+                        placePlant(plant);
+                    } catch (Exception e) {
+                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    }
+                });
+    }
+
+    private void growPlantsDaily() {
+        gardener.createPlantsDaily(plants.size(), getSize(), boundary)
+                .forEach(plant -> {
+                    try {
+                        placePlant(plant);
+                    } catch (Exception e) {
+                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    }
+                });
     }
 
 

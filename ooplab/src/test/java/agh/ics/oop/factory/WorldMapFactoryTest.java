@@ -1,5 +1,6 @@
 package agh.ics.oop.factory;
 
+import agh.ics.oop.model.configuration.SimulationConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapConfigurationBuilder;
 import agh.ics.oop.model.configuration.WorldMapVariant;
 import agh.ics.oop.model.map.fire.FireEarth;
@@ -20,7 +21,9 @@ class WorldMapFactoryTest {
                 .mapVariant(WorldMapVariant.EARTH)
                 .build();
 
-        var factory = new WorldMapFactory(configuration);
+        var simulationConfiguration = SimulationConfigurationBuilder.create().build();
+
+        var factory = new WorldMapFactory(configuration, simulationConfiguration);
 
         //when
         var map = factory.createWorldMap();
@@ -39,7 +42,10 @@ class WorldMapFactoryTest {
                 .mapVariant(WorldMapVariant.FIRE)
                 .build();
 
-        var factory = new WorldMapFactory(configuration);
+        var simulationConfiguration = SimulationConfigurationBuilder.create().build();
+
+
+        var factory = new WorldMapFactory(configuration, simulationConfiguration);
 
         //when
         var map = factory.createWorldMap();

@@ -30,7 +30,7 @@ class EarthUnitTest {
 
     @BeforeEach
     void setUp() {
-        map = new Earth(5, 5, PlantVariant.FORESTED_EQUATORS);
+        map = new Earth(5, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
     }
 
     @Test
@@ -331,8 +331,8 @@ class EarthUnitTest {
 
     @Test
     void getSizeShouldReturn() {
-        var map1 = new Earth(4, 10, PlantVariant.FORESTED_EQUATORS);
-        var map2 = new Earth(14, 5, PlantVariant.FORESTED_EQUATORS);
+        var map1 = new Earth(4, 10, 5, 0, PlantVariant.FORESTED_EQUATORS);
+        var map2 = new Earth(14, 5, 5, 0, PlantVariant.FORESTED_EQUATORS);
         assertEquals(4 * 10, map1.getSize());
         assertEquals(14 * 5, map2.getSize());
     }
