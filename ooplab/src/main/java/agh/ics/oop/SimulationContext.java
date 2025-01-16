@@ -78,7 +78,6 @@ public class SimulationContext {
 
                                 parent1.decreaseEnergy(lossCopulateEnergy);
                                 parent2.decreaseEnergy(lossCopulateEnergy);
-                                //TODO add parents to child, and child to parents
 
                                 worldMap.place(child);
 
