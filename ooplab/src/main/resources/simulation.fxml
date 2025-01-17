@@ -2,9 +2,43 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="550.0" minWidth="850.0" maxWidth="1200"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="700.0" minWidth="850.0" maxWidth="1200"
             maxHeight="800"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+
+    <left>
+        <VBox prefWidth="200.0" spacing="10" style="-fx-background-color: #e0e0e0; -fx-padding: 10;">
+            <Label text="Statystyki" style="-fx-font-weight: bold;" />
+
+            <TitledPane text="Liczba zwierzaków" collapsible="false">
+                <Label fx:id="animalCountLabel" text="0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+
+            <TitledPane text="Liczba roślin" collapsible="false">
+                <Label fx:id="plantCountLabel" text="0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+
+            <TitledPane text="Liczba wolnych pól" collapsible="false">
+                <Label fx:id="freeFieldsLabel" text="0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+
+            <TitledPane text="Najpopularniejsze genotypy" collapsible="false">
+                <Label fx:id="popularGenotypeLabel" text="Brak danych" wrapText="true" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+
+            <TitledPane text="Średni poziom energii" collapsible="false">
+                <Label fx:id="avgEnergyLabel" text="0.0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+
+            <TitledPane text="Średnia długość życia" collapsible="false">
+                <Label fx:id="avgLifespanLabel" text="0.0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+
+            <TitledPane text="Średnia liczba dzieci" collapsible="false">
+                <Label fx:id="avgChildrenLabel" text="0.0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            </TitledPane>
+        </VBox>
+    </left>
 
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true">

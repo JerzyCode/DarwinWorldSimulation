@@ -12,6 +12,7 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.plant.Earth;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,9 +40,27 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Button startButton;
 
+//    Stats
+    @FXML
+    private Label animalCountLabel;
+    @FXML
+    private Label plantCountLabel;
+    @FXML
+    private Label freeFieldsLabel;
+    @FXML
+    private Label popularGenotypeLabel;
+    @FXML
+    private Label avgEnergyLabel;
+    @FXML
+    private Label avgLifespanLabel;
+    @FXML
+    private Label avgChildrenLabel;
+
+
     private WorldMap worldMap;
     private Configuration configuration;
     private SimulationEngine simulationEngine;
+    private SimulationContext simulationContext;
 
     public void initialize() {
         System.out.println("initialize()");
@@ -71,6 +90,7 @@ public class SimulationPresenter implements MapChangeListener {
     public void mapChanged(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             historyTextArea.appendText(message + "\n");
+            updateStatistics();
             this.drawMap();
         });
     }
@@ -80,7 +100,7 @@ public class SimulationPresenter implements MapChangeListener {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
         }
 
-        var simulationContext = new SimulationContext(configuration);
+        simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
         simulationContext.setMapChangeListener(this);
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
@@ -215,6 +235,15 @@ public class SimulationPresenter implements MapChangeListener {
             return Math.abs(maxBottomY);
         }
         return 0;
+    }
+
+    private void updateStatistics() {
+        animalCountLabel.setText(String.format("%d", simulationContext.getAnimalCount()));
+        plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
+        freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
+        avgEnergyLabel.setText(String.format(String.valueOf(simulationContext.getAverageAnimalEnergy().orElse(0))));
+        avgLifespanLabel.setText(String.valueOf(simulationContext.getAverageDeadAnimalTimeLife().orElse(0)));
+        avgChildrenLabel.setText(String.valueOf(simulationContext.getAverageAnimalCountOfChildren().orElse(0)));
     }
 
 }
