@@ -14,6 +14,7 @@ public class TestAnimalBuilder {
     private MapDirection orientation = MapDirection.NORTH;
     private Genome genome = new Genome(List.of(new Gen(1)));
     private int startDay = 1;
+    private int wellFedEnergy;
 
     private TestAnimalBuilder() {
     }
@@ -42,12 +43,17 @@ public class TestAnimalBuilder {
         return this;
     }
 
+    public TestAnimalBuilder wellFedEnergy(int wellFedEnergy) {
+        this.wellFedEnergy = wellFedEnergy;
+        return this;
+    }
+
     public TestAnimalBuilder startDay(int startDay) {
         this.startDay = 1;
         return this;
     }
 
     public Animal build() {
-        return new Animal(energy, position, orientation, genome, 1);
+        return new Animal(energy, position, orientation, genome, 1, wellFedEnergy);
     }
 }

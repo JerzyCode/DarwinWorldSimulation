@@ -27,7 +27,7 @@ class WorldMapFactoryTest {
                 .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
-        var factory = new WorldMapFactory(configuration);
+        var factory = new WorldMapFactory(configuration, null);
 
         //when
         var map = factory.createWorldMap();
@@ -50,7 +50,7 @@ class WorldMapFactoryTest {
                 .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
-        var factory = new WorldMapFactory(configuration);
+        var factory = new WorldMapFactory(configuration, null);
 
         //when
         var map = factory.createWorldMap();

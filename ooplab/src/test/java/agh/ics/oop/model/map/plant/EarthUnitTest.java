@@ -1,6 +1,7 @@
 package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.TestAnimalBuilder;
+import agh.ics.oop.model.AnimalBreeder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
@@ -24,12 +25,18 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EarthUnitTest {
-
     private Earth map;
+    private AnimalBreeder breeder;
+
 
     @BeforeEach
     void setUp() {
-        map = new Earth(5, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        breeder = (animal1, animal2) -> TestAnimalBuilder.create()
+                .position(animal1.getPosition())
+                .genome(animal2.getGenome())
+                .energy(animal2.getEnergy() + animal1.getEnergy())
+                .build();
+        map = new Earth(5, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
     }
 
     @Test
@@ -330,8 +337,8 @@ class EarthUnitTest {
 
     @Test
     void getSizeShouldReturn() {
-        var map1 = new Earth(4, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
-        var map2 = new Earth(14, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var map1 = new Earth(4, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
+        var map2 = new Earth(14, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         assertEquals(4 * 10, map1.getSize());
         assertEquals(14 * 5, map2.getSize());
     }
@@ -384,7 +391,7 @@ class EarthUnitTest {
     @Test
     void animalStepOnPlantShouldIncreaseEnergy() {
         // given
-        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         var plant = new Plant(new Vector2d(2, 2), 5);
         var animal = TestAnimalBuilder.create()
                 .position(new Vector2d(2, 3))
@@ -412,7 +419,7 @@ class EarthUnitTest {
     //    @Test TODO poprawić gardenera tak że ma działać
     void handleDayEndsShouldGrowNewPlants() {
         // given
-        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
 
         // when
         earth.handleDayEnds(1);

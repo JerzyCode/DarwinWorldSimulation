@@ -26,21 +26,22 @@ public class Animal implements WorldElement {
     private int countOfEatenPlants;
     private final int startDay;
     private int endDay;
+    private final int wellFedEnergy;
 
     public Animal(int startEnergy, Vector2d position, Genome genome) {
-        this(startEnergy, position, MapDirection.NORTH, genome, 1);
+        this(startEnergy, position, MapDirection.NORTH, genome, 1, 10);
     }
 
     public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
-        this(energy, position, orientation, genome, 1);
+        this(energy, position, orientation, genome, 1, 10);
     }
 
     public Animal(int startEnergy, Vector2d position, Genome genome, int startDay) {
-        this(startEnergy, position, MapDirection.NORTH, genome, startDay);
+        this(startEnergy, position, MapDirection.NORTH, genome, startDay, 10);
     }
 
 
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, int startDay) {
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, int startDay, int wellFedEnergy) {
         this.energy = energy;
         this.orientation = orientation;
         this.position = position;
@@ -48,6 +49,7 @@ public class Animal implements WorldElement {
         this.children = new HashSet<>();
         this.countOfEatenPlants = 0;
         this.startDay = startDay;
+        this.wellFedEnergy = wellFedEnergy;
         this.endDay = 0;
     }
 
@@ -57,7 +59,7 @@ public class Animal implements WorldElement {
     }
 
     public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, Animal parent1, Animal parent2, int startDay) {
-        this(energy, position, orientation, genome, startDay);
+        this(energy, position, orientation, genome, startDay, 10);
         this.parents = Set.of(parent1, parent2);
     }
 
@@ -82,7 +84,7 @@ public class Animal implements WorldElement {
         energy = 0;
     }
 
-    public boolean canMakeChild(int wellFedEnergy) {
+    public boolean canMakeChild() {
         return energy >= wellFedEnergy;
     }
 

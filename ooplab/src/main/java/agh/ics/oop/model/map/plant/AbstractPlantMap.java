@@ -5,15 +5,16 @@ import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
-import agh.ics.oop.model.map.AbstractWorldMap;
+import agh.ics.oop.model.map.simulation.SimulationAbstractWorldMap;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractPlantMap extends AbstractWorldMap implements PlantWorldMap {
+public abstract class AbstractPlantMap extends SimulationAbstractWorldMap implements PlantWorldMap {
     protected final Map<Vector2d, Plant> plants;
 
     public AbstractPlantMap() {
+        super();
         this.plants = new HashMap<>();
     }
 

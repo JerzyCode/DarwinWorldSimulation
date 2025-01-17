@@ -371,17 +371,17 @@ class AnimalTest {
         var animal = TestAnimalBuilder.create()
                 .energy(10)
                 .position(new Vector2d(1, 2))
+                .wellFedEnergy(5)
                 .build();
-        var wellFedEnergy = 5;
 
         //when & then
-        assertTrue(animal.canMakeChild(wellFedEnergy));
+        assertTrue(animal.canMakeChild());
 
         animal.decreaseEnergy(5);
-        assertTrue(animal.canMakeChild(wellFedEnergy));
+        assertTrue(animal.canMakeChild());
 
         animal.decreaseEnergy(3);
-        assertFalse(animal.canMakeChild(wellFedEnergy));
+        assertFalse(animal.canMakeChild());
     }
 
 
