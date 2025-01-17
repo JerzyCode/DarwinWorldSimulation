@@ -6,7 +6,6 @@ import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.WorldMap;
@@ -39,16 +38,7 @@ public class SimulationContext {
 
 
     private Animal breedAnimals(Animal parent1, Animal parent2) {
-        var lossCopulateEnergy = configuration.getSimulationConfiguration().getLossCopulateEnergy();
-        try {
-            var child = animalFactory.birthAnimal(parent1, parent2, 2 * lossCopulateEnergy, currentDay);
-            parent1.decreaseEnergy(lossCopulateEnergy);
-            parent2.decreaseEnergy(lossCopulateEnergy);
-            return child;
-        } catch (AnimalNotBirthException e) {
-            System.out.println("handleCopulate(), animal could not be born: message=" + e.getMessage());
-            return null;
-        }
+        return animalFactory.birthAnimal(parent1, parent2, currentDay);
     }
 
 

@@ -8,6 +8,9 @@ import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,52 +19,36 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Builder
+@Getter
+@AllArgsConstructor
 public class Animal implements WorldElement {
-    private final Genome genome;
     private int energy;
     private Vector2d position;
     private MapDirection orientation;
     private Set<Animal> parents;
-    private final Set<Animal> children;
     private int countOfEatenPlants;
-    private final int startDay;
     private int endDay;
     private final int wellFedEnergy;
+    private final int startDay;
+    private final Set<Animal> children = new HashSet<>();
+    private final Genome genome;
 
-    public Animal(int startEnergy, Vector2d position, Genome genome) {
-        this(startEnergy, position, MapDirection.NORTH, genome, 1, 10);
+    public Animal(Vector2d position, Genome genome) {
+        this(25, position, MapDirection.NORTH, new HashSet<>(), 0, 0, 15, 0, genome);
     }
 
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome) {
-        this(energy, position, orientation, genome, 1, 10);
-    }
-
-    public Animal(int startEnergy, Vector2d position, Genome genome, int startDay) {
-        this(startEnergy, position, MapDirection.NORTH, genome, startDay, 10);
-    }
-
-
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, int startDay, int wellFedEnergy) {
+    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, int startDay, int wellFedEnergy, int lossCopulateEnergy) {
         this.energy = energy;
         this.orientation = orientation;
         this.position = position;
         this.genome = genome;
-        this.children = new HashSet<>();
         this.countOfEatenPlants = 0;
         this.startDay = startDay;
         this.wellFedEnergy = wellFedEnergy;
         this.endDay = 0;
     }
 
-    public Animal(int energy, Vector2d position, Genome genome, Animal parent1, Animal parent2, int startDay) {
-        this(energy, position, genome, startDay);
-        this.parents = Set.of(parent1, parent2);
-    }
-
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, Animal parent1, Animal parent2, int startDay) {
-        this(energy, position, orientation, genome, startDay, 10);
-        this.parents = Set.of(parent1, parent2);
-    }
 
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
@@ -157,24 +144,8 @@ public class Animal implements WorldElement {
         return position;
     }
 
-    public MapDirection getOrientation() {
-        return orientation;
-    }
-
-    public Genome getGenome() {
-        return genome;
-    }
-
     public Gen getActivatedGen() {
         return genome.getActivatedGen();
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public int getCountOfEatenPlants() {
-        return countOfEatenPlants;
     }
 
     public int getCountOfChildren() {
@@ -183,10 +154,6 @@ public class Animal implements WorldElement {
 
     public int getCountOfDescendants() {
         return getDescendants().size();
-    }
-
-    public int getStartDay() {
-        return startDay;
     }
 
     public int getEndDay() throws AnimalStillAliveException {
