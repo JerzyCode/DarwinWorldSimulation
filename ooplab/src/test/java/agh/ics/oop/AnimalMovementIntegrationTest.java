@@ -3,7 +3,7 @@ package agh.ics.oop;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.map.RectangularMap;
+import agh.ics.oop.model.map.rectangular.RectangularMap;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.Assertions;

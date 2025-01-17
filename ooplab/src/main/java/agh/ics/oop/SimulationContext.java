@@ -1,47 +1,41 @@
 package agh.ics.oop;
 
 import agh.ics.oop.factory.AnimalFactory;
-import agh.ics.oop.factory.PlantFactory;
 import agh.ics.oop.factory.WorldMapFactory;
 import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.model.SimulationWorldMap;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Fire;
-import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
-import agh.ics.oop.model.map.*;
+import agh.ics.oop.model.map.AbstractWorldMap;
+import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.OptionalDouble;
+import java.util.Set;
 
 public class SimulationContext {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
-    private final PlantFactory plantFactory;
-    private final WorldMap worldMap;
+    private final SimulationWorldMap worldMap;
     private final Set<Animal> animals;
     private final Set<Animal> deadAnimals;
-    private final Set<Plant> plants;
-    private final Set<Fire> fires;
     private int currentDay;
 
     public SimulationContext(Configuration configuration) {
         this.configuration = configuration;
         this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
         WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration());
-        this.plantFactory = new PlantFactory(configuration.getSimulationConfiguration().getPlantVariant());
         this.worldMap = worldMapFactory.createWorldMap();
-        this.plants = new HashSet<>();
         this.animals = new HashSet<>();
         this.deadAnimals = new HashSet<>();
-        this.fires = new HashSet<>();
         currentDay = 1;
 
-        createPlants(configuration.getSimulationConfiguration().getStartPlantCount());
         createAnimals();
     }
 
@@ -49,35 +43,18 @@ public class SimulationContext {
         System.out.println("Current day: " + currentDay + ", animalsCount=" + animals.size());
         clearDeadAnimals();
         handleAnimalsMove();
-        handlePlantEating();
         handleCopulate();
         handleAnimalLossEnergy();
-        handlePlantGrowth();
-        handleFirefightings();
-        handleAnimalsOnFire();
+
+        worldMap.handleDayEnds(currentDay);
         currentDay++;
     }
+
 
     private void handleAnimalsMove() {
         animals.forEach(animal -> worldMap.move(animal, MoveDirection.FORWARD));
     }
 
-    private void handlePlantEating() {
-        if (worldMap instanceof PlantMap plantMap)
-            animals.forEach(animal -> {
-                var position = animal.getPosition();
-                if (plantMap.isPlantAtPosition(position)) {
-                    var plant = plantMap.getPlantAtPosition(position);
-                    plants.remove(plant);
-                    plantMap.removePlant(position);
-                    animal.eat(plant);
-                }
-            });
-    }
-
-    private void handlePlantGrowth() {
-        createPlants(configuration.getSimulationConfiguration().getPlantGrowth());
-    }
 
     private void handleCopulate() {
         if (worldMap instanceof Earth earth) {
@@ -101,7 +78,6 @@ public class SimulationContext {
 
                                 parent1.decreaseEnergy(lossCopulateEnergy);
                                 parent2.decreaseEnergy(lossCopulateEnergy);
-                                //TODO add parents to child, and child to parents
 
                                 worldMap.place(child);
 
@@ -117,13 +93,6 @@ public class SimulationContext {
         }
     }
 
-    private void handleAnimalsOnFire() {
-        if (worldMap instanceof FireWorldMap fireWorldMap) {
-            animals.stream()
-                    .filter(animal -> fireWorldMap.isFireAtPosition(animal.getPosition()))
-                    .forEach(animal -> animal.kill(currentDay));
-        }
-    }
 
     private void clearDeadAnimals() {
         animals.removeIf(animal -> {
@@ -131,6 +100,7 @@ public class SimulationContext {
                 System.out.println("removing dead animal");
                 worldMap.removeAnimal(animal);
                 deadAnimals.add(animal);
+                animal.setEndDay(currentDay);
                 return true;
             }
             return false;
@@ -141,25 +111,6 @@ public class SimulationContext {
         animals.forEach(animal -> animal.decreaseEnergy(1));
     }
 
-
-    private void createPlants(int plantCount) {
-        int countOfPlantsBeforeCreating = plants.size();
-        var countOfAvailablePlacesForPlants = worldMap.getSize() - countOfPlantsBeforeCreating;
-        plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
-
-        int placedPlantsCount = 0;
-
-        while (placedPlantsCount < plantCount) {
-            try {
-                var plant = plantFactory.createPlant(worldMap.getCurrentBounds(), configuration.getSimulationConfiguration().getEnergyGain());
-                ((PlantMap) worldMap).placePlant(plant);
-                plants.add(plant);
-                placedPlantsCount++;
-            } catch (IncorrectPositionException ignored) {
-                //        System.out.println("Couldn't create plant: " + e.getMessage());
-            }
-        }
-    }
 
     private void createAnimals() {
         var boundary = worldMap.getCurrentBounds();
@@ -179,88 +130,6 @@ public class SimulationContext {
         }
     }
 
-    private void handleFirefightings() {
-        if (worldMap instanceof FireWorldMap fireWorldMap) {
-            fireWorldMap.decreaseFireRemainingLifetime();
-            removeBurnedFires();
-            spreadFire();
-            var fireFrequency = configuration.getSimulationConfiguration().getFireFrequency();
-            if (fireFrequency > 0 && currentDay % fireFrequency == 0) {
-                createFire();
-            }
-        }
-    }
-
-    private void removeBurnedFires() {
-        if (worldMap instanceof FireEarth fireEarth) {
-            fireEarth.getBurnedFires()
-                    .forEach(fire -> {
-                        fires.remove(fire);
-                        fireEarth.removeFire(fire);
-                    });
-        }
-    }
-
-    private void spreadFire() {
-        if (worldMap instanceof FireEarth fireEarth) {
-            Set<Fire> newFires = new HashSet<>();
-            for (Fire fire : fires) {
-                var newFirePositions = fireEarth.getNewFirePositions(fire);
-
-                newFirePositions.forEach(firePosition -> {
-                    try {
-                        var newFire = new Fire(firePosition, configuration.getSimulationConfiguration().getFireDuration());
-
-                        var plant = fireEarth.getPlantAtPosition(firePosition);
-                        plants.remove(plant);
-                        fireEarth.removePlant(firePosition);
-
-                        fireEarth.placeFire(newFire);
-                        newFires.add(newFire);
-
-                    } catch (IncorrectPositionException ignored) {
-                        //            System.out.println("Couldn't spread fire to new position: " + e.getMessage());
-                    }
-                });
-            }
-            fires.addAll(newFires);
-        }
-    }
-
-    //TODO: tak sobie myślę, że skoro na polu może być maksymalnie jedna trawa, tak samo jak maksymalnie jeden ogień to może lepiej to trzymać w HashMapie.
-    private void createFire() {
-        if (worldMap instanceof FireEarth fireEarth) {
-
-            List<Vector2d> plantsPositions
-                    = plants.stream()
-                    .map(Plant::getPosition)
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            Collections.shuffle(plantsPositions);
-
-            boolean isFirePlaced = false;
-            for (Vector2d position : plantsPositions) {
-                try {
-                    var plant = fireEarth.getPlantAtPosition(position);
-                    plants.remove(plant);
-                    fireEarth.removePlant(position);
-
-                    var newFire = new Fire(position, configuration.getSimulationConfiguration().getFireDuration());
-                    fireEarth.placeFire(newFire);
-                    fires.add(newFire);
-                    isFirePlaced = true;
-
-                } catch (IncorrectPositionException ignored) {
-                    //          System.out.println("Couldn't create fire: " + e.getMessage());
-                }
-                if (isFirePlaced) {
-                    return;
-                }
-            }
-
-        }
-
-    }
 
     public void setMapChangeListener(MapChangeListener listener) {
         ((AbstractWorldMap) worldMap).addListener(listener);

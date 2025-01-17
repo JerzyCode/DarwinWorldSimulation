@@ -1,9 +1,9 @@
 package agh.ics.oop.factory;
 
+import agh.ics.oop.model.SimulationWorldMap;
 import agh.ics.oop.model.configuration.WorldMapConfiguration;
-import agh.ics.oop.model.map.Earth;
-import agh.ics.oop.model.map.FireEarth;
-import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.fire.FireEarth;
+import agh.ics.oop.model.map.plant.Earth;
 
 public class WorldMapFactory {
     private final WorldMapConfiguration worldMapConfiguration;
@@ -12,7 +12,7 @@ public class WorldMapFactory {
         this.worldMapConfiguration = worldMapConfiguration;
     }
 
-    public WorldMap createWorldMap() {
+    public SimulationWorldMap createWorldMap() {
         return switch (worldMapConfiguration.getMapVariant()) {
             case EARTH -> createEarth();
             case FIRE -> createFireEarth();
@@ -23,13 +23,26 @@ public class WorldMapFactory {
     private Earth createEarth() {
         var width = worldMapConfiguration.getWidth();
         var height = worldMapConfiguration.getHeight();
-        return new Earth(width, height);
+        var plantVariant = worldMapConfiguration.getPlantVariant();
+        var plantGrowth = worldMapConfiguration.getPlantGrowth();
+        var startPlantCount = worldMapConfiguration.getStartPlantCount();
+        var energyGain = worldMapConfiguration.getEnergyGain();
+
+        return new Earth(width, height, plantGrowth, startPlantCount, energyGain, plantVariant);
     }
 
     private FireEarth createFireEarth() {
         var width = worldMapConfiguration.getWidth();
         var height = worldMapConfiguration.getHeight();
-        return new FireEarth(width, height);
+        var fireDuration = worldMapConfiguration.getFireDuration();
+        var fireFrequency = worldMapConfiguration.getFireFrequency();
+        var plantVariant = worldMapConfiguration.getPlantVariant();
+        var plantGrowth = worldMapConfiguration.getPlantGrowth();
+        var startPlantCount = worldMapConfiguration.getStartPlantCount();
+        var energyGain = worldMapConfiguration.getEnergyGain();
+
+
+        return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, energyGain, plantVariant);
     }
 
 }

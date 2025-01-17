@@ -1,4 +1,4 @@
-package agh.ics.oop.model.map;
+package agh.ics.oop.model.map.rectangular;
 
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;

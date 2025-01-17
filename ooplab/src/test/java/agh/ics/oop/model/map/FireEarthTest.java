@@ -1,232 +1,317 @@
 package agh.ics.oop.model.map;
 
+import agh.ics.oop.TestAnimalBuilder;
+import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.elements.Fire;
-import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.configuration.PlantVariant;
+import agh.ics.oop.model.elements.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
-import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
-import org.junit.jupiter.api.BeforeEach;
+import agh.ics.oop.model.map.fire.FireEarth;
+import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireEarthTest {
-    FireEarth fireEarth;
 
-    @BeforeEach
-    void setUp() {
-        fireEarth = new FireEarth(5, 5);
+    @Test
+    void placePlantShouldSucceed() {
+        // given
+        var plant = new Plant(new Vector2d(0, 0));
+        var fireEarth = new FireEarth(1, 1, 1, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+
+        //when & then
         try {
+            fireEarth.placePlant(plant);
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+        }
+
+        assertTrue(fireEarth.isPlantAtPosition(new Vector2d(0, 0)));
+    }
+
+    @Test
+    void placePlantShouldThrowExceptionWhenPlacePlantAtFire() {
+        // given
+        var plant = new Plant(new Vector2d(0, 0));
+        var fireEarth = new FireEarth(1, 1, 1, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        try {
+            fireEarth.placePlant(plant);
+            assertTrue(fireEarth.isPlantAtPosition(new Vector2d(0, 0)));
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+        }
+
+        fireEarth.handleDayEnds(0);
+
+        // when & then
+        assertThrows(PositionOccupiedByWorldElementException.class,
+                () -> fireEarth.placePlant(new Plant(new Vector2d(0, 0))));
+    }
+
+
+    @Test
+    void placeFireShouldSucceed() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var position = new Vector2d(5, 5);
+
+        try {
+            fireEarth.placePlant(new Plant(position));
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+        }
+
+        //when
+        var result = fireEarth.placeFire(new Fire(position, 5));
+
+        assertTrue(result);
+        assertFalse(fireEarth.isPlantAtPosition(position));
+        assertTrue(fireEarth.isFireAtPosition(position));
+    }
+
+
+    @Test
+    void placeFireShouldFail() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var fireOutsideMap = new Fire(new Vector2d(-1, 10), 2);
+        var fireNotAtPlant = new Fire(new Vector2d(2, 2), 2);
+
+        //when
+        var result1 = fireEarth.placeFire(fireOutsideMap);
+        var result2 = fireEarth.placeFire(fireNotAtPlant);
+
+        assertFalse(result1);
+        assertFalse(result2);
+        assertFalse(fireEarth.isPlantAtPosition(new Vector2d(-1, 10)));
+        assertFalse(fireEarth.isFireAtPosition(new Vector2d(2, 2)));
+    }
+
+    @Test
+    void canPlaceFireShouldReturnTrue() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var position = new Vector2d(5, 5);
+
+        try {
+            fireEarth.placePlant(new Plant(position));
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+        }
+
+        //when
+        var result = fireEarth.canPlaceFire(position);
+
+        //then
+        assertTrue(result);
+    }
+
+    @Test
+    void canPLaceFireShouldReturnFalseWhenPlaceNotAtPlant() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var position = new Vector2d(5, 5);
+
+        try {
+            fireEarth.placePlant(new Plant(position));
+            fireEarth.placeFire(new Fire(position, 5));
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+
+            //when
+            var result = fireEarth.canPlaceFire(position);
+
+            //then
+            assertFalse(result);
+            assertTrue(fireEarth.isFireAtPosition(position));
+        }
+    }
+
+
+    @Test
+    void canPLaceFireShouldReturnFalseWhenPlaceAtOtherFire() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var position = new Vector2d(5, 5);
+        //when
+        var result = fireEarth.canPlaceFire(position);
+
+        //then
+        assertFalse(result);
+    }
+
+
+    @Test
+    void canPLaceFireShouldReturnFalseWhenOutsideMap() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 2, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+
+        //when & then
+        assertFalse(fireEarth.canPlaceFire(new Vector2d(-1, -1)));
+        assertFalse(fireEarth.canPlaceFire(new Vector2d(-1, 5)));
+        assertFalse(fireEarth.canPlaceFire(new Vector2d(5, -1)));
+        assertFalse(fireEarth.canPlaceFire(new Vector2d(11, 11)));
+        assertFalse(fireEarth.canPlaceFire(new Vector2d(11, 2)));
+        assertFalse(fireEarth.canPlaceFire(new Vector2d(1, 11)));
+    }
+
+
+    @Test
+    void handleDayEndsShouldCreateNewFire() {
+        // given
+        var fireEarth = new FireEarth(10, 10, 1, 10, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var animal = TestAnimalBuilder.create()
+                .position(new Vector2d(8, 8))
+                .build();
+
+        try {
+            fireEarth.place(animal);
             fireEarth.placePlant(new Plant(new Vector2d(0, 0)));
-            fireEarth.placeFire(new Fire(new Vector2d(0, 1), 3));
+            fireEarth.placePlant(new Plant(new Vector2d(3, 3)));
         } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    void placePlantShouldThrowsExceptionWhenGivenFieldIsBurning() {
-        // given
-        Plant plant = new Plant(new Vector2d(0, 1));
-
-        // when & then
-        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placePlant(plant));
-    }
-
-    @Test
-    void placePlantShouldThrowsExceptionWhenGivenFieldIsOccupiedByOtherPlant() {
-        // given
-        Plant plant = new Plant(new Vector2d(0, 0));
-
-        // when & then
-        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placePlant(plant));
-    }
-
-    @Test
-    void placePlantShouldThrowsExceptionWhenGivenFieldIsOutsideMap() {
-        // given
-        Plant plant = new Plant(new Vector2d(5, 4));
-
-        // when & then
-        assertThrows(PositionOutOfMapBoundaryException.class, () -> fireEarth.placePlant(plant));
-    }
-
-
-    @Test
-    void placePlantWorksProperlyWhenPlantPositionIsAvailable() {
-        // given
-        Plant plant1 = new Plant(new Vector2d(1, 1));
-        Plant plant2 = new Plant(new Vector2d(4, 4));
-        Plant plant3 = new Plant(new Vector2d(3, 2));
-
-        // when
-        try {
-            fireEarth.placePlant(plant1);
-            fireEarth.placePlant(plant2);
-            fireEarth.placePlant(plant3);
-        } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
+            fail("Place element should not throw exception: " + e.getMessage());
         }
 
-        // then
-        assertEquals(plant1, fireEarth.getPlantAtPosition(plant1.getPosition()));
-        assertEquals(plant2, fireEarth.getPlantAtPosition(plant2.getPosition()));
-        assertEquals(plant3, fireEarth.getPlantAtPosition(plant3.getPosition()));
-    }
 
-    @Test
-    void getElements() {
-        // given
-        Plant plant1 = new Plant(new Vector2d(1, 1));
-        Plant plant2 = new Plant(new Vector2d(4, 4));
-        Plant plant3 = new Plant(new Vector2d(3, 2));
-        Fire fire1 = new Fire(new Vector2d(2, 2), 3);
-        Fire fire2 = new Fire(new Vector2d(3, 3), 3);
+        //when & then
+        fireEarth.handleDayEnds(0);
+        var elementsAtMap = fireEarth.getElements();
 
-        try {
-            fireEarth.placePlant(plant1);
-            fireEarth.placePlant(plant2);
-            fireEarth.placePlant(plant3);
-            fireEarth.placeFire(fire1);
-            fireEarth.placeFire(fire2);
-        } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
+        var animalCount = 0;
+        var plantCount = 0;
+        var fireCount = 0;
+
+        for (var element : elementsAtMap) {
+            if (element instanceof Plant) {
+                plantCount++;
+            } else if (element instanceof Fire) {
+                fireCount++;
+            } else if (element instanceof Animal) {
+                animalCount++;
+            }
         }
 
-        // when
-        var elements = fireEarth.getElements();
-        var fires = elements.stream()
-                .filter(fire -> fire instanceof Fire)
-                .toList();
-        var plants = elements.stream()
-                .filter(plant -> plant instanceof Plant)
-                .toList();
-
-        // then
-        assertEquals(3, fires.size());
-        assertEquals(4, plants.size());
-        assertTrue(fires.contains(fire1));
-        assertTrue(fires.contains(fire2));
-        assertTrue(plants.contains(plant1));
-        assertTrue(plants.contains(plant2));
-        assertTrue(plants.contains(plant3));
+        assertEquals(1, animalCount);
+        assertEquals(1, plantCount);
+        assertEquals(1, fireCount);
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(0, 0)) ||
+                fireEarth.isFireAtPosition(new Vector2d(3, 3)));
     }
 
-    @Test
-    void isFireAtPosition() {
-        // given
-        var positionWithFire = new Vector2d(0, 1);
-        var positionWithoutFire = new Vector2d(0, 0);
-        var positionWithoutFire2 = new Vector2d(1, 0);
-
-        // when
-        // then
-        assertTrue(fireEarth.isFireAtPosition(positionWithFire));
-        assertFalse(fireEarth.isFireAtPosition(positionWithoutFire));
-        assertFalse(fireEarth.isFireAtPosition(positionWithoutFire2));
-
-    }
 
     @Test
-    void placeFireShouldThrowsExceptionWhenPositionIsOccupiedByPlant() {
+    void handleDayEndsShouldSpreadFire() {
         // given
-        var fire = new Fire(new Vector2d(0, 0), 3);
-        // when & then
-        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placeFire(fire));
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var fireCenter = new Vector2d(3, 3);
 
-    }
-
-    @Test
-    void placeFireShouldThrowsExceptionWhenPositionIsOccupiedByOtherFire() {
-        // given
-        var fire = new Fire(new Vector2d(0, 1), 3);
-        // when & then
-        assertThrows(PositionOccupiedByWorldElementException.class, () -> fireEarth.placeFire(fire));
-
-    }
-
-    @Test
-    void placeFireShouldThrowsExceptionWhenPositionIsOutsideMap() {
-        // given
-        var fire = new Fire(new Vector2d(1, 5), 3);
-
-        // when & then
-        assertThrows(PositionOutOfMapBoundaryException.class, () -> fireEarth.placeFire(fire));
-    }
-
-    @Test
-    void getFireAtPosition() {
-        // given
-        var firePosition = new Vector2d(3, 3);
-        var fire = new Fire(firePosition, 1);
         try {
+            fireEarth.placePlant(new Plant(fireCenter));
+            fireEarth.placePlant(new Plant(fireCenter.add(new Vector2d(1, 0))));
+            fireEarth.placePlant(new Plant(fireCenter.add(new Vector2d(-1, 0))));
+            fireEarth.placePlant(new Plant(fireCenter.add(new Vector2d(0, 1))));
+            fireEarth.placePlant(new Plant(fireCenter.add(new Vector2d(0, -1))));
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+        }
+
+        fireEarth.placeFire(new Fire(fireCenter, 5));
+
+
+        //when & then
+        fireEarth.handleDayEnds(1);
+
+        var elementsAtMap = fireEarth.getElements();
+        var plantCount = 0;
+        var fireCount = 0;
+
+        for (var element : elementsAtMap) {
+            if (element instanceof Plant) {
+                plantCount++;
+            } else if (element instanceof Fire) {
+                fireCount++;
+            }
+        }
+
+        assertEquals(0, plantCount);
+        assertEquals(5, fireCount);
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(4, 3)));
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(3, 4)));
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(2, 3)));
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(3, 2)));
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(3, 3)));
+    }
+
+
+    @Test
+    void handleDayEndsShouldBurnRemoveFires() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
+
+        try {
+            fireEarth.placePlant(new Plant(new Vector2d(3, 3)));
+            fireEarth.placeFire(new Fire(new Vector2d(3, 3), 1));
+        } catch (IncorrectPositionException e) {
+            fail("Place plant should not throw exception: " + e.getMessage());
+        }
+
+        //when & then
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(3, 3)));
+        assertFalse(fireEarth.isPlantAtPosition(new Vector2d(3, 3)));
+        fireEarth.handleDayEnds(1);
+        fireEarth.handleDayEnds(2);
+        assertFalse(fireEarth.isFireAtPosition(new Vector2d(3, 3)));
+        assertFalse(fireEarth.isPlantAtPosition(new Vector2d(3, 3)));
+
+        var elementsAtMap = fireEarth.getElements();
+        var plantCount = 0;
+        var fireCount = 0;
+
+        for (var element : elementsAtMap) {
+            if (element instanceof Plant) {
+                plantCount++;
+            } else if (element instanceof Fire) {
+                fireCount++;
+            }
+        }
+
+        assertEquals(0, plantCount);
+        assertEquals(0, fireCount);
+    }
+
+
+    @Test
+    void animalStepOnFireShouldKill() {
+        //given
+        var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var animal = TestAnimalBuilder.create()
+                .position(new Vector2d(2, 3))
+                .genome(new Genome(List.of(new Gen(4))))
+                .energy(10)
+                .orientation(MapDirection.NORTH)
+                .build();
+        var plant = new Plant(new Vector2d(2, 2));
+        var fire = new Fire(new Vector2d(2, 2), 2);
+
+        try {
+            fireEarth.place(animal);
+            fireEarth.placePlant(plant);
             fireEarth.placeFire(fire);
         } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
+            fail("Placing element not throw exception");
         }
 
-        // when
-        var fireByPosition = fireEarth.getFireAtPosition(firePosition);
+        //when
+        fireEarth.move(animal, MoveDirection.FORWARD);
 
-        // then
-        assertEquals(fire, fireByPosition);
+        //then
+        assertTrue(fireEarth.isFireAtPosition(new Vector2d(2, 2)));
+        assertFalse(fireEarth.isPlantAtPosition(new Vector2d(2, 2)));
+        assertTrue(animal.isDead());
     }
 
-    @Test
-    void decreaseFireRemainingLifetime() {
-        // given
-        var firePosition = new Vector2d(3, 3);
-        var fire = new Fire(firePosition, 1);
-        try {
-            fireEarth.placeFire(fire);
-        } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
-        }
-
-        // when
-        fireEarth.decreaseFireRemainingLifetime();
-
-        // then
-        assertTrue(fire.isBurned());
-        assertFalse(fireEarth.getFireAtPosition(new Vector2d(0, 1)).isBurned());
-
-    }
-
-    @Test
-    void removeFire() {
-        // given
-        var fire = fireEarth.getFireAtPosition(new Vector2d(0, 1));
-
-        // when
-        fireEarth.removeFire(fire);
-
-        // then
-        assertNull(fireEarth.getFireAtPosition(new Vector2d(0, 1)));
-
-    }
-
-    @Test
-    void getBurnedFires() {
-        // given
-        var fire1 = new Fire(new Vector2d(0, 2), 1);
-        var burnedFire1 = new Fire(new Vector2d(0, 3), 0);
-        var burnedFire2 = new Fire(new Vector2d(0, 4), 0);
-        try {
-            fireEarth.placeFire(fire1);
-            fireEarth.placeFire(burnedFire1);
-            fireEarth.placeFire(burnedFire2);
-        } catch (IncorrectPositionException e) {
-            fail(e.getMessage());
-        }
-
-        // when
-        var burnedFires = fireEarth.getBurnedFires();
-
-        // then
-        assertEquals(2, burnedFires.size());
-        assertTrue(burnedFires.contains(burnedFire1));
-        assertTrue(burnedFires.contains(burnedFire2));
-
-    }
 }

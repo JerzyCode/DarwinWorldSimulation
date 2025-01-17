@@ -1,7 +1,9 @@
-package agh.ics.oop.model.map;
+package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.SimulationWorldMap;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
@@ -13,18 +15,21 @@ import agh.ics.oop.model.move.MoveDirection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Earth extends AbstractPlantMap implements MoveAdjuster {
+public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationWorldMap {
     private final Boundary boundary;
     private final Map<Vector2d, Set<Animal>> animals;
+    private final Gardener gardener;
 
-    public Earth(int width, int height) {
+    public Earth(int width, int height, int plantGrowth, int startPlantCount, int energyGain, PlantVariant plantVariant) {
         boundary = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
         animals = new ConcurrentHashMap<>();
+        gardener = new Gardener(plantVariant, plantGrowth, energyGain);
+        growPlantsStart(startPlantCount);
     }
 
-    // TODO: remove unused constructor
-    public Earth() {
-        this(1, 1);
+    @Override
+    public void handleDayEnds(int currentDay) {
+        growPlantsDaily();
     }
 
     @Override
@@ -110,7 +115,10 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
             placeAnimalAtNewPosition(animal);
             notifyListeners("Animal moved to position: " + animal.getPosition());
         }
+
+        handleAnimalStepOnPlant(animal);
     }
+
 
     public Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
@@ -135,6 +143,37 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster {
                 .count();
 
         return getSize() - (int) countOfOccupiedFields;
+    }
+
+
+    private void handleAnimalStepOnPlant(Animal animal) {
+        var position = animal.getPosition();
+        if (isPlantAtPosition(position)) {
+            animal.eat(plants.get(position));
+            removePlant(position);
+        }
+    }
+
+    private void growPlantsStart(int startPlantCount) {
+        gardener.createPlants(plants.size(), getSize(), boundary, startPlantCount)
+                .forEach(plant -> {
+                    try {
+                        placePlant(plant);
+                    } catch (Exception e) {
+                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    }
+                });
+    }
+
+    private void growPlantsDaily() {
+        gardener.createPlantsDaily(plants.size(), getSize(), boundary)
+                .forEach(plant -> {
+                    try {
+                        placePlant(plant);
+                    } catch (Exception e) {
+                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    }
+                });
     }
 
 

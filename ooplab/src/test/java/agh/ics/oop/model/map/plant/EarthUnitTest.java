@@ -1,8 +1,9 @@
-package agh.ics.oop.model.map;
+package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.elements.Plant;
@@ -28,7 +29,7 @@ class EarthUnitTest {
 
     @BeforeEach
     void setUp() {
-        map = new Earth(5, 5);
+        map = new Earth(5, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
     }
 
     @Test
@@ -329,8 +330,8 @@ class EarthUnitTest {
 
     @Test
     void getSizeShouldReturn() {
-        var map1 = new Earth(4, 10);
-        var map2 = new Earth(14, 5);
+        var map1 = new Earth(4, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var map2 = new Earth(14, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS);
         assertEquals(4 * 10, map1.getSize());
         assertEquals(14 * 5, map2.getSize());
     }
@@ -378,6 +379,46 @@ class EarthUnitTest {
         assertEquals(1, animalsAtPosition.size());
         assertTrue(animalsAtPosition.contains(animal1));
         assertFalse(animalsAtPosition.contains(animal2));
+    }
+
+    @Test
+    void animalStepOnPlantShouldIncreaseEnergy() {
+        // given
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS);
+        var plant = new Plant(new Vector2d(2, 2), 5);
+        var animal = TestAnimalBuilder.create()
+                .position(new Vector2d(2, 3))
+                .genome(new Genome(List.of(new Gen(4))))
+                .energy(10)
+                .orientation(MapDirection.NORTH)
+                .build();
+
+        try {
+            earth.place(animal);
+            earth.placePlant(plant);
+        } catch (IncorrectPositionException e) {
+            fail("Placing element not throw exception");
+        }
+
+        //when
+        earth.move(animal, MoveDirection.FORWARD);
+
+        //then
+        assertEquals(new Vector2d(2, 2), animal.getPosition());
+        assertEquals(15, animal.getEnergy());
+        assertFalse(earth.isPlantAtPosition(new Vector2d(2, 2)));
+    }
+
+    //    @Test TODO poprawić gardenera tak że ma działać
+    void handleDayEndsShouldGrowNewPlants() {
+        // given
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS);
+
+        // when
+        earth.handleDayEnds(1);
+
+        //then
+        assertEquals(10, earth.getElements().size());
     }
 
     private static Stream<Arguments> providePlacePlantArgumentsSuccess() {

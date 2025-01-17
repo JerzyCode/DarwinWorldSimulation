@@ -9,7 +9,13 @@ public class Configuration {
         this.worldMapConfiguration = WorldMapConfigurationBuilder.create()
                 .height(26)
                 .width(54)
+                .energyGain(5)
+                .plantGrowth(7)
+                .startPlantCount(45)
+                .fireDuration(0)
+                .fireFrequency(0)
                 .mapVariant(WorldMapVariant.EARTH)
+                .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .build();
 
 
@@ -23,15 +29,9 @@ public class Configuration {
 
         this.simulationConfiguration = SimulationConfigurationBuilder.create()
                 .daysCount(2000)
-                .energyGain(5)
-                .plantGrowth(7)
-                .plantVariant(PlantVariant.FORESTED_EQUATORS)
                 .wellFedEnergy(10)
                 .lossCopulateEnergy(10)
-                .fireFrequency(0)
-                .fireDuration(0)
                 .startAnimalCount(45)
-                .startPlantCount(45)
                 .build();
     }
 
@@ -52,6 +52,7 @@ public class Configuration {
     public SimulationConfiguration getSimulationConfiguration() {
         return simulationConfiguration;
     }
+
 
     @Override
     public String toString() {
