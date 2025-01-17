@@ -1,6 +1,5 @@
 package agh.ics.oop.model.map;
 
-import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.AnimalBreeder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
@@ -13,6 +12,7 @@ import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ class FireEarthTest {
 
     @BeforeEach
     void setup() {
-        breeder = (animal1, animal2) -> TestAnimalBuilder.create()
+        breeder = (animal1, animal2) -> Animal.builder()
                 .position(animal1.getPosition())
                 .genome(animal2.getGenome())
                 .energy(animal2.getEnergy() + animal1.getEnergy())
@@ -178,7 +178,10 @@ class FireEarthTest {
     void handleDayEndsShouldCreateNewFire() {
         // given
         var fireEarth = new FireEarth(10, 10, 1, 10, 0, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
+                .energy(15)
+                .orientation(MapDirection.SOUTH)
+                .genome(new Genome(new ArrayList<>(List.of(new Gen(1)))))
                 .position(new Vector2d(8, 8))
                 .build();
 
@@ -302,7 +305,7 @@ class FireEarthTest {
     void animalStepOnFireShouldKill() {
         //given
         var fireEarth = new FireEarth(10, 10, 1, 2, 0, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 3))
                 .genome(new Genome(List.of(new Gen(4))))
                 .energy(10)

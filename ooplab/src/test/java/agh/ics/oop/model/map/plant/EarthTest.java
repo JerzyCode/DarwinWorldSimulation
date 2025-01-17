@@ -1,10 +1,12 @@
 package agh.ics.oop.model.map.plant;
 
-import agh.ics.oop.TestAnimalBuilder;
+import agh.ics.oop.factory.AnimalFactory;
 import agh.ics.oop.model.AnimalBreeder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.AnimalConfiguration;
 import agh.ics.oop.model.configuration.PlantVariant;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.elements.Plant;
@@ -23,19 +25,22 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-class EarthUnitTest {
+class EarthTest {
     private Earth map;
-    private AnimalBreeder breeder;
+    private final AnimalBreeder breeder = mock(AnimalBreeder.class);
 
 
     @BeforeEach
     void setUp() {
-        breeder = (animal1, animal2) -> TestAnimalBuilder.create()
-                .position(animal1.getPosition())
-                .genome(animal2.getGenome())
-                .energy(animal2.getEnergy() + animal1.getEnergy())
-                .build();
+        when(breeder.breed(any(), any())).thenReturn(Animal.builder()
+                .position(new Vector2d(0, 0))
+                .orientation(MapDirection.NORTH)
+                .build());
+
         map = new Earth(5, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
     }
 
@@ -48,7 +53,7 @@ class EarthUnitTest {
     @Test
     void placeAnimalShouldCreateNewListAtPosition() {
         //given
-        var animal = TestAnimalBuilder.create().position(new Vector2d(2, 2)).build();
+        var animal = Animal.builder().position(new Vector2d(2, 2)).build();
 
         //when && then
         try {
@@ -64,16 +69,23 @@ class EarthUnitTest {
     @Test
     void placeAnimalOutsideMapShouldThrowException() {
         //given
-        var animal1 = TestAnimalBuilder.create().position(new Vector2d(-1, 2)).build();
-        var animal2 = TestAnimalBuilder.create().position(new Vector2d(0, 10)).build();
-        var animal3 = TestAnimalBuilder.create().position(new Vector2d(15, 2)).build();
-        var animal4 = TestAnimalBuilder.create().position(new Vector2d(3, -2)).build();
+        var animal1 = Animal.builder().position(new Vector2d(-1, 2)).build();
+        var animal2 = Animal.builder().position(new Vector2d(0, 10)).build();
+        var animal3 = Animal.builder().position(new Vector2d(15, 2)).build();
+        var animal4 = Animal.builder().position(new Vector2d(3, -2)).build();
 
         //when && then
         assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal1));
         assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal2));
         assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal3));
         assertThrows(PositionOutOfMapBoundaryException.class, () -> map.place(animal4));
+    }
+
+    @Test
+    void getAnimalsAtPositionShouldReturnEmptySet() {
+        //given
+        //when && then
+        assertTrue(map.getAnimalsAtPosition(new Vector2d(0, 0)).isEmpty());
     }
 
     @Test
@@ -132,7 +144,7 @@ class EarthUnitTest {
 
         //when && then
         assertThrows(PositionOccupiedByWorldElementException.class, () -> map.placePlant(plantToPlace));
-        assertEquals(1, map.plants.size());
+        assertEquals(1, map.getPlantCount());
         assertEquals(plantPlaced, map.getPlantAtPosition(plantPlaced.getPosition()));
     }
 
@@ -158,7 +170,7 @@ class EarthUnitTest {
         map.removePlant(wrongPosition);
 
         //then
-        assertEquals(1, map.plants.size());
+        assertEquals(1, map.getPlantCount());
         assertFalse(map.isPlantAtPosition(plantPlaced1.getPosition()));
         assertFalse(map.isPlantAtPosition(plantPlaced2.getPosition()));
         assertTrue(map.isPlantAtPosition(plantPlaced3.getPosition()));
@@ -167,13 +179,15 @@ class EarthUnitTest {
     @Test
     void moveAnimalAdjusterShouldNoTrigger() {
         //given
-        var animalN = TestAnimalBuilder.create()
+        var animalN = Animal.builder()
                 .position(new Vector2d(2, 2))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(0))))
                 .build();
 
-        var animalS = TestAnimalBuilder.create()
+        var animalS = Animal.builder()
                 .position(new Vector2d(1, 3))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(4))))
                 .build();
         try {
@@ -196,13 +210,15 @@ class EarthUnitTest {
     @Test
     void moveAnimalsOnTheSamePosition() {
         //given
-        var animalN = TestAnimalBuilder.create()
+        var animalN = Animal.builder()
                 .position(new Vector2d(2, 2))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(0))))
                 .build();
 
-        var animalE = TestAnimalBuilder.create()
+        var animalE = Animal.builder()
                 .position(new Vector2d(1, 2))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(2))))
                 .build();
         try {
@@ -226,13 +242,15 @@ class EarthUnitTest {
     @Test
     void moveAnimalsWithAdjusterHorizontal() {
         // given
-        var animalW = TestAnimalBuilder.create()
+        var animalW = Animal.builder()
                 .position(new Vector2d(0, 3))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(6))))
                 .build();
 
-        var animalE = TestAnimalBuilder.create()
+        var animalE = Animal.builder()
                 .position(new Vector2d(4, 2))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(2))))
                 .build();
         try {
@@ -257,13 +275,15 @@ class EarthUnitTest {
     @Test
     void moveAnimalsWithAdjusterVertical() {
         // given
-        var animalN = TestAnimalBuilder.create()
+        var animalN = Animal.builder()
                 .position(new Vector2d(2, 4))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(0))))
                 .build();
 
-        var animalS = TestAnimalBuilder.create()
+        var animalS = Animal.builder()
                 .position(new Vector2d(1, 0))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(4))))
                 .build();
         try {
@@ -290,23 +310,27 @@ class EarthUnitTest {
     @Test
     void moveAnimalsWithAdjusterCorners() {
         // given
-        var animalNE = TestAnimalBuilder.create()
+        var animalNE = Animal.builder()
                 .position(new Vector2d(4, 4))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(1))))
                 .build();
 
-        var animalSE = TestAnimalBuilder.create()
+        var animalSE = Animal.builder()
                 .position(new Vector2d(4, 0))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(3))))
                 .build();
 
-        var animalSW = TestAnimalBuilder.create()
+        var animalSW = Animal.builder()
                 .position(new Vector2d(0, 0))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(5))))
                 .build();
 
-        var animalNW = TestAnimalBuilder.create()
+        var animalNW = Animal.builder()
                 .position(new Vector2d(0, 4))
+                .orientation(MapDirection.NORTH)
                 .genome(new Genome(List.of(new Gen(7))))
                 .build();
         try {
@@ -363,11 +387,11 @@ class EarthUnitTest {
     @Test
     void shouldRemoveAnimal() {
         //given
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .build();
 
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .build();
 
@@ -393,7 +417,7 @@ class EarthUnitTest {
         // given
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         var plant = new Plant(new Vector2d(2, 2), 5);
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 3))
                 .genome(new Genome(List.of(new Gen(4))))
                 .energy(10)
@@ -404,7 +428,7 @@ class EarthUnitTest {
             earth.place(animal);
             earth.placePlant(plant);
         } catch (IncorrectPositionException e) {
-            fail("Placing element not throw exception");
+            fail("Placing element should not throw exception");
         }
 
         //when
@@ -426,6 +450,61 @@ class EarthUnitTest {
 
         //then
         assertEquals(10, earth.getElements().size());
+    }
+
+
+    @Test
+    void animalIntegrationStepOnEachOtherShouldCopulate() {
+        // given
+        var animalConfiguration = AnimalConfiguration
+                .builder()
+                .wellFedEnergy(15)
+                .genomeLength(3)
+                .lossCopulateEnergy(5)
+                .startEnergy(50)
+                .build();
+
+        var factory = new AnimalFactory(animalConfiguration);
+        AnimalBreeder breeder = (animal1, animal2) -> factory.birthAnimal(animal1, animal2, 1);
+        var parent1 = Animal.builder()
+                .position(new Vector2d(0, 4))
+                .genome(new Genome(List.of(new Gen(4))))
+                .energy(20)
+                .orientation(MapDirection.NORTH)
+                .build();
+
+        var parent2 = factory.createAnimal(new Vector2d(0, 3), 1);
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
+
+        try {
+            earth.place(parent1);
+            earth.place(parent2);
+        } catch (IncorrectPositionException e) {
+            fail("Placing element should not throw exception");
+        }
+
+        //when
+        earth.move(parent1, MoveDirection.FORWARD);
+
+        //then
+        var animalsAtPosition = earth.getAnimalsAtPosition(new Vector2d(0, 3));
+        var bornAnimalOptional = animalsAtPosition.stream()
+                .filter(animal -> animal != parent1 && animal != parent2)
+                .findAny();
+
+        assertTrue(bornAnimalOptional.isPresent());
+        var bornAnimal = bornAnimalOptional.get();
+
+        assertEquals(15, parent1.getEnergy());
+        assertEquals(45, parent2.getEnergy());
+        assertEquals(10, bornAnimal.getEnergy());
+        assertTrue(animalsAtPosition.contains(parent1));
+        assertTrue(animalsAtPosition.contains(parent2));
+        assertTrue(animalsAtPosition.contains(bornAnimal));
+        assertTrue(parent1.getChildren().contains(bornAnimal));
+        assertTrue(parent2.getChildren().contains(bornAnimal));
+        assertTrue(bornAnimal.getParents().contains(parent1));
+        assertTrue(bornAnimal.getParents().contains(parent2));
     }
 
     private static Stream<Arguments> providePlacePlantArgumentsSuccess() {

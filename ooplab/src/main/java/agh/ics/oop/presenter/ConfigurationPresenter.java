@@ -118,8 +118,7 @@ public class ConfigurationPresenter {
                 .startAnimalCount(Integer.parseInt(startAnimalCountInput.getText()))
                 .build();
 
-        var worldMapConfiguration = WorldMapConfigurationBuilder
-                .create()
+        var worldMapConfiguration = WorldMapConfiguration.builder()
                 .width(Integer.parseInt(widthInput.getText()))
                 .height(Integer.parseInt(heightInput.getText()))
                 .energyGain(Integer.parseInt(energyGainInput.getText()))

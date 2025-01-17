@@ -3,7 +3,7 @@ package agh.ics.oop.factory;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
-import agh.ics.oop.model.configuration.WorldMapConfigurationBuilder;
+import agh.ics.oop.model.configuration.WorldMapConfiguration;
 import agh.ics.oop.model.configuration.WorldMapVariant;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.map.WorldMap;
@@ -19,7 +19,7 @@ class WorldMapFactoryTest {
     @Test
     void should_create_earth() {
         //given
-        var configuration = WorldMapConfigurationBuilder.create()
+        var configuration = WorldMapConfiguration.builder()
                 .height(100)
                 .width(100)
                 .startPlantCount(10)
@@ -42,7 +42,7 @@ class WorldMapFactoryTest {
     @Test
     void should_create_fire_earth() {
         //given
-        var configuration = WorldMapConfigurationBuilder.create()
+        var configuration = WorldMapConfiguration.builder()
                 .height(500)
                 .width(500)
                 .startPlantCount(10)

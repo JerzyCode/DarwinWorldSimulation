@@ -13,7 +13,7 @@ public class Configuration {
     private final SimulationConfiguration simulationConfiguration;
 
     public Configuration() {
-        this.worldMapConfiguration = WorldMapConfigurationBuilder.create()
+        this.worldMapConfiguration = WorldMapConfiguration.builder()
                 .height(26)
                 .width(54)
                 .energyGain(5)
