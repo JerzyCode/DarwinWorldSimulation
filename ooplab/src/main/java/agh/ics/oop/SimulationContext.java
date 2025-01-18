@@ -6,13 +6,18 @@ import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Gen;
+import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
+import java.util.List;
+import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 public class SimulationContext {
     private final Configuration configuration;
@@ -80,6 +85,7 @@ public class SimulationContext {
 
     public OptionalDouble getAverageDeadAnimalTimeLife() {
         return worldMap.getAnimals().stream()
+                .filter(Animal::isDead)
                 .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
                 .average();
     }
@@ -90,5 +96,22 @@ public class SimulationContext {
                 .average();
     }
 
-    //TODO: getMostPopularGenotype
+    // TODO: nie wiem czy to chodzi o cały Genom czy to mogą być podciągi z Genomu też, ale wtedy najpopularniejszy genotyp to byłby zawsze jakiś jeden gen
+    public List<Gen> getMostPopularGenotype() {
+        Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
+                .filter(animal -> !animal.isDead())
+                .map(Animal::getGenome)
+                .map(Genome::getGens)
+                .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()));
+
+        long maxCount = genotypeCount.values().stream()
+                .max(Long::compareTo)
+                .orElse(0L);
+
+        return genotypeCount.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxCount)
+                .map(Map.Entry::getKey)
+                .toList()
+                .getFirst();
+    }
 }

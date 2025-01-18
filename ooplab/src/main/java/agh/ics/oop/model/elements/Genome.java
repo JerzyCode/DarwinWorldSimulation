@@ -60,4 +60,7 @@ public class Genome {
         return gens.get(currentIndex);
     }
 
+    public List<Gen> getGens() {
+        return Collections.unmodifiableList(gens);
+    }
 }

@@ -242,6 +242,7 @@ public class SimulationPresenter implements MapChangeListener {
         plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
         freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
         avgEnergyLabel.setText(String.format(String.valueOf(simulationContext.getAverageAnimalEnergy().orElse(0))));
+        popularGenotypeLabel.setText(simulationContext.getMostPopularGenotype().toString());
         avgLifespanLabel.setText(String.valueOf(simulationContext.getAverageDeadAnimalTimeLife().orElse(0)));
         avgChildrenLabel.setText(String.valueOf(simulationContext.getAverageAnimalCountOfChildren().orElse(0)));
     }
