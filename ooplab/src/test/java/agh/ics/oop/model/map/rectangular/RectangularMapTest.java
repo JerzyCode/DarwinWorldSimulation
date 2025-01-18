@@ -1,8 +1,8 @@
 package agh.ics.oop.model.map.rectangular;
 
-import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.move.MoveDirection;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +35,7 @@ class RectangularMapTest {
     @Test
     void shouldPlaceAnimal() throws IncorrectPositionException {
         //given
-        var animal = TestAnimalBuilder.create().position(new Vector2d(2, 2)).build();
+        var animal = Animal.builder().position(new Vector2d(2, 2)).build();
 
         //when
         rectangularMap.place(animal);
@@ -47,8 +47,8 @@ class RectangularMapTest {
     @Test
     void shouldThrowExceptionWhenAnimalPositionOccupied() throws IncorrectPositionException {
         //given
-        var animal1 = TestAnimalBuilder.create().position(new Vector2d(2, 2)).build();
-        var animal2 = TestAnimalBuilder.create().position(new Vector2d(2, 2)).build();
+        var animal1 = Animal.builder().position(new Vector2d(2, 2)).build();
+        var animal2 = Animal.builder().position(new Vector2d(2, 2)).build();
         rectangularMap.place(animal1);
 
         //when && then
@@ -59,7 +59,7 @@ class RectangularMapTest {
     @Test
     void shouldThrowExceptionWhenAnimalWrongPosition() {
         //given
-        var animal = TestAnimalBuilder.create().position(new Vector2d(-1, -1)).build();
+        var animal = Animal.builder().position(new Vector2d(-1, -1)).build();
 
         //when && then
         assertThrows(IncorrectPositionException.class, () -> rectangularMap.place(animal));
@@ -69,7 +69,7 @@ class RectangularMapTest {
     @Test
     void shouldMoveAnimal() throws IncorrectPositionException {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
@@ -86,11 +86,11 @@ class RectangularMapTest {
     @Test
     void shouldNotMoveAnimalOnOccupiedPosition() throws IncorrectPositionException {
         //given
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .position(new Vector2d(2, 1))
                 .orientation(MapDirection.NORTH)
                 .build();
@@ -108,7 +108,7 @@ class RectangularMapTest {
     @Test
     void positionShouldBeOccupied() throws IncorrectPositionException {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
@@ -124,7 +124,7 @@ class RectangularMapTest {
     @Test
     void positionShouldNotBeOccupied() throws IncorrectPositionException {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(4, 4))
                 .orientation(MapDirection.NORTH)
                 .build();
@@ -140,7 +140,7 @@ class RectangularMapTest {
     @Test
     void shouldReturnAnimalObjectAt() throws IncorrectPositionException {
         //given
-        var animal = TestAnimalBuilder.create().position(new Vector2d(2, 2)).build();
+        var animal = Animal.builder().position(new Vector2d(2, 2)).build();
         rectangularMap.place(animal);
 
         //when
@@ -153,7 +153,7 @@ class RectangularMapTest {
     @Test
     void cantMoveToPositionIsOccupied() throws IncorrectPositionException {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();

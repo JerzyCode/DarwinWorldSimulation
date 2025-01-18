@@ -1,5 +1,6 @@
 package agh.ics.oop.model.map.fire;
 
+import agh.ics.oop.model.AnimalBreeder;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Animal;
@@ -21,8 +22,8 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
     private final int fireFrequency;
     private final FireSpreader fireSpreader;
 
-    public FireEarth(int width, int height, int fireFrequency, int fireDuration, int plantGrowth, int startPlantCount, int energyGain, PlantVariant plantVariant) {
-        super(width, height, plantGrowth, startPlantCount, energyGain, plantVariant);
+    public FireEarth(int width, int height, int fireFrequency, int fireDuration, int plantGrowth, int startPlantCount, int energyGain, PlantVariant plantVariant, AnimalBreeder breeder) {
+        super(width, height, plantGrowth, startPlantCount, energyGain, plantVariant, breeder);
         this.fireFrequency = fireFrequency;
         this.fires = new HashMap<>();
         this.fireSpreader = new FireSpreader(fireDuration);

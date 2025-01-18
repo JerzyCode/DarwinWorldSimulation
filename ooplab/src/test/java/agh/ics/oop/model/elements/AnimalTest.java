@@ -1,6 +1,5 @@
 package agh.ics.oop.model.elements;
 
-import agh.ics.oop.TestAnimalBuilder;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.exceptions.InvalidCountException;
@@ -23,7 +22,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveNorthDirectionAfterTurnLeft() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.EAST)
                 .build();
@@ -39,7 +38,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveNorthDirectionAfterTurnRight() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.WEST)
                 .build();
@@ -55,7 +54,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveSouthDirectionAfterTurnLeft() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.WEST)
                 .build();
@@ -71,7 +70,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveSouthDirectionAfterTurnRight() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.EAST)
                 .build();
@@ -87,7 +86,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveEastDirectionAfterTurnLeft() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.SOUTH)
                 .build();
@@ -103,7 +102,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveEastDirectionAfterTurnRight() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
@@ -119,7 +118,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveWestDirectionAfterTurnLeft() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
@@ -135,7 +134,7 @@ class AnimalTest {
     @Test
     void animalShouldHaveWestDirectionAfterTurnRight() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.SOUTH)
                 .build();
@@ -151,11 +150,11 @@ class AnimalTest {
     @Test
     void animalsShouldIncreaseX() {
         //given
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.EAST)
                 .build();
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.WEST)
                 .build();
@@ -176,11 +175,11 @@ class AnimalTest {
     @Test
     void animalsShouldDecreaseX() {
         //given
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.EAST)
                 .build();
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.WEST)
                 .build();
@@ -201,11 +200,11 @@ class AnimalTest {
     @Test
     void animalsShouldIncreaseY() {
         //given
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.SOUTH)
                 .build();
@@ -226,11 +225,11 @@ class AnimalTest {
     @Test
     void animalsShouldDecreaseY() {
         //given
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.NORTH)
                 .build();
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .position(new Vector2d(2, 2))
                 .orientation(MapDirection.SOUTH)
                 .build();
@@ -251,7 +250,8 @@ class AnimalTest {
     @Test
     void animalShouldNotMoveForwardWhenValidatorReturnFalse() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
+                .orientation(MapDirection.NORTH)
                 .position(new Vector2d(2, 2))
                 .build();
         when(validator.canMoveTo(any())).thenReturn(false);
@@ -267,7 +267,8 @@ class AnimalTest {
     @Test
     void animalShouldNotMoveBackwardWhenValidatorReturnFalse() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
+                .orientation(MapDirection.NORTH)
                 .position(new Vector2d(2, 2))
                 .build();
         when(validator.canMoveTo(any())).thenReturn(false);
@@ -284,8 +285,9 @@ class AnimalTest {
     void animalShouldNotMoveAccordingToGenome() {
         //given
         var genome = new Genome(List.of(new Gen(0)));
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
+                .orientation(MapDirection.NORTH)
                 .genome(genome)
                 .build();
         when(validator.canMoveTo(any())).thenReturn(true);
@@ -305,8 +307,9 @@ class AnimalTest {
                 new Gen(0), new Gen(1), new Gen(2), new Gen(3),
                 new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
 
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .position(new Vector2d(2, 2))
+                .orientation(MapDirection.NORTH)
                 .genome(genome)
                 .build();
 
@@ -353,7 +356,7 @@ class AnimalTest {
     @Test
     void animalIsDeadTest() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .energy(20)
                 .position(new Vector2d(2, 2))
                 .build();
@@ -368,20 +371,20 @@ class AnimalTest {
     @Test
     void animalIsWellFeedTest() {
         //given
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .energy(10)
                 .position(new Vector2d(1, 2))
+                .wellFedEnergy(5)
                 .build();
-        var wellFedEnergy = 5;
 
         //when & then
-        assertTrue(animal.canMakeChild(wellFedEnergy));
+        assertTrue(animal.canMakeChild());
 
         animal.decreaseEnergy(5);
-        assertTrue(animal.canMakeChild(wellFedEnergy));
+        assertTrue(animal.canMakeChild());
 
         animal.decreaseEnergy(3);
-        assertFalse(animal.canMakeChild(wellFedEnergy));
+        assertFalse(animal.canMakeChild());
     }
 
 
@@ -392,7 +395,7 @@ class AnimalTest {
                 new Gen(0), new Gen(1), new Gen(2), new Gen(3),
                 new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
 
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .genome(genome)
                 .build();
         var count = 5;
@@ -420,7 +423,7 @@ class AnimalTest {
                 new Gen(0), new Gen(1), new Gen(2), new Gen(3),
                 new Gen(4), new Gen(5), new Gen(6), new Gen(7)));
 
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .genome(genome)
                 .build();
         var count = 5;
@@ -446,12 +449,12 @@ class AnimalTest {
     void getPartOfGensShouldReturnEmptyList() {
         //given
         var genome1 = new Genome(List.of(new Gen(0)));
-        var animal1 = TestAnimalBuilder.create()
+        var animal1 = Animal.builder()
                 .genome(genome1)
                 .build();
 
         var genome2 = new Genome(new ArrayList<>());
-        var animal2 = TestAnimalBuilder.create()
+        var animal2 = Animal.builder()
                 .genome(genome2)
                 .build();
 
@@ -470,7 +473,7 @@ class AnimalTest {
     void getGensForChildShouldReturnAllPartOfGens() {
         //given
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .genome(genome)
                 .build();
 
@@ -501,7 +504,7 @@ class AnimalTest {
     void getPartOfGensShouldThrowException() {
         //given
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
-        var animal = TestAnimalBuilder.create()
+        var animal = Animal.builder()
                 .genome(genome)
                 .build();
 
@@ -518,19 +521,59 @@ class AnimalTest {
 
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
         var position = new Vector2d(2, 2);
-        var animal1 = new Animal(10, position, MapDirection.NORTH, genome);
-        var animal2 = new Animal(10, position, MapDirection.NORTH_EAST, genome);
-        var animal3 = new Animal(10, position, MapDirection.EAST, genome);
+        var animal1 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH)
+                .genome(genome)
+                .build();
+        var animal2 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH_EAST)
+                .genome(genome)
+                .build();
 
-        var animal4 = new Animal(10, position, MapDirection.SOUTH_EAST, genome, animal1, animal2, 1);
+        var animal3 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.EAST)
+                .genome(genome)
+                .build();
+
+        var animal4 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.SOUTH_EAST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .startDay(1)
+                .build();
         animal1.addChild(animal4);
         animal2.addChild(animal4);
 
-        var animal5 = new Animal(10, position, MapDirection.SOUTH, genome, animal2, animal3, 1);
+        var animal5 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.SOUTH)
+                .genome(genome)
+                .parents(Set.of(animal2, animal3))
+                .startDay(1)
+                .build();
+
         animal2.addChild(animal5);
         animal3.addChild(animal5);
 
-        var animal6 = new Animal(10, position, MapDirection.SOUTH_WEST, genome, animal4, animal5, 1);
+
+        var animal6 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.SOUTH_WEST)
+                .genome(genome)
+                .parents(Set.of(animal4, animal5))
+                .startDay(1)
+                .build();
+
         animal4.addChild(animal6);
         animal5.addChild(animal6);
 

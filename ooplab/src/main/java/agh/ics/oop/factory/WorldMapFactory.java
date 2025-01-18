@@ -1,15 +1,18 @@
 package agh.ics.oop.factory;
 
-import agh.ics.oop.model.SimulationWorldMap;
+import agh.ics.oop.model.AnimalBreeder;
 import agh.ics.oop.model.configuration.WorldMapConfiguration;
 import agh.ics.oop.model.map.fire.FireEarth;
 import agh.ics.oop.model.map.plant.Earth;
+import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 
 public class WorldMapFactory {
     private final WorldMapConfiguration worldMapConfiguration;
+    private final AnimalBreeder breeder;
 
-    public WorldMapFactory(WorldMapConfiguration worldMapConfiguration) {
+    public WorldMapFactory(WorldMapConfiguration worldMapConfiguration, AnimalBreeder breeder) {
         this.worldMapConfiguration = worldMapConfiguration;
+        this.breeder = breeder;
     }
 
     public SimulationWorldMap createWorldMap() {
@@ -28,7 +31,7 @@ public class WorldMapFactory {
         var startPlantCount = worldMapConfiguration.getStartPlantCount();
         var energyGain = worldMapConfiguration.getEnergyGain();
 
-        return new Earth(width, height, plantGrowth, startPlantCount, energyGain, plantVariant);
+        return new Earth(width, height, plantGrowth, startPlantCount, energyGain, plantVariant, breeder);
     }
 
     private FireEarth createFireEarth() {
@@ -42,7 +45,7 @@ public class WorldMapFactory {
         var energyGain = worldMapConfiguration.getEnergyGain();
 
 
-        return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, energyGain, plantVariant);
+        return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, energyGain, plantVariant, breeder);
     }
 
 }

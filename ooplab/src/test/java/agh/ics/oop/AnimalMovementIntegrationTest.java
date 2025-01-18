@@ -432,7 +432,8 @@ class AnimalMovementIntegrationTest {
   private List<Animal> createAndPlaceAnimals(List<Vector2d> animalsPositions) {
     List<Animal> animals = new ArrayList<>();
     animalsPositions.forEach(position -> {
-      var animal = TestAnimalBuilder.create()
+      var animal = Animal.builder()
+              .orientation(MapDirection.NORTH)
               .position(position)
               .build();
       try {
