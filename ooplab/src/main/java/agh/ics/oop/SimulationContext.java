@@ -17,6 +17,7 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SimulationContext {
@@ -52,9 +53,11 @@ public class SimulationContext {
         var randomizer = new RandomPositionGenerator(
                 configuration.getSimulationConfiguration().getStartAnimalCount(),
                 boundary.rightTopCorner().getX(),
-                boundary.rightTopCorner().getY());
+                boundary.rightTopCorner().getY(),
+                Set.of());
 
         for (Vector2d position : randomizer) {
+            System.out.println("Generated: " + position.getX() + " " + position.getY());
             var animal = animalFactory.createAnimal(position, currentDay);
             try {
                 worldMap.place(animal);
