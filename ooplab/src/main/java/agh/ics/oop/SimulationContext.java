@@ -84,8 +84,7 @@ public class SimulationContext {
     }
 
     public OptionalDouble getAverageDeadAnimalTimeLife() {
-        return worldMap.getAnimals().stream()
-                .filter(Animal::isDead)
+        return worldMap.getDeadAnimals().stream()
                 .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
                 .average();
     }
@@ -99,7 +98,6 @@ public class SimulationContext {
     // TODO: nie wiem czy to chodzi o cały Genom czy to mogą być podciągi z Genomu też, ale wtedy najpopularniejszy genotyp to byłby zawsze jakiś jeden gen
     public List<Gen> getMostPopularGenotype() {
         Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
-                .filter(animal -> !animal.isDead())
                 .map(Animal::getGenome)
                 .map(Genome::getGens)
                 .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()));
@@ -111,7 +109,7 @@ public class SimulationContext {
         return genotypeCount.entrySet().stream()
                 .filter(entry -> entry.getValue() == maxCount)
                 .map(Map.Entry::getKey)
-                .toList()
-                .getFirst();
+                .findFirst()
+                .orElse(null);
     }
 }
