@@ -103,25 +103,22 @@ public class ConfigurationPresenter {
     }
 
     public Configuration createConfiguration() {
-        var animalConfiguration = AnimalConfigurationBuilder
-                .create()
+        var animalConfiguration = AnimalConfiguration.builder()
                 .startEnergy(Integer.parseInt(startEnergyInput.getText()))
                 .minimumMutationCount(Integer.parseInt(minMutationCountInput.getText()))
                 .mutationVariant(mutationVariant)
+                .wellFedEnergy(Integer.parseInt(wellFedEnergyInput.getText()))
+                .lossCopulateEnergy(Integer.parseInt(lossCopulateEnergyInput.getText()))
                 .maximumMutationCount(Integer.parseInt(maxMutationCountInput.getText()))
                 .genomeLength(Integer.parseInt(genomeLengthInput.getText()))
                 .build();
 
-        var simulationConfiguration = SimulationConfigurationBuilder
-                .create()
+        var simulationConfiguration = SimulationConfiguration.builder()
                 .daysCount(Integer.parseInt(daysCountInput.getText()))
-                .wellFedEnergy(Integer.parseInt(wellFedEnergyInput.getText()))
-                .lossCopulateEnergy(Integer.parseInt(lossCopulateEnergyInput.getText()))
                 .startAnimalCount(Integer.parseInt(startAnimalCountInput.getText()))
                 .build();
 
-        var worldMapConfiguration = WorldMapConfigurationBuilder
-                .create()
+        var worldMapConfiguration = WorldMapConfiguration.builder()
                 .width(Integer.parseInt(widthInput.getText()))
                 .height(Integer.parseInt(heightInput.getText()))
                 .energyGain(Integer.parseInt(energyGainInput.getText()))
@@ -207,12 +204,12 @@ public class ConfigurationPresenter {
         startEnergyInput.setText(String.valueOf(animalConfiguration.getStartEnergy()));
         minMutationCountInput.setText(String.valueOf(animalConfiguration.getMinimumMutationCount()));
         maxMutationCountInput.setText(String.valueOf(animalConfiguration.getMaximumMutationCount()));
+        wellFedEnergyInput.setText(String.valueOf(animalConfiguration.getWellFedEnergy()));
+        lossCopulateEnergyInput.setText(String.valueOf(animalConfiguration.getLossCopulateEnergy()));
         genomeLengthInput.setText(String.valueOf(animalConfiguration.getGenomeLength()));
 
         var simulationConfiguration = configuration.getSimulationConfiguration();
         daysCountInput.setText(String.valueOf(simulationConfiguration.getDaysCount()));
-        wellFedEnergyInput.setText(String.valueOf(simulationConfiguration.getWellFedEnergy()));
-        lossCopulateEnergyInput.setText(String.valueOf(simulationConfiguration.getLossCopulateEnergy()));
         startAnimalCountInput.setText(String.valueOf(simulationConfiguration.getStartAnimalCount()));
     }
 }

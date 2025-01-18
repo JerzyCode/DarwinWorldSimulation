@@ -10,7 +10,9 @@ import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.InvalidCountException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AnimalFactory {
     private final AnimalConfiguration animalConfiguration;
@@ -26,11 +28,19 @@ public class AnimalFactory {
     }
 
     public Animal createAnimal(Vector2d position, int birthDay) {
-        var genome = createGenome();
-        return new Animal(animalConfiguration.getStartEnergy(), position, genome, birthDay);
+        return Animal.builder()
+                .position(position)
+                .orientation(MapDirection.NORTH)
+                .genome(createGenome())
+                .startDay(birthDay)
+                .wellFedEnergy(animalConfiguration.getWellFedEnergy())
+                .energy(animalConfiguration.getStartEnergy())
+                .parents(new HashSet<>())
+                .countOfEatenPlants(0)
+                .build();
     }
 
-    public Animal birthAnimal(Animal parent1, Animal parent2, int startBirthEnergy, int birthDay) throws AnimalNotBirthException {
+    public Animal birthAnimal(Animal parent1, Animal parent2, int birthDay) throws AnimalNotBirthException {
         var dominating = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
         var other = dominating == parent1 ? parent2 : parent1;
         var percentage = ((double) dominating.getEnergy()) / (other.getEnergy() + dominating.getEnergy());
@@ -38,9 +48,23 @@ public class AnimalFactory {
 
         try {
             var childGenome = createChildGenome(dominating, other, dominatingLeft, percentage);
-            var newAnimal = new Animal(startBirthEnergy, parent1.getPosition(), childGenome, parent1, parent2, birthDay);
+            var newAnimal = Animal.builder()
+                    .energy(2 * animalConfiguration.getLossCopulateEnergy())
+                    .position(parent1.getPosition())
+                    .orientation(MapDirection.NORTH)
+                    .parents(Set.of(parent1, parent2))
+                    .countOfEatenPlants(0)
+                    .wellFedEnergy(animalConfiguration.getWellFedEnergy())
+                    .startDay(birthDay)
+                    .genome(childGenome)
+                    .build();
+
+
             parent1.addChild(newAnimal);
             parent2.addChild(newAnimal);
+            parent1.decreaseEnergy(animalConfiguration.getLossCopulateEnergy());
+            parent2.decreaseEnergy(animalConfiguration.getLossCopulateEnergy());
+
             return newAnimal;
         } catch (InvalidCountException e) {
             throw new AnimalNotBirthException(e.getMessage());
