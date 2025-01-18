@@ -682,6 +682,7 @@ class AnimalTest {
 
     @Test
     void getCountOfChildren() {
+        // given
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
         var position = new Vector2d(2, 2);
         var animal1 = Animal.builder()
