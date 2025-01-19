@@ -9,5 +9,6 @@ public interface SimulationWorldMap extends WorldMap {
     void handleDayEnds(int currentDay);
 
     Set<Animal> getAnimals();
+
     Set<Animal> getDeadAnimals();
 }
