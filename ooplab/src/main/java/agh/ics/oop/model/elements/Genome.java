@@ -21,7 +21,6 @@ public class Genome {
         this.mutation = mutation;
     }
 
-    //TODO test
     public void mutate(int count) {
         count = Math.min(count, gens.size());
 
@@ -36,9 +35,11 @@ public class Genome {
         }
     }
 
-
-    //TODO test
     public List<Gen> getPartOfGenome(int count, boolean shouldStartFromLeft) {
+        if (count < 0) {
+            return new ArrayList<>();
+        }
+
         count = Math.min(count, gens.size());
         List<Gen> partOfGenome;
         if (shouldStartFromLeft) {
