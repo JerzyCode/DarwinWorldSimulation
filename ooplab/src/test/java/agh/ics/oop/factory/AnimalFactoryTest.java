@@ -9,12 +9,14 @@ import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.exceptions.AnimalNotBirthException;
 import agh.ics.oop.model.exceptions.InvalidCountException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class AnimalFactoryTest {
@@ -25,7 +27,7 @@ class AnimalFactoryTest {
         var configuration = AnimalConfiguration.builder()
                 .startEnergy(10)
                 .minimumMutationCount(0)
-                .maximumMutationCount(0)
+                .maximumMutationCount(3)
                 .wellFedEnergy(15)
                 .mutationVariant(MutationVariant.FULL_RANDOM)
                 .genomeLength(3)
@@ -72,7 +74,7 @@ class AnimalFactoryTest {
                 .genome(parent2Genome)
                 .build();
 
-        var random = Mockito.mock(RandomWrapper.class);
+        var random = mock(RandomWrapper.class);
         when(random.nextInt(2)).thenReturn(1);
 
         var factory = new AnimalFactory(configuration, random);
@@ -219,5 +221,30 @@ class AnimalFactoryTest {
         // then
         assertEquals(1, animal.getStartDay());
         assertEquals(25, animal2.getStartDay());
+    }
+
+
+    @Test
+    void animalBirthShouldThrowException() throws InvalidCountException {
+        // given
+        var configuration = AnimalConfiguration.builder()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .wellFedEnergy(15)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
+
+        var parent1 = mock(Animal.class);
+        when(parent1.getPartOfGens(anyInt(), anyBoolean())).thenThrow(InvalidCountException.class);
+        var parent2 = mock(Animal.class);
+        when(parent2.getPartOfGens(anyInt(), anyBoolean())).thenThrow(InvalidCountException.class);
+
+
+        var factory = new AnimalFactory(configuration);
+
+        //when & then
+        assertThrows(AnimalNotBirthException.class, () -> factory.birthAnimal(parent1, parent2, 10));
     }
 }

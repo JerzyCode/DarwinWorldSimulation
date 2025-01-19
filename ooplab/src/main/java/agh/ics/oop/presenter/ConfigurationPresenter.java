@@ -130,7 +130,7 @@ public class ConfigurationPresenter {
                 .plantVariant(plantVariant)
                 .build();
 
-        return ConfigurationBuilder.create()
+        return Configuration.builder()
                 .worldMapConfiguration(worldMapConfiguration)
                 .animalConfiguration(animalConfiguration)
                 .simulationConfiguration(simulationConfiguration)
