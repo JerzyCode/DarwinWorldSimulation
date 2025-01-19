@@ -1,59 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="700.0" minWidth="850.0" maxWidth="1200"
-            maxHeight="800"
-            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+<BorderPane maxHeight = "800" maxWidth = "1200" minHeight = "700.0" minWidth = "1028.0"
+            xmlns:fx = "http://javafx.com/fxml/1" xmlns = "http://javafx.com/javafx/17.0.12"
+            fx:controller = "agh.ics.oop.presenter.SimulationPresenter">
 
     <left>
-        <VBox prefWidth="200.0" spacing="10" style="-fx-background-color: #e0e0e0; -fx-padding: 10;">
-            <Label text="Statystyki" style="-fx-font-weight: bold;" />
+        <VBox prefWidth = "150.0" spacing = "10" style = "-fx-background-color: #e0e0e0; -fx-padding: 10;">
+            <Label style = "-fx-font-weight: bold;" text = "Statystyki"/>
 
-            <TitledPane text="Liczba zwierzaków" collapsible="false">
-                <Label fx:id="animalCountLabel" text="0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Liczba zwierzaków">
+                <Label fx:id = "animalCountLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
             </TitledPane>
 
-            <TitledPane text="Liczba roślin" collapsible="false">
-                <Label fx:id="plantCountLabel" text="0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Liczba roślin">
+                <Label fx:id = "plantCountLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
             </TitledPane>
 
-            <TitledPane text="Liczba wolnych pól" collapsible="false">
-                <Label fx:id="freeFieldsLabel" text="0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Liczba wolnych pól">
+                <Label fx:id = "freeFieldsLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
             </TitledPane>
 
-            <TitledPane text="Najpopularniejsze genotypy" collapsible="false">
-                <Label fx:id="popularGenotypeLabel" text="Brak danych" wrapText="true" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Najpopularniejsze genotypy">
+                <Label fx:id = "popularGenotypeLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "Brak danych"
+                       wrapText = "true"/>
             </TitledPane>
 
-            <TitledPane text="Średni poziom energii" collapsible="false">
-                <Label fx:id="avgEnergyLabel" text="0.0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Średni poziom energii">
+                <Label fx:id = "avgEnergyLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
             </TitledPane>
 
-            <TitledPane text="Średnia długość życia" collapsible="false">
-                <Label fx:id="avgLifespanLabel" text="0.0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Średnia długość życia">
+                <Label fx:id = "avgLifespanLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
             </TitledPane>
 
-            <TitledPane text="Średnia liczba dzieci" collapsible="false">
-                <Label fx:id="avgChildrenLabel" text="0.0" style="-fx-font-size: 14; -fx-padding: 5;" />
+            <TitledPane collapsible = "false" text = "Średnia liczba dzieci">
+                <Label fx:id = "avgChildrenLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
             </TitledPane>
         </VBox>
     </left>
 
     <center>
-        <ScrollPane fitToHeight="true" fitToWidth="true">
+        <ScrollPane fitToHeight = "true" fitToWidth = "true">
             <AnchorPane>
-                <GridPane fx:id="topCoordinates" gridLinesVisible="true" BorderPane.alignment="CENTER"
-                          alignment="BASELINE_LEFT" >
+                <GridPane fx:id = "topCoordinates" alignment = "BASELINE_LEFT" gridLinesVisible = "true"
+                          BorderPane.alignment = "CENTER">
                 </GridPane>
 
-                <GridPane fx:id="leftCoordinates" gridLinesVisible="true" BorderPane.alignment="CENTER"
-                          alignment="BASELINE_LEFT" AnchorPane.topAnchor="40.0" AnchorPane.leftAnchor="0.0"
-                          prefWidth="40">
+                <GridPane fx:id = "leftCoordinates" alignment = "BASELINE_LEFT" gridLinesVisible = "true"
+                          prefWidth = "40" AnchorPane.leftAnchor = "0.0" AnchorPane.topAnchor = "40.0"
+                          BorderPane.alignment = "CENTER">
                 </GridPane>
 
-                <GridPane fx:id="mapGrid" gridLinesVisible="true" BorderPane.alignment="CENTER"
-                          alignment="BASELINE_LEFT" >
+                <GridPane fx:id = "mapGrid" alignment = "BASELINE_LEFT" gridLinesVisible = "true"
+                          BorderPane.alignment = "CENTER">
                 </GridPane>
             </AnchorPane>
         </ScrollPane>
@@ -61,16 +63,20 @@
 
 
     <bottom>
-        <HBox alignment="CENTER" spacing="20" BorderPane.alignment="CENTER">
-            <VBox prefWidth="600" spacing="10">
-                <Label style="-fx-font-weight: bold;" text="History:"/>
-                <ScrollPane>
-                    <TextArea fx:id="historyTextArea" editable="false" prefHeight="100" prefWidth="599"/>
+        <HBox alignment = "CENTER" spacing = "20" BorderPane.alignment = "CENTER">
+            <VBox prefHeight = "129.0" prefWidth = "629.0" spacing = "10">
+                <VBox.margin>
+                    <Insets top = "20"/>
+                </VBox.margin>
+                <Label prefHeight = "24.0" prefWidth = "45.0" style = "-fx-font-weight: bold;" text = "History:">
+                </Label>
+                <ScrollPane hbarPolicy = "NEVER" prefHeight = "84.0" prefWidth = "650.0">
+                    <TextArea fx:id = "historyTextArea" editable = "false" prefHeight = "82.0" prefWidth = "633.0"/>
                 </ScrollPane>
             </VBox>
 
-            <VBox alignment="CENTER" prefHeight="107.0" prefWidth="200.0" spacing="10">
-                <Button fx:id="startButton" onAction="#onSimulationStartClicked" text="Simulation start"/>
+            <VBox alignment = "CENTER" prefHeight = "129.0" prefWidth = "187.0" spacing = "10">
+                <Button fx:id = "startButton" onAction = "#onSimulationStartClicked" text = "Simulation start"/>
             </VBox>
         </HBox>
     </bottom>
