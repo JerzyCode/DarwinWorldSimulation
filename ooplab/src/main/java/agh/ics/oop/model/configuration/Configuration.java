@@ -14,7 +14,7 @@ public class Configuration {
 
     public Configuration() {
         this.worldMapConfiguration = WorldMapConfiguration.builder()
-                .height(26)
+                .height(36)
                 .width(54)
                 .energyGain(5)
                 .plantGrowth(7)

@@ -146,7 +146,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     private void initPlants(int startPlantCount) {
-        gardener.createPlants(plants.size(), getSize(), boundary, startPlantCount)
+        gardener.createPlants(plants.size(), getSize(), boundary, startPlantCount, plants.keySet())
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
@@ -157,7 +157,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     private void growPlantsDaily() {
-        gardener.createPlantsDaily(plants.size(), getSize(), boundary)
+
+        gardener.createPlantsDaily(plants.size(), getSize(), boundary, plants.keySet())
                 .forEach(plant -> {
                     try {
                         placePlant(plant);

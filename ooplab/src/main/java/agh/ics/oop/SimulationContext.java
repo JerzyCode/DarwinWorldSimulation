@@ -6,13 +6,16 @@ import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Gen;
+import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.OptionalDouble;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SimulationContext {
     private final Configuration configuration;
@@ -47,7 +50,8 @@ public class SimulationContext {
         var randomizer = new RandomPositionGenerator(
                 configuration.getSimulationConfiguration().getStartAnimalCount(),
                 boundary.rightTopCorner().getX(),
-                boundary.rightTopCorner().getY());
+                boundary.rightTopCorner().getY(),
+                Set.of());
 
         for (Vector2d position : randomizer) {
             var animal = animalFactory.createAnimal(position, currentDay);
@@ -79,7 +83,7 @@ public class SimulationContext {
     }
 
     public OptionalDouble getAverageDeadAnimalTimeLife() {
-        return worldMap.getAnimals().stream()
+        return worldMap.getDeadAnimals().stream()
                 .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
                 .average();
     }
@@ -90,5 +94,20 @@ public class SimulationContext {
                 .average();
     }
 
-    //TODO: getMostPopularGenotype
+    // TODO: nie wiem czy to chodzi o cały Genom czy to mogą być podciągi z Genomu też, ale wtedy najpopularniejszy genotyp to byłby zawsze jakiś jeden gen
+    public Optional<List<Gen>> getMostPopularGenotype() {
+        Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
+                .map(Animal::getGenome)
+                .map(Genome::getGens)
+                .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()));
+
+        long maxCount = genotypeCount.values().stream()
+                .max(Long::compareTo)
+                .orElse(0L);
+
+        return genotypeCount.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxCount)
+                .map(Map.Entry::getKey)
+                .findFirst();
+    }
 }

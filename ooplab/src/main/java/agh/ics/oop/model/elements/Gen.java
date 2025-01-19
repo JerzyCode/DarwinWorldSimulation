@@ -65,8 +65,6 @@ public class Gen {
 
     @Override
     public String toString() {
-        return "Gen{" +
-                "index=" + index +
-                '}';
+        return "%d".formatted(index);
     }
 }

@@ -8,6 +8,7 @@ import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +70,11 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
                 .stream()
                 .flatMap(Set::stream)
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public Set<Animal> getDeadAnimals() {
+        return Collections.unmodifiableSet(deadAnimals);
     }
 
     protected void placeAnimalAtNewPosition(Animal animal) {

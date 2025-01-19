@@ -577,30 +577,224 @@ class AnimalTest {
         animal4.addChild(animal6);
         animal5.addChild(animal6);
 
-        var expectedAncestorsOfAnimal5 = Set.of(animal6);
-        var expectedAncestorsOfAnimal4 = Set.of(animal6);
-        var expectedAncestorsOfAnimal3 = Set.of(animal6, animal5);
-        var expectedAncestorsOfAnimal2 = Set.of(animal6, animal5, animal4);
-        var expectedAncestorsOfAnimal1 = Set.of(animal6, animal4);
+        var expectedDescendantsOfAnimal5 = Set.of(animal6);
+        var expectedDescendantsOfAnimal4 = Set.of(animal6);
+        var expectedDescendantsOfAnimal3 = Set.of(animal6, animal5);
+        var expectedDescendantsOfAnimal2 = Set.of(animal6, animal5, animal4);
+        var expectedDescendantsOfAnimal1 = Set.of(animal6, animal4);
 
         // when
 
-        var ancestorsOfAnimal6 = animal6.getDescendants();
-        var ancestorsOfAnimal5 = animal5.getDescendants();
-        var ancestorsOfAnimal4 = animal4.getDescendants();
-        var ancestorsOfAnimal3 = animal3.getDescendants();
-        var ancestorsOfAnimal2 = animal2.getDescendants();
-        var ancestorsOfAnimal1 = animal1.getDescendants();
+        var descendantsOfAnimal6 = animal6.getDescendants();
+        var descendantsOfAnimal5 = animal5.getDescendants();
+        var descendantsOfAnimal4 = animal4.getDescendants();
+        var descendantsOfAnimal3 = animal3.getDescendants();
+        var descendantsOfAnimal2 = animal2.getDescendants();
+        var descendantsOfAnimal1 = animal1.getDescendants();
 
         // then
 
-        assertTrue(ancestorsOfAnimal6.isEmpty());
-        assertEquals(expectedAncestorsOfAnimal5, ancestorsOfAnimal5);
-        assertEquals(expectedAncestorsOfAnimal4, ancestorsOfAnimal4);
-        assertEquals(expectedAncestorsOfAnimal3, ancestorsOfAnimal3);
-        assertEquals(expectedAncestorsOfAnimal2, ancestorsOfAnimal2);
-        assertEquals(expectedAncestorsOfAnimal1, ancestorsOfAnimal1);
+        assertTrue(descendantsOfAnimal6.isEmpty());
+        assertEquals(expectedDescendantsOfAnimal5, descendantsOfAnimal5);
+        assertEquals(expectedDescendantsOfAnimal4, descendantsOfAnimal4);
+        assertEquals(expectedDescendantsOfAnimal3, descendantsOfAnimal3);
+        assertEquals(expectedDescendantsOfAnimal2, descendantsOfAnimal2);
+        assertEquals(expectedDescendantsOfAnimal1, descendantsOfAnimal1);
 
+    }
+
+    @Test
+    void getParents() {
+        // given
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var position = new Vector2d(2, 2);
+        var animal1 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH)
+                .genome(genome)
+                .build();
+        var animal2 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH_EAST)
+                .genome(genome)
+                .build();
+
+        // when
+        var animal3 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.EAST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .build();
+
+        // then
+        assertEquals(Set.of(animal1, animal2), animal3.getParents());
+    }
+
+    @Test
+    void getChildren() {
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var position = new Vector2d(2, 2);
+        var animal1 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH)
+                .genome(genome)
+                .build();
+        var animal2 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH_EAST)
+                .genome(genome)
+                .build();
+
+        var animal3 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.EAST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .build();
+
+        var animal4 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.WEST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .build();
+
+        // when
+        animal1.addChild(animal3);
+        animal1.addChild(animal4);
+        animal2.addChild(animal3);
+        animal2.addChild(animal4);
+
+        // then
+        assertEquals(Set.of(animal3, animal4), animal1.getChildren());
+        assertEquals(Set.of(animal3, animal4), animal2.getChildren());
+        assertTrue(animal3.getChildren().isEmpty());
+        assertTrue(animal4.getChildren().isEmpty());
+    }
+
+    @Test
+    void getCountOfChildren() {
+        // given
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var position = new Vector2d(2, 2);
+        var animal1 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH)
+                .genome(genome)
+                .build();
+        var animal2 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH_EAST)
+                .genome(genome)
+                .build();
+
+        var animal3 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.EAST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .build();
+
+        var animal4 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.WEST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .build();
+        animal1.addChild(animal3);
+        animal1.addChild(animal4);
+        animal2.addChild(animal3);
+        animal2.addChild(animal4);
+
+        // when & then
+        assertEquals(2, animal1.getCountOfChildren());
+        assertEquals(2, animal2.getCountOfChildren());
+        assertEquals(0, animal3.getCountOfChildren());
+        assertEquals(0, animal4.getCountOfChildren());
+    }
+
+    @Test
+    void getCountOfDescendants(){
+        // given
+
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
+        var position = new Vector2d(2, 2);
+        var animal1 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH)
+                .genome(genome)
+                .build();
+        var animal2 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.NORTH_EAST)
+                .genome(genome)
+                .build();
+
+        var animal3 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.EAST)
+                .genome(genome)
+                .build();
+
+        var animal4 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.SOUTH_EAST)
+                .genome(genome)
+                .parents(Set.of(animal1, animal2))
+                .startDay(1)
+                .build();
+        animal1.addChild(animal4);
+        animal2.addChild(animal4);
+
+        var animal5 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.SOUTH)
+                .genome(genome)
+                .parents(Set.of(animal2, animal3))
+                .startDay(1)
+                .build();
+
+        animal2.addChild(animal5);
+        animal3.addChild(animal5);
+
+
+        var animal6 = Animal.builder()
+                .energy(10)
+                .position(position)
+                .orientation(MapDirection.SOUTH_WEST)
+                .genome(genome)
+                .parents(Set.of(animal4, animal5))
+                .startDay(1)
+                .build();
+
+        animal4.addChild(animal6);
+        animal5.addChild(animal6);
+
+        // when & then
+
+        assertEquals(0, animal6.getCountOfDescendants());
+        assertEquals(1, animal5.getCountOfDescendants());
+        assertEquals(1, animal4.getCountOfDescendants());
+        assertEquals(2, animal3.getCountOfDescendants());
+        assertEquals(3, animal2.getCountOfDescendants());
+        assertEquals(2, animal1.getCountOfDescendants());
     }
 
 }

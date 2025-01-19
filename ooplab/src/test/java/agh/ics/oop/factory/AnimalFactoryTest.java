@@ -116,4 +116,108 @@ class AnimalFactoryTest {
         }
 
     }
+
+    @Test
+    void shouldBirthAnimalProperlyHandleParentsAndChildren() {
+        // given
+        var configuration = AnimalConfiguration.builder()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .wellFedEnergy(15)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
+
+        var factory = new AnimalFactory(configuration);
+
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var parent1 = Animal.builder()
+                .position(new Vector2d(0, 0))
+                .energy(60)
+                .genome(genome)
+                .build();
+        var parent2 = Animal.builder()
+                .position(new Vector2d(0, 0))
+                .energy(60)
+                .genome(genome)
+                .build();
+
+        // when
+        var children1 = factory.birthAnimal(parent1, parent2, 3);
+        var children2 = factory.birthAnimal(parent1, parent2, 3);
+        var children3 = factory.birthAnimal(children1, children2, 10);
+
+        // then
+        assertEquals(Set.of(children1, children2), parent1.getChildren());
+        assertEquals(Set.of(children1, children2), parent2.getChildren());
+        assertEquals(Set.of(children3), children1.getChildren());
+        assertEquals(Set.of(children3), children2.getChildren());
+        assertTrue(children3.getChildren().isEmpty());
+        assertEquals(Set.of(parent1, parent2), children1.getParents());
+        assertEquals(Set.of(parent1, parent2), children2.getParents());
+        assertEquals(Set.of(children1, children2), children3.getParents());
+
+    }
+
+    @Test
+    void shouldBirthAnimalSetStartDayProperly() {
+        // given
+        var configuration = AnimalConfiguration.builder()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .wellFedEnergy(15)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
+
+        var factory = new AnimalFactory(configuration);
+
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var parent1 = Animal.builder()
+                .position(new Vector2d(0, 0))
+                .energy(60)
+                .genome(genome)
+                .build();
+        var parent2 = Animal.builder()
+                .position(new Vector2d(0, 0))
+                .energy(60)
+                .genome(genome)
+                .build();
+
+        // when
+        var children1 = factory.birthAnimal(parent1, parent2, 10);
+        var children2 = factory.birthAnimal(parent1, parent2, 15);
+
+        // then
+        assertEquals(10, children1.getStartDay());
+        assertEquals(15, children2.getStartDay());
+    }
+
+    @Test
+    void shouldCreateAnimalSetStartDayProperly() {
+        // given
+        var configuration = AnimalConfiguration.builder()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .wellFedEnergy(15)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
+
+        var factory = new AnimalFactory(configuration);
+
+        var position = new Vector2d(0, 0);
+
+        // when
+        var animal = factory.createAnimal(position, 1);
+        var animal2 = factory.createAnimal(position, 25);
+
+
+        // then
+        assertEquals(1, animal.getStartDay());
+        assertEquals(25, animal2.getStartDay());
+    }
 }
