@@ -9,6 +9,7 @@ import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
@@ -23,6 +24,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+
+import java.util.List;
+import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -242,7 +246,12 @@ public class SimulationPresenter implements MapChangeListener {
         plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
         freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
         avgEnergyLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalEnergy().orElse(0.0)));
-        popularGenotypeLabel.setText(simulationContext.getMostPopularGenotype().toString());
+        Optional<List<Gen>> mostPopularGenotype = simulationContext.getMostPopularGenotype();
+        if (mostPopularGenotype.isPresent()) {
+            popularGenotypeLabel.setText(mostPopularGenotype.get().toString());
+        } else {
+            popularGenotypeLabel.setText("No animals");
+        }
         avgLifespanLabel.setText(String.format("%.2f", simulationContext.getAverageDeadAnimalTimeLife().orElse(0.0)));
         avgChildrenLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalCountOfChildren().orElse(0.0)));
     }

@@ -6,8 +6,8 @@ import agh.ics.oop.model.Vector2d;
 import java.util.*;
 
 public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vector2d> {
-    LinkedList<Vector2d> preferredPositions = new LinkedList<>();
-    LinkedList<Vector2d> otherPositions = new LinkedList<>();
+    private final LinkedList<Vector2d> preferredPositions = new LinkedList<>();
+    private final LinkedList<Vector2d> otherPositions = new LinkedList<>();
     Random random = new Random();
     private final Boundary preferredArea;
     private int elementsCount;

@@ -14,10 +14,7 @@ import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SimulationContext {
@@ -57,7 +54,6 @@ public class SimulationContext {
                 Set.of());
 
         for (Vector2d position : randomizer) {
-            System.out.println("Generated: " + position.getX() + " " + position.getY());
             var animal = animalFactory.createAnimal(position, currentDay);
             try {
                 worldMap.place(animal);
@@ -99,7 +95,7 @@ public class SimulationContext {
     }
 
     // TODO: nie wiem czy to chodzi o cały Genom czy to mogą być podciągi z Genomu też, ale wtedy najpopularniejszy genotyp to byłby zawsze jakiś jeden gen
-    public List<Gen> getMostPopularGenotype() {
+    public Optional<List<Gen>> getMostPopularGenotype() {
         Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
                 .map(Animal::getGenome)
                 .map(Genome::getGens)
@@ -112,7 +108,6 @@ public class SimulationContext {
         return genotypeCount.entrySet().stream()
                 .filter(entry -> entry.getValue() == maxCount)
                 .map(Map.Entry::getKey)
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }
