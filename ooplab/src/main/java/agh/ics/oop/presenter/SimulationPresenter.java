@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Button startButton;
 
-//    Stats
+    //    Stats
     @FXML
     private Label animalCountLabel;
     @FXML
@@ -62,6 +63,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     private WorldMap worldMap;
+    @Setter
     private Configuration configuration;
     private SimulationEngine simulationEngine;
     private SimulationContext simulationContext;
@@ -84,9 +86,8 @@ public class SimulationPresenter implements MapChangeListener {
         synchronized (worldMap.getElements()) {
             var mapBoundary = worldMap.getCurrentBounds();
             clearGrid();
-//            fillCoordinates(mapBoundary);
             fillGrid(mapBoundary);
-            drawElements(mapBoundary);
+            drawElements();
         }
     }
 
@@ -120,10 +121,6 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
     private void clearGrid() {
         if (mapGrid.getChildren() != null) {
             mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
@@ -143,23 +140,6 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getRowConstraints().clear();
     }
 
-    private void fillCoordinates(Boundary mapBoundary) {
-        var maxRightX = mapBoundary.rightTopCorner().getX();
-        var maxLeftX = mapBoundary.leftBottomCorner().getX();
-        var maxTopY = mapBoundary.rightTopCorner().getY();
-        var maxBottomY = mapBoundary.leftBottomCorner().getY();
-
-        for (int i = 1; i <= maxRightX + calculateOffsetX(maxLeftX) + 1; i++) {
-            topCoordinates.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
-            topCoordinates.add(createCoordinateLabel(Integer.toString(maxLeftX + i - 1)), i, 0);
-        }
-
-        for (int i = 0; i <= maxTopY + calculateOffsetY(maxBottomY); i++) {
-            leftCoordinates.getRowConstraints().add(new RowConstraints(GRID_WIDTH));
-            leftCoordinates.add(createCoordinateLabel(Integer.toString(maxBottomY + i)), 0, i);
-        }
-
-    }
 
     private void fillGrid(Boundary mapBoundary) {
         int width = calculateGridWidth(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
@@ -175,13 +155,10 @@ public class SimulationPresenter implements MapChangeListener {
 
     }
 
-    private void drawElements(Boundary mapBoundary) {
-        var maxLeftX = mapBoundary.leftBottomCorner().getX();
-        var maxBottomY = mapBoundary.leftBottomCorner().getY();
-
+    private void drawElements() {
         worldMap.getElements().forEach(element -> {
-            int x = element.getPosition().getX() + calculateOffsetX(maxLeftX);
-            int y = element.getPosition().getY() + calculateOffsetY(maxBottomY);
+            int x = element.getPosition().getX();
+            int y = element.getPosition().getY();
 
             Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
 
@@ -211,34 +188,12 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
-    private Label createCoordinateLabel(String text) {
-        Label label = new Label(text);
-        label.setPrefWidth(GRID_WIDTH);
-        label.setPrefHeight(GRID_WIDTH);
-        label.getStyleClass().add(COORDINATE_LABEL_CLASS_NAME);
-        return label;
-    }
-
     private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
         return Math.abs(leftBot.subtract(rightTop).getX());
     }
 
     private int calculateGridHeight(Vector2d leftBot, Vector2d rightTop) {
         return Math.abs(leftBot.subtract(rightTop).getY());
-    }
-
-    private int calculateOffsetX(int maxLeftX) {
-        if (maxLeftX < 0) {
-            return Math.abs(maxLeftX);
-        }
-        return 0;
-    }
-
-    private int calculateOffsetY(int maxBottomY) {
-        if (maxBottomY < 0) {
-            return Math.abs(maxBottomY);
-        }
-        return 0;
     }
 
     private void updateStatistics() {
