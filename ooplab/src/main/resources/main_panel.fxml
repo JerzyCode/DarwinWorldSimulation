@@ -1,34 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="750.0"
-            xmlns="http://javafx.com/javafx/17.0.12" fx:controller="agh.ics.oop.presenter.MainPanelPresenter">
+<AnchorPane prefHeight = "500.0" prefWidth = "750.0" xmlns = "http://javafx.com/javafx/17.0.12"
+            xmlns:fx = "http://javafx.com/fxml/1" fx:controller = "agh.ics.oop.presenter.MainPanelPresenter">
 
-    <Button fx:id="startSimulationButton" layoutX="325.0" layoutY="460.0" onAction="#openSimulationWindow"
-            text="Start Simulation"
-            AnchorPane.leftAnchor="250.0"
-            AnchorPane.topAnchor="460.0"
-            AnchorPane.bottomAnchor="20"
-            AnchorPane.rightAnchor="250.0"/>
-    <StackPane fx:id="contentContainer"
-               layoutX="20.0"
-               layoutY="78.0"
-               prefHeight="272.0"
-               AnchorPane.topAnchor="50"
-               AnchorPane.bottomAnchor="50"
-               AnchorPane.leftAnchor="20.0"
-               AnchorPane.rightAnchor="20.0"/>
-    <MenuButton fx:id="menuButton" layoutX="94.0" layoutY="23.0" mnemonicParsing="false" text="Grass Field">
-        <items>
-            <MenuItem fx:id="earthItem" mnemonicParsing="false" text="Earth"/>
-            <MenuItem fx:id="fireEarthItem" mnemonicParsing="false" text="Fire Earth"/>
-        </items>
-    </MenuButton>
-    <Label layoutX="36.0" layoutY="26.0" prefHeight="18.0" prefWidth="57.0" text="Map:">
-        <font>
-            <Font name="System Bold" size="14.0"/>
-        </font>
-    </Label>
+    <Button fx:id = "startSimulationButton" layoutX = "300.0" layoutY = "480.0" onAction = "#openSimulationWindow"
+            prefHeight = "25.0" prefWidth = "150.0" text = "Start Simulation" AnchorPane.bottomAnchor = "14.0"
+            AnchorPane.leftAnchor = "300.0" AnchorPane.rightAnchor = "300.0" AnchorPane.topAnchor = "480.0"/>
+    <StackPane fx:id = "contentContainer" layoutX = "20.0" layoutY = "78.0" prefHeight = "272.0"
+               AnchorPane.bottomAnchor = "50" AnchorPane.leftAnchor = "20.0" AnchorPane.rightAnchor = "20.0"
+               AnchorPane.topAnchor = "50"/>
 </AnchorPane>

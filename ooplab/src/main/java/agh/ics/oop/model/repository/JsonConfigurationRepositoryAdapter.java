@@ -28,7 +28,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
     @Override
     public void save(Configuration configuration, String saveName) throws SaveFailedException {
         if (doesSaveExist(saveName)) {
-            throw new SaveFailedException(String.format("Save %s already exists", saveName));
+            throw new SaveFailedException(String.format("Configuration with name %s already exists", saveName));
         }
 
         try {
@@ -36,7 +36,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
             mapper.writeValue(newSave, configuration);
             saveNames.add(saveName);
         } catch (IOException e) {
-            throw new SaveFailedException(String.format("Save %s failed, exeception: %s", saveName, e.getMessage()));
+            throw new SaveFailedException(String.format("Couldn't save configuration: %s, error: %s", saveName, e.getMessage()));
         }
     }
 
@@ -85,7 +85,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    saveNames.add(file.getName());
+                    saveNames.add(file.getName().replace(".json", ""));
                 }
             }
         }
