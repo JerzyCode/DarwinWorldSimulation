@@ -30,10 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
-
     private static final int GRID_WIDTH = 15;
 
-    private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
     @FXML
     private GridPane mapGrid;
     @FXML
@@ -163,7 +161,7 @@ public class SimulationPresenter implements MapChangeListener {
             Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
 
             if (element instanceof Animal animal) {
-                var animalDrawing = createAnimalDrawing(animal.getOrientation());
+                var animalDrawing = createAnimalDrawing(animal.getOrientation(), animal.getEnergy());
                 mapGrid.add(animalDrawing, x, y);
             } else if (element instanceof Plant) {
                 rectangle.setFill(Color.LIGHTGREEN);
@@ -176,17 +174,28 @@ public class SimulationPresenter implements MapChangeListener {
         });
     }
 
-    private Pane createAnimalDrawing(MapDirection orientation) {
+    private Pane createAnimalDrawing(MapDirection orientation, int animalEnergy) {
         Pane pane = new Pane();
         double centerX = (double) GRID_WIDTH / 2;
         double centerY = (double) GRID_WIDTH / 2;
         double radius = (double) GRID_WIDTH / 2 - 2;
         Circle head = new Circle(centerX, centerY, radius);
-        head.setFill(Color.LIGHTBLUE);
+        head.setFill(calculateColor(animalEnergy));
         pane.getChildren().add(head);
         return pane;
     }
 
+    private Color calculateColor(int animalEnergy) {
+        int maxEnergy = 40;
+        animalEnergy = Math.max(0, Math.min(animalEnergy, maxEnergy));
+        double energyFactor = (double) animalEnergy / maxEnergy;
+
+        int red = (int) (255 * energyFactor);
+        int green = 0;
+        int blue = (int) (255 * energyFactor);
+
+        return Color.rgb(red, green, blue);
+    }
 
     private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
         return Math.abs(leftBot.subtract(rightTop).getX());
