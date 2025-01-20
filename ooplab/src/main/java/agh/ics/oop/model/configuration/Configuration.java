@@ -1,6 +1,7 @@
 package agh.ics.oop.model.configuration;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -8,14 +9,23 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@AllArgsConstructor
 public class Configuration {
     private final WorldMapConfiguration worldMapConfiguration;
     private final AnimalConfiguration animalConfiguration;
     private final SimulationConfiguration simulationConfiguration;
 
-    public Configuration() {
-        this.worldMapConfiguration = WorldMapConfiguration.builder()
+    @JsonCreator
+    public Configuration(
+            @JsonProperty("worldMapConfiguration") WorldMapConfiguration worldMapConfiguration,
+            @JsonProperty("animalConfiguration") AnimalConfiguration animalConfiguration,
+            @JsonProperty("simulationConfiguration") SimulationConfiguration simulationConfiguration) {
+        this.worldMapConfiguration = worldMapConfiguration;
+        this.animalConfiguration = animalConfiguration;
+        this.simulationConfiguration = simulationConfiguration;
+    }
+
+    public static Configuration getDefaultConfig() {
+        var worldMapConfiguration = WorldMapConfiguration.builder()
                 .height(36)
                 .width(54)
                 .energyGain(5)
@@ -28,7 +38,7 @@ public class Configuration {
                 .build();
 
 
-        this.animalConfiguration = AnimalConfiguration.builder()
+        var animalConfiguration = AnimalConfiguration.builder()
                 .startEnergy(15)
                 .minimumMutationCount(0)
                 .maximumMutationCount(0)
@@ -38,10 +48,17 @@ public class Configuration {
                 .genomeLength(7)
                 .build();
 
-        this.simulationConfiguration = SimulationConfiguration.builder()
+        var simulationConfiguration = SimulationConfiguration.builder()
                 .daysCount(2000)
                 .startAnimalCount(45)
                 .build();
+
+        return Configuration.builder()
+                .worldMapConfiguration(worldMapConfiguration)
+                .animalConfiguration(animalConfiguration)
+                .simulationConfiguration(simulationConfiguration)
+                .build();
     }
+
 
 }

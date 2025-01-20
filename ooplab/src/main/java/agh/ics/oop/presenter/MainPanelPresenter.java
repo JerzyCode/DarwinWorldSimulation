@@ -42,7 +42,7 @@ public class MainPanelPresenter {
         var configurationViewLoader = new FXMLLoader(getClass().getResource(CONFIGURATION_VIEW_RESOURCE));
         AnchorPane configurationView = configurationViewLoader.load();
         configurationPresenter = configurationViewLoader.getController();
-        configurationPresenter.setConfiguration(new Configuration());
+        configurationPresenter.setConfiguration(Configuration.getDefaultConfig());
         contentContainer.getChildren().add(configurationView);
     }
 
