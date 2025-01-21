@@ -1,208 +1,223 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.exceptions.PresenterNoMapToPresentException;
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Gen;
+import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
+import agh.ics.oop.model.map.WorldMap;
+import agh.ics.oop.model.map.plant.Earth;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
+import lombok.Setter;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
+    private static final int GRID_WIDTH = 15;
 
-  @FXML
-  private GridPane mapGrid;
-  @FXML
-  private GridPane leftCoordinates;
-  @FXML
-  private GridPane topCoordinates;
-  @FXML
-  private TextArea historyTextArea;
-  @FXML
-  private Button startButton;
-  @FXML
-  private TextField movesTextField;
+    @FXML
+    private GridPane mapGrid;
+    @FXML
+    private GridPane leftCoordinates;
+    @FXML
+    private GridPane topCoordinates;
+    @FXML
+    private TextArea historyTextArea;
+    @FXML
+    private Button startButton;
 
-  private WorldMap worldMap;
+    //    Stats
+    @FXML
+    private Label animalCountLabel;
+    @FXML
+    private Label plantCountLabel;
+    @FXML
+    private Label freeFieldsLabel;
+    @FXML
+    private Label popularGenotypeLabel;
+    @FXML
+    private Label avgEnergyLabel;
+    @FXML
+    private Label avgLifespanLabel;
+    @FXML
+    private Label avgChildrenLabel;
 
-  private static final int GRID_WIDTH = 40;
-  private static final String COORDINATE_LABEL_CLASS_NAME = "coordinate-label";
 
-  public void drawMap() {
-    var mapBoundary = worldMap.getCurrentBounds();
-    clearGrid();
-    fillCoordinates(mapBoundary);
-    fillGrid(mapBoundary);
-    drawElements(mapBoundary);
-  }
+    private WorldMap worldMap;
+    @Setter
+    private Configuration configuration;
+    private SimulationEngine simulationEngine;
+    private SimulationContext simulationContext;
 
-  @Override
-  public void mapChanged(WorldMap worldMap, String message) {
-    historyTextArea.appendText(message + "\n");
-    Platform.runLater(this::drawMap);
-  }
+    public void initialize() {
+        System.out.println("initialize()");
+        AnchorPane.setTopAnchor(topCoordinates, 0.0);
+        AnchorPane.setLeftAnchor(topCoordinates, 0.0);
 
-  public void onSimulationStartClicked() {
-    if (worldMap == null) {
-      throw new PresenterNoMapToPresentException("Presenter has no map to present!");
+        AnchorPane.setTopAnchor(leftCoordinates, (double) GRID_WIDTH);
+        AnchorPane.setLeftAnchor(leftCoordinates, 0.0);
+
+        AnchorPane.setTopAnchor(mapGrid, (double) GRID_WIDTH);
+        AnchorPane.setLeftAnchor(mapGrid, (double) GRID_WIDTH);
+
+        leftCoordinates.setPrefWidth(GRID_WIDTH);
     }
 
-    var args = movesTextField.getText().split(" ");
-    var directions = OptionsParser.parse(args);
-    var animalPositions = List.of(new Vector2d(-2, -2), new Vector2d(2, 2));
-    var simulation = new Simulation(animalPositions, directions, worldMap);
-    var simulationEngine = new SimulationEngine(List.of(simulation));
-
-    simulationEngine.runAsyncInThreadPool();
-    startButton.setDisable(true);
-  }
-
-  public void setWorldMap(WorldMap worldMap) {
-    this.worldMap = worldMap;
-  }
-
-  private void clearGrid() {
-    if (mapGrid.getChildren() != null) {
-      mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
+    public void drawMap() {
+        synchronized (worldMap.getElements()) {
+            var mapBoundary = worldMap.getCurrentBounds();
+            clearGrid();
+            fillGrid(mapBoundary);
+            drawElements();
+        }
     }
 
-    if (topCoordinates.getChildren() != null) {
-      topCoordinates.getChildren().retainAll(topCoordinates.getChildren().getFirst());
+    @Override
+    public void mapChanged(WorldMap worldMap, String message) {
+        Platform.runLater(() -> {
+            historyTextArea.appendText(message + "\n");
+            updateStatistics();
+            this.drawMap();
+        });
     }
 
-    if (leftCoordinates.getChildren() != null) {
-      leftCoordinates.getChildren().retainAll(leftCoordinates.getChildren().getFirst());
+    public void onSimulationStartClicked() {
+        if (configuration == null) {
+            throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
+        }
+
+        simulationContext = new SimulationContext(configuration);
+        worldMap = simulationContext.getWorldMap();
+        simulationContext.setMapChangeListener(this);
+        var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
+        simulationEngine = new SimulationEngine(simulation);
+
+        simulationEngine.runAsyncInThreadPool();
+        startButton.setDisable(true);
     }
 
-    topCoordinates.getColumnConstraints().clear();
-    leftCoordinates.getRowConstraints().clear();
-    mapGrid.getColumnConstraints().clear();
-    mapGrid.getRowConstraints().clear();
-  }
-
-  private void fillCoordinates(Boundary mapBoundary) {
-    var maxRightX = mapBoundary.rightTopCorner().getX();
-    var maxLeftX = mapBoundary.leftBottomCorner().getX();
-    var maxTopY = mapBoundary.rightTopCorner().getY();
-    var maxBottomY = mapBoundary.leftBottomCorner().getY();
-
-    for (int i = 1; i <= maxRightX + calculateOffsetX(maxLeftX) + 1; i++) {
-      topCoordinates.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
-      topCoordinates.add(createCoordinateLabel(Integer.toString(maxLeftX + i - 1)), i, 0);
+    public void stopSimulation() {
+        if (simulationEngine != null) {
+            simulationEngine.shutDown();
+        }
     }
 
-    for (int i = 0; i <= maxTopY + calculateOffsetY(maxBottomY); i++) {
-      leftCoordinates.getRowConstraints().add(new RowConstraints(GRID_WIDTH));
-      leftCoordinates.add(createCoordinateLabel(Integer.toString(maxBottomY + i)), 0, i);
+    private void clearGrid() {
+        if (mapGrid.getChildren() != null) {
+            mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
+        }
+
+        if (topCoordinates.getChildren() != null) {
+            topCoordinates.getChildren().retainAll(topCoordinates.getChildren().getFirst());
+        }
+
+        if (leftCoordinates.getChildren() != null) {
+            leftCoordinates.getChildren().retainAll(leftCoordinates.getChildren().getFirst());
+        }
+
+        topCoordinates.getColumnConstraints().clear();
+        leftCoordinates.getRowConstraints().clear();
+        mapGrid.getColumnConstraints().clear();
+        mapGrid.getRowConstraints().clear();
     }
 
-  }
 
-  private void fillGrid(Boundary mapBoundary) {
-    int width = calculateGridWidth(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
-    int height = calculateGridHeight(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
+    private void fillGrid(Boundary mapBoundary) {
+        int width = calculateGridWidth(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
+        int height = calculateGridHeight(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
 
-    for (int i = 0; i <= width; i++) {
-      mapGrid.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
+        for (int i = 0; i <= width; i++) {
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
+        }
+
+        for (int i = 0; i <= height; i++) {
+            mapGrid.getRowConstraints().add(new RowConstraints(GRID_WIDTH));
+        }
+
     }
 
-    for (int i = 0; i <= height; i++) {
-      mapGrid.getRowConstraints().add(new RowConstraints(GRID_WIDTH));
+    private void drawElements() {
+        worldMap.getElements().forEach(element -> {
+            int x = element.getPosition().getX();
+            int y = element.getPosition().getY();
+
+            Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
+
+            if (element instanceof Animal animal) {
+                var animalDrawing = createAnimalDrawing(animal.getOrientation(), animal.getEnergy());
+                mapGrid.add(animalDrawing, x, y);
+            } else if (element instanceof Plant) {
+                rectangle.setFill(Color.LIGHTGREEN);
+                mapGrid.add(rectangle, x, y);
+            } else {
+                rectangle.setFill(Color.RED);
+                mapGrid.add(rectangle, x, y);
+            }
+
+        });
     }
 
-  }
-
-  private void drawElements(Boundary mapBoundary) {
-    var maxLeftX = mapBoundary.leftBottomCorner().getX();
-    var maxBottomY = mapBoundary.leftBottomCorner().getY();
-
-    worldMap.getElements().forEach(element -> {
-      int x = element.getPosition().getX() + calculateOffsetX(maxLeftX);
-      int y = element.getPosition().getY() + calculateOffsetY(maxBottomY);
-
-      Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
-
-      if (element instanceof Animal animal) {
-        var animalDrawing = createAnimalDrawing(animal.getOrientation());
-        mapGrid.add(animalDrawing, x, y);
-      }
-      else {
-        rectangle.setFill(Color.GREEN);
-        mapGrid.add(rectangle, x, y);
-      }
-
-    });
-  }
-
-  private Pane createAnimalDrawing(MapDirection orientation) {
-    Pane pane = new Pane();
-    double width = (double)GRID_WIDTH / 2;
-    double radius = width / 1.5;
-    Circle head = new Circle(width, width, radius);
-    head.setFill(Color.LIGHTBLUE);
-
-    Text text = new Text(width, width, orientation.getSymbol());
-    text.setFill(Color.BLACK);
-    text.setStyle("-fx-font-size: 16; -fx-font-weight: bold");
-
-    pane.getChildren().addAll(head, text);
-    return pane;
-  }
-
-  private Circle createCircle(MapDirection orientation) {
-    // TODO draw nice animal with circle and triangle
-    return null;
-  }
-
-  private Polygon createTriangle(MapDirection orientation) {
-    // TODO draw nice animal with circle and triangle
-    return null;
-  }
-
-  private Label createCoordinateLabel(String text) {
-    Label label = new Label(text);
-    label.setPrefWidth(GRID_WIDTH);
-    label.setPrefHeight(GRID_WIDTH);
-    label.getStyleClass().add(COORDINATE_LABEL_CLASS_NAME);
-    return label;
-  }
-
-  private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
-    return Math.abs(leftBot.subtract(rightTop).getX());
-  }
-
-  private int calculateGridHeight(Vector2d leftBot, Vector2d rightTop) {
-    return Math.abs(leftBot.subtract(rightTop).getY());
-  }
-
-  private int calculateOffsetX(int maxLeftX) {
-    if (maxLeftX < 0) {
-      return Math.abs(maxLeftX);
+    private Pane createAnimalDrawing(MapDirection orientation, int animalEnergy) {
+        Pane pane = new Pane();
+        double centerX = (double) GRID_WIDTH / 2;
+        double centerY = (double) GRID_WIDTH / 2;
+        double radius = (double) GRID_WIDTH / 2 - 2;
+        Circle head = new Circle(centerX, centerY, radius);
+        head.setFill(calculateColor(animalEnergy));
+        pane.getChildren().add(head);
+        return pane;
     }
-    return 0;
-  }
 
-  private int calculateOffsetY(int maxBottomY) {
-    if (maxBottomY < 0) {
-      return Math.abs(maxBottomY);
+    private Color calculateColor(int animalEnergy) {
+        int maxEnergy = 40;
+        animalEnergy = Math.max(0, Math.min(animalEnergy, maxEnergy));
+        double energyFactor = (double) animalEnergy / maxEnergy;
+
+        int red = (int) (255 * energyFactor);
+        int green = 0;
+        int blue = (int) (255 * energyFactor);
+
+        return Color.rgb(red, green, blue);
     }
-    return 0;
-  }
+
+    private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
+        return Math.abs(leftBot.subtract(rightTop).getX());
+    }
+
+    private int calculateGridHeight(Vector2d leftBot, Vector2d rightTop) {
+        return Math.abs(leftBot.subtract(rightTop).getY());
+    }
+
+    private void updateStatistics() {
+        animalCountLabel.setText(String.format("%d", simulationContext.getAnimalCount()));
+        plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
+        freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
+        avgEnergyLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalEnergy().orElse(0.0)));
+        Optional<List<Gen>> mostPopularGenotype = simulationContext.getMostPopularGenotype();
+        if (mostPopularGenotype.isPresent()) {
+            popularGenotypeLabel.setText(mostPopularGenotype.get().toString());
+        } else {
+            popularGenotypeLabel.setText("No animals");
+        }
+        avgLifespanLabel.setText(String.format("%.2f", simulationContext.getAverageDeadAnimalTimeLife().orElse(0.0)));
+        avgChildrenLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalCountOfChildren().orElse(0.0)));
+    }
 
 }

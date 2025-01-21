@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns = "http://javafx.com/javafx/17.0.12" xmlns:fx = "http://javafx.com/fxml/1"
+            fx:controller = "agh.ics.oop.presenter.ConfigurationPresenter">
+
+    <GridPane fx:id = "mainGridPane" hgap = "25" vgap = "10" AnchorPane.leftAnchor = "10" AnchorPane.topAnchor = "10">
+        <columnConstraints>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+            <ColumnConstraints halignment = "CENTER" hgrow = "ALWAYS"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+
+        <Label text = "Map Configuration" GridPane.columnIndex = "0" GridPane.rowIndex = "0">
+            <font>
+                <Font name = "System Bold" size = "12.0"/>
+            </font>
+        </Label>
+
+        <Label text = "Map Variant:" GridPane.columnIndex = "0" GridPane.rowIndex = "1"/>
+        <MenuButton fx:id = "menuButton" mnemonicParsing = "false" prefHeight = "25.0" prefWidth = "149.0"
+                    GridPane.columnIndex = "1" GridPane.rowIndex = "1">
+            <items>
+                <MenuItem fx:id = "earthItem" mnemonicParsing = "false" text = "Earth"/>
+                <MenuItem fx:id = "fireEarthItem" mnemonicParsing = "false" text = "Fire Earth"/>
+            </items>
+        </MenuButton>
+
+        <Label text = "Height:" GridPane.columnIndex = "0" GridPane.rowIndex = "2"/>
+        <TextField fx:id = "heightInput" GridPane.columnIndex = "1" GridPane.rowIndex = "2"/>
+
+        <Label text = "Width:" GridPane.columnIndex = "0" GridPane.rowIndex = "3"/>
+        <TextField fx:id = "widthInput" GridPane.columnIndex = "1" GridPane.rowIndex = "3"/>
+
+        <Label text = "Start Plant Count:" GridPane.columnIndex = "0" GridPane.rowIndex = "4"/>
+        <TextField fx:id = "startPlantCountInput" GridPane.columnIndex = "1" GridPane.rowIndex = "4"/>
+
+
+        <Label text = "Animal Configuration" GridPane.columnIndex = "0" GridPane.rowIndex = "5">
+            <font>
+                <Font name = "System Bold" size = "12.0"/>
+            </font>
+        </Label>
+
+        <Label text = "Mutation Variant:" GridPane.columnIndex = "0" GridPane.rowIndex = "6"/>
+        <MenuButton fx:id = "mutationVariantMenuButton" prefHeight = "25.0" prefWidth = "148.0" text = "Full Random"
+                    GridPane.columnIndex = "1" GridPane.rowIndex = "6">
+            <items>
+                <MenuItem fx:id = "fullRandomVariant" mnemonicParsing = "false" text = "Full Random"/>
+                <MenuItem fx:id = "littleCorrectionVariant" mnemonicParsing = "false" text = "Little Correction"/>
+            </items>
+        </MenuButton>
+
+        <Label text = "Start Energy:" GridPane.columnIndex = "0" GridPane.rowIndex = "7"/>
+        <TextField fx:id = "startEnergyInput" GridPane.columnIndex = "1" GridPane.rowIndex = "7"/>
+
+        <Label text = "Minimum Mutation Count:" GridPane.columnIndex = "0" GridPane.rowIndex = "8"/>
+        <TextField fx:id = "minMutationCountInput" GridPane.columnIndex = "1" GridPane.rowIndex = "8"/>
+
+        <Label text = "Maximum Mutation Count:" GridPane.columnIndex = "0" GridPane.rowIndex = "9"/>
+        <TextField fx:id = "maxMutationCountInput" GridPane.columnIndex = "1" GridPane.rowIndex = "9"/>
+
+        <Label text = "Genome Length:" GridPane.columnIndex = "0" GridPane.rowIndex = "10"/>
+        <TextField fx:id = "genomeLengthInput" GridPane.columnIndex = "1" GridPane.rowIndex = "10"/>
+
+        <Label text = "Simulation Configuration" GridPane.columnIndex = "2" GridPane.rowIndex = "0">
+            <font>
+                <Font name = "System Bold" size = "12.0"/>
+            </font>
+        </Label>
+
+        <Label text = "Plant Variant:" GridPane.columnIndex = "2" GridPane.rowIndex = "1"/>
+        <MenuButton fx:id = "plantVariantMenuButton" prefHeight = "25.0" prefWidth = "150.0" text = "Forest Equators"
+                    GridPane.columnIndex = "3" GridPane.rowIndex = "1">
+            <items>
+                <MenuItem fx:id = "forestEquatorsVariant" mnemonicParsing = "false" text = "Forest Equators"/>
+            </items>
+        </MenuButton>
+
+        <Label text = "Days Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "2"/>
+        <TextField fx:id = "daysCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "2"/>
+
+        <Label text = "Energy Gain:" GridPane.columnIndex = "2" GridPane.rowIndex = "3"/>
+        <TextField fx:id = "energyGainInput" GridPane.columnIndex = "3" GridPane.rowIndex = "3"/>
+
+        <Label text = "Plant Growth:" GridPane.columnIndex = "2" GridPane.rowIndex = "4"/>
+        <TextField fx:id = "plantGrowthInput" GridPane.columnIndex = "3" GridPane.rowIndex = "4"/>
+
+        <Label text = "Well Fed Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "5"/>
+        <TextField fx:id = "wellFedEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "5"/>
+
+        <Label text = "Loss Copulate Energy:" GridPane.columnIndex = "2" GridPane.rowIndex = "6"/>
+        <TextField fx:id = "lossCopulateEnergyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "6"/>
+
+        <Label text = "Fire Frequency:" GridPane.columnIndex = "2" GridPane.rowIndex = "7"/>
+        <TextField fx:id = "fireFrequencyInput" GridPane.columnIndex = "3" GridPane.rowIndex = "7"/>
+
+        <Label text = "Fire duration:" GridPane.columnIndex = "2" GridPane.rowIndex = "8"/>
+        <TextField fx:id = "fireDurationInput" GridPane.columnIndex = "3" GridPane.rowIndex = "8"/>
+
+        <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "9"/>
+        <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "9"/>
+
+
+        <Label text = "Saved Configurations" GridPane.columnIndex = "4" GridPane.rowIndex = "0">
+            <font>
+                <Font name = "System Bold" size = "12.0"/>
+            </font>
+        </Label>
+
+        <VBox prefHeight = "0.0" prefWidth = "100.0" GridPane.columnIndex = "4" GridPane.rowIndex = "1"
+              GridPane.rowSpan = "8">
+            <ScrollPane fx:id = "savedScrollPane" prefHeight = "200.0" prefWidth = "200.0" VBox.vgrow = "ALWAYS">
+                <VBox fx:id = "configurationListContainer"/>
+            </ScrollPane>
+        </VBox>
+
+        <VBox GridPane.columnIndex = "4" GridPane.rowIndex = "9">
+            <Label fx:id = "errorLabel" style = "-fx-font-weight: bold; -fx-text-fill: red;"/>
+            <HBox>
+                <Label text = "Save Name:"/>
+                <TextField fx:id = "saveNameInput"/>
+            </HBox>
+        </VBox>
+
+        <Button fx:id = "saveConfigurationButton" onAction = "#onSaveConfiguration" GridPane.columnIndex = "4"
+                GridPane.rowIndex = "10">
+            Save Configuration
+        </Button>
+    </GridPane>
+</AnchorPane>
