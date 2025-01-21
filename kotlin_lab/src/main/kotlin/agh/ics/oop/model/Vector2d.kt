@@ -3,9 +3,9 @@ package agh.ics.oop.model
 data class Vector2d(val x: Int, val y: Int) : Comparable<Vector2d> {
     override fun compareTo(other: Vector2d): Int {
         return when {
-            x >= other.x && y >= other.y -> 1 // follows
-            x <= other.x && y <= other.y -> -1 // precedes
-            else -> 0
+            x == other.x && y == other.y -> 0 // equal
+            x > other.x || (x == other.x && y > other.y) -> 1 // follows
+            else -> -1 // precedes
         }
     }
 

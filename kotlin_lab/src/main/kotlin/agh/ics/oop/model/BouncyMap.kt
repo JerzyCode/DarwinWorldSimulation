@@ -9,11 +9,25 @@ class BouncyMap(width: Int, height: Int) : WorldMap {
 
     override fun place(animal: Animal) {
         val position = animal.getPosition
-        if (!canMoveTo(position)) {
-            throw IncorrectPositionException("Can't place animal at: $position")
-        }
 
-        animals[position] = animal
+        if (isOccupied(position)) {
+            val freePosition =
+                animals.randomFreePosition(Vector2d(boundary.rightTopCorner.x, boundary.rightTopCorner.y))
+            if (freePosition != null) {
+                animals[freePosition] = animal
+            } else {
+                val positionToEvict = animals.randomPosition()
+                if (positionToEvict != null) {
+                    animals.remove(positionToEvict)
+                }
+                animals[position] = animal
+            }
+        } else {
+            if (!canMoveTo(position)) {
+                throw IncorrectPositionException("Can't place animal at: $position")
+            }
+            animals[position] = animal
+        }
     }
 
     override fun move(animal: Animal, moveDirection: MoveDirection) {
@@ -25,7 +39,7 @@ class BouncyMap(width: Int, height: Int) : WorldMap {
     }
 
     override fun canMoveTo(position: Vector2d): Boolean =
-        position > boundary.leftBottomCorner && position < boundary.rightTopCorner
+        position >= boundary.leftBottomCorner && position <= boundary.rightTopCorner
 
     override fun isOccupied(position: Vector2d): Boolean = animals.containsKey(position)
 
