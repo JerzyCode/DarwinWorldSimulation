@@ -264,9 +264,9 @@ public class ConfigurationPresenter {
         }
     }
 
-    private void loadSavedConfiguration(String savedName) {
+    private void loadSavedConfiguration(String saveName) {
         try {
-            var configuration = configurationRepositoryPort.loadConfiguration(savedName);
+            var configuration = configurationRepositoryPort.loadConfiguration(saveName);
             setInputValues(configuration);
         } catch (LoadConfigurationException e) {
             System.out.println(e.getMessage());
