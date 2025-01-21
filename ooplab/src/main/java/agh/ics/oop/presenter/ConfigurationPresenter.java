@@ -1,12 +1,16 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.configuration.*;
+import agh.ics.oop.model.exceptions.LoadConfigurationException;
+import agh.ics.oop.model.exceptions.SaveFailedException;
+import agh.ics.oop.model.repository.ConfigurationRepositoryPort;
+import agh.ics.oop.model.repository.JsonConfigurationRepositoryAdapter;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import java.util.function.UnaryOperator;
 
@@ -14,8 +18,24 @@ public class ConfigurationPresenter {
 
     @FXML
     private GridPane mainGridPane;
+    @FXML
+    private ScrollPane savedScrollPane;
+    @FXML
+    private VBox configurationListContainer;
+    @FXML
+    private Button saveConfigurationButton;
+    @FXML
+    private TextField saveNameInput;
+    @FXML
+    private Label errorLabel;
 
     //  Map configuration elements
+    @FXML
+    private MenuButton menuButton;
+    @FXML
+    private MenuItem earthItem;
+    @FXML
+    private MenuItem fireEarthItem;
     @FXML
     private TextField heightInput;
     @FXML
@@ -66,40 +86,25 @@ public class ConfigurationPresenter {
     private WorldMapVariant mapVariant;
     private PlantVariant plantVariant;
     private MutationVariant mutationVariant;
+    private final ConfigurationRepositoryPort configurationRepositoryPort = new JsonConfigurationRepositoryAdapter();
 
+    @FXML
     public void initialize() {
         setTextFieldValidation();
         littleCorrectionVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.LITTLE_CORRECTION));
         fullRandomVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.FULL_RANDOM));
         forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
+        earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
+        fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
+        configurationRepositoryPort.getSaveNames().forEach(this::addLoadSavedConfigurationButton);
+        savedScrollPane.setFitToWidth(true);
+        saveNameInput.textProperty().addListener((observable, oldValue, newValue) -> clearError());
+        errorLabel.setMaxWidth(200);
+
     }
 
     public void setConfiguration(Configuration configuration) {
-        chooseMutationVariant(MutationVariant.FULL_RANDOM);
-        choosePlantVariant(PlantVariant.FORESTED_EQUATORS);
         setInputValues(configuration);
-    }
-
-    public void switchWorldMapVariant(WorldMapVariant newVariant) {
-        this.mapVariant = newVariant;
-        switch (newVariant) {
-            case WorldMapVariant.EARTH -> setEarthFieldModeVisibility();
-            case WorldMapVariant.FIRE -> setFireEarthFieldModeVisibility();
-        }
-    }
-
-    public void setEarthFieldModeVisibility() {
-        enableNumericTextField(heightInput);
-        enableNumericTextField(widthInput);
-        enableNumericTextField(plantGrowthInput);
-        disableNumericInputWithZeroValue(fireFrequencyInput);
-        disableNumericInputWithZeroValue(fireDurationInput);
-    }
-
-    public void setFireEarthFieldModeVisibility() {
-        setEarthFieldModeVisibility();
-        enableNumericTextField(fireFrequencyInput);
-        enableNumericTextField(fireDurationInput);
     }
 
     public Configuration createConfiguration() {
@@ -135,6 +140,37 @@ public class ConfigurationPresenter {
                 .animalConfiguration(animalConfiguration)
                 .simulationConfiguration(simulationConfiguration)
                 .build();
+    }
+
+    private void switchWorldMapVariant(WorldMapVariant newVariant) {
+        this.mapVariant = newVariant;
+        switch (newVariant) {
+            case WorldMapVariant.EARTH -> setEarthFieldModeVisibility();
+            case WorldMapVariant.FIRE -> setFireEarthFieldModeVisibility();
+        }
+    }
+
+    private void defaultInputsVisibility() {
+        enableNumericTextField(heightInput);
+        enableNumericTextField(widthInput);
+        enableNumericTextField(plantGrowthInput);
+    }
+
+    private void setEarthFieldModeVisibility() {
+        defaultInputsVisibility();
+        disableNumericInputWithZeroValue(fireFrequencyInput);
+        disableNumericInputWithZeroValue(fireDurationInput);
+    }
+
+    private void setFireEarthFieldModeVisibility() {
+        defaultInputsVisibility();
+        enableNumericTextField(fireFrequencyInput);
+        enableNumericTextField(fireDurationInput);
+    }
+
+    private void chooseMap(WorldMapVariant mapVariant) {
+        menuButton.setText(mapVariant.getDisplayText());
+        switchWorldMapVariant(mapVariant);
     }
 
     private void chooseMutationVariant(MutationVariant variant) {
@@ -199,7 +235,6 @@ public class ConfigurationPresenter {
         fireFrequencyInput.setText(String.valueOf(mapConfiguration.getFireFrequency()));
         fireDurationInput.setText(String.valueOf(mapConfiguration.getFireDuration()));
 
-
         var animalConfiguration = configuration.getAnimalConfiguration();
         startEnergyInput.setText(String.valueOf(animalConfiguration.getStartEnergy()));
         minMutationCountInput.setText(String.valueOf(animalConfiguration.getMinimumMutationCount()));
@@ -211,5 +246,48 @@ public class ConfigurationPresenter {
         var simulationConfiguration = configuration.getSimulationConfiguration();
         daysCountInput.setText(String.valueOf(simulationConfiguration.getDaysCount()));
         startAnimalCountInput.setText(String.valueOf(simulationConfiguration.getStartAnimalCount()));
+
+        chooseMap(configuration.getWorldMapConfiguration().getMapVariant());
+        chooseMutationVariant(configuration.getAnimalConfiguration().getMutationVariant());
+        choosePlantVariant(configuration.getWorldMapConfiguration().getPlantVariant());
+    }
+
+
+    public void onSaveConfiguration() {
+        var inputName = saveNameInput.getText();
+        try {
+            configurationRepositoryPort.save(createConfiguration(), inputName);
+            addLoadSavedConfigurationButton(inputName);
+        } catch (SaveFailedException e) {
+            System.out.println(e.getMessage());
+            displayError(e.getMessage());
+        }
+    }
+
+    private void loadSavedConfiguration(String saveName) {
+        try {
+            var configuration = configurationRepositoryPort.loadConfiguration(saveName);
+            setInputValues(configuration);
+        } catch (LoadConfigurationException e) {
+            System.out.println(e.getMessage());
+            displayError(e.getMessage());
+        }
+    }
+
+    private void addLoadSavedConfigurationButton(String saveName) {
+        Button button = new Button(saveName);
+        button.setMaxWidth(Double.MAX_VALUE);
+        VBox.setVgrow(button, Priority.ALWAYS);
+        HBox.setHgrow(button, Priority.ALWAYS);
+        configurationListContainer.getChildren().add(button);
+        button.setOnAction(event -> loadSavedConfiguration(saveName));
+    }
+
+    private void displayError(String message) {
+        errorLabel.setText(message);
+    }
+
+    private void clearError() {
+        errorLabel.setText("");
     }
 }

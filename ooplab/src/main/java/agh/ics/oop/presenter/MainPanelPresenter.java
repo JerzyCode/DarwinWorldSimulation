@@ -1,13 +1,10 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.configuration.Configuration;
-import agh.ics.oop.model.configuration.WorldMapVariant;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -22,34 +19,21 @@ public class MainPanelPresenter {
     private StackPane contentContainer;
     @FXML
     private Button startSimulationButton;
-    @FXML
-    private MenuButton menuButton;
-    @FXML
-    private MenuItem earthItem;
-    @FXML
-    private MenuItem fireEarthItem;
+
     private ConfigurationPresenter configurationPresenter;
 
     public void initialize() throws IOException {
         loadConfigurationViews();
-        chooseMap(WorldMapVariant.EARTH);
-        earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
-        fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
-
     }
 
     private void loadConfigurationViews() throws IOException {
         var configurationViewLoader = new FXMLLoader(getClass().getResource(CONFIGURATION_VIEW_RESOURCE));
         AnchorPane configurationView = configurationViewLoader.load();
         configurationPresenter = configurationViewLoader.getController();
-        configurationPresenter.setConfiguration(new Configuration());
+        configurationPresenter.setConfiguration(Configuration.getDefaultConfig());
         contentContainer.getChildren().add(configurationView);
     }
 
-    private void chooseMap(WorldMapVariant mapVariant) {
-        menuButton.setText(mapVariant.getDisplayText());
-        configurationPresenter.switchWorldMapVariant(mapVariant);
-    }
 
     public void openSimulationWindow() throws IOException {
         Stage stage = new Stage();

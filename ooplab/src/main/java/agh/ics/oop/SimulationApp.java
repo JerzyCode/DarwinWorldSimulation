@@ -22,6 +22,7 @@ public class SimulationApp extends Application {
     private void configureStage(Stage primaryStage, Pane viewRoot) {
         var scene = new Scene(viewRoot);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Simulation app");
     }
 }

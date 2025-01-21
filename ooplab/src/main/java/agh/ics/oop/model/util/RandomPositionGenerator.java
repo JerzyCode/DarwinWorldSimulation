@@ -43,7 +43,6 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
             return otherPositions.poll();
         }
 
-
         if(random.nextDouble() < 0.8) {
             return preferredPositions.poll();
         }
