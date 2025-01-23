@@ -145,7 +145,9 @@ class EarthTest {
         //when && then
         assertThrows(PositionOccupiedByWorldElementException.class, () -> map.placePlant(plantToPlace));
         assertEquals(1, map.getPlantCount());
-        assertEquals(plantPlaced, map.getPlantAtPosition(plantPlaced.getPosition()));
+
+        var elementAtPosition = map.objectAt(plantPlaced.getPosition());
+        assertInstanceOf(Plant.class, elementAtPosition);
     }
 
     @Test

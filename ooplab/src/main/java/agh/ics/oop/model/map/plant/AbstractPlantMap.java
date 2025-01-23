@@ -40,11 +40,6 @@ public abstract class AbstractPlantMap extends SimulationAbstractWorldMap implem
     }
 
     @Override
-    public Plant getPlantAtPosition(Vector2d position) {
-        return plants.get(position);
-    }
-
-    @Override
     public boolean isPlantAtPosition(Vector2d position) {
         return plants.containsKey(position);
     }

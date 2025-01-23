@@ -42,7 +42,11 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        return animals.get(position).iterator().next();
+        var elements = animals.get(position);
+        if (elements == null || elements.isEmpty()) {
+            return null;
+        }
+        return elements.iterator().next();
     }
 
     @Override

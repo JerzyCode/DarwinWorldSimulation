@@ -95,6 +95,16 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
         }
     }
 
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        var animalAt = super.objectAt(position);
+        if (animalAt == null) {
+            return plants.get(position);
+        }
+
+        return animalAt;
+    }
+
     Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
             return animals.get(position);

@@ -10,8 +10,6 @@ public interface PlantWorldMap extends WorldMap {
 
     void removePlant(Vector2d position);
 
-    Plant getPlantAtPosition(Vector2d position);
-
     boolean isPlantAtPosition(Vector2d position);
 
     int getPlantCount();

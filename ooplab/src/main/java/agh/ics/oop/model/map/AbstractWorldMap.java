@@ -73,6 +73,12 @@ public abstract class AbstractWorldMap implements WorldMap {
         return !isOccupied(position);
     }
 
+    @Override
+    public final String toString() {
+        var bounds = getCurrentBounds();
+        return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
+    }
+
     public abstract Boundary getCurrentBounds();
 
     protected final boolean isPositionWithinMapBoundary(Vector2d position) {
@@ -81,11 +87,6 @@ public abstract class AbstractWorldMap implements WorldMap {
                 position.precedes(boundary.rightTopCorner());
     }
 
-    @Override
-    public final String toString() {
-        var bounds = getCurrentBounds();
-        return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
-    }
 
     public void addListener(MapChangeListener listener) {
         mapChangeListeners.add(listener);
