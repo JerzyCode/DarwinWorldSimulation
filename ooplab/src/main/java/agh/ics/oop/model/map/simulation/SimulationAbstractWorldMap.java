@@ -8,9 +8,7 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -41,12 +39,17 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Optional<WorldElement> objectAt(Vector2d position) {
         var elements = animals.get(position);
-        if (elements == null || elements.isEmpty()) {
-            return null;
+        if (elements == null) {
+            return Optional.empty();
         }
-        return elements.iterator().next();
+        return Optional.ofNullable(elements.iterator().next());
+    }
+
+    @Override
+    public Collection<WorldElement> getElements() {
+        return getAnimals().stream().collect(Collectors.toUnmodifiableSet());
     }
 
     @Override

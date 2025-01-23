@@ -147,7 +147,8 @@ class RectangularMapTest {
         var result = rectangularMap.objectAt(animal.getPosition());
 
         //then
-        assertEquals(animal, result);
+        assertTrue(result.isPresent());
+        assertEquals(animal, result.get());
     }
 
     @Test

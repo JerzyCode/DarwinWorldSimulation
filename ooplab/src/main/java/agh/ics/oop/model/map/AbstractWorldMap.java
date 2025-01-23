@@ -59,13 +59,13 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        return animals.get(position);
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        return Optional.ofNullable(animals.get(position));
     }
 
     @Override
     public Collection<WorldElement> getElements() {
-        return Collections.unmodifiableCollection(new ArrayList<>(animals.values()));
+        return Collections.unmodifiableCollection(animals.values());
     }
 
     @Override

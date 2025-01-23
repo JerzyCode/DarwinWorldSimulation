@@ -10,10 +10,10 @@ import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
-import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class SimulationContext {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
+    @Getter
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
@@ -84,10 +85,6 @@ public class SimulationContext {
         ((AbstractWorldMap) worldMap).addListener(listener);
     }
 
-
-    public WorldMap getWorldMap() {
-        return worldMap;
-    }
 
     public int getAnimalCount() {
         return worldMap.getAnimals().size();

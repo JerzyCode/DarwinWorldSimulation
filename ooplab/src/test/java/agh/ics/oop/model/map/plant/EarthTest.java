@@ -147,7 +147,8 @@ class EarthTest {
         assertEquals(1, map.getPlantCount());
 
         var elementAtPosition = map.objectAt(plantPlaced.getPosition());
-        assertInstanceOf(Plant.class, elementAtPosition);
+        assertTrue(elementAtPosition.isPresent());
+        assertInstanceOf(Plant.class, elementAtPosition.get());
     }
 
     @Test
@@ -270,8 +271,14 @@ class EarthTest {
         assertEquals(2, map.getElements().size());
         assertEquals(new Vector2d(4, 3), animalW.getPosition());
         assertEquals(new Vector2d(0, 2), animalE.getPosition());
-        assertEquals(animalE, map.objectAt(animalE.getPosition()));
-        assertEquals(animalW, map.objectAt(animalW.getPosition()));
+
+        var animalAtMap1Opt = map.objectAt(animalE.getPosition());
+        assertTrue(animalAtMap1Opt.isPresent());
+        assertEquals(animalE, animalAtMap1Opt.get());
+
+        var animalAtMap2Opt = map.objectAt(animalW.getPosition());
+        assertTrue(animalAtMap2Opt.isPresent());
+        assertEquals(animalW, animalAtMap2Opt.get());
     }
 
     @Test
@@ -305,8 +312,15 @@ class EarthTest {
         assertEquals(new Vector2d(1, 0), animalS.getPosition());
         assertEquals(MapDirection.SOUTH, animalN.getOrientation());
         assertEquals(MapDirection.NORTH, animalS.getOrientation());
-        assertEquals(animalN, map.objectAt(animalN.getPosition()));
-        assertEquals(animalS, map.objectAt(animalS.getPosition()));
+
+        var animalOnMapOpt1 = map.objectAt(animalN.getPosition());
+        assertTrue(animalOnMapOpt1.isPresent());
+        assertEquals(animalN, animalOnMapOpt1.get());
+
+
+        var animalOnMapOpt2 = map.objectAt(animalS.getPosition());
+        assertTrue(animalOnMapOpt2.isPresent());
+        assertEquals(animalS, animalOnMapOpt2.get());
     }
 
     @Test

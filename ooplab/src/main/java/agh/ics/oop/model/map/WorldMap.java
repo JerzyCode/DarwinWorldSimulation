@@ -9,6 +9,7 @@ import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.move.MoveValidator;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface WorldMap extends MoveValidator {
@@ -19,7 +20,7 @@ public interface WorldMap extends MoveValidator {
 
     boolean isOccupied(Vector2d position);
 
-    WorldElement objectAt(Vector2d position);
+    Optional<WorldElement> objectAt(Vector2d position);
 
     Collection<WorldElement> getElements();
 

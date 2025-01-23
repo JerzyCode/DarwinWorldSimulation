@@ -15,8 +15,9 @@ import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FireEarth extends Earth implements FireWorldMap, FireValidator {
     private final HashMap<Vector2d, Fire> fires;
@@ -83,18 +84,15 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
 
     @Override
     public Collection<WorldElement> getElements() {
-        var elements = new ArrayList<WorldElement>();
-        elements.addAll(super.getElements());
-        elements.addAll(fires.values());
-
-        return Collections.unmodifiableCollection(elements);
+        return Stream
+                .concat(super.getElements().stream(), fires.values().stream())
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
     public boolean isFireAtPosition(Vector2d position) {
         return fires != null && fires.containsKey(position);
     }
-
 
     private void decreaseFireRemainingLifetime() {
         fires.values().forEach(Fire::decreaseRemainingLifetime);

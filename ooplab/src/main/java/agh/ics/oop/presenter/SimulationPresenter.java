@@ -17,6 +17,7 @@ import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
+import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -63,7 +64,7 @@ public class SimulationPresenter implements MapChangeListener {
     private Label avgChildrenLabel;
 
 
-    private WorldMap worldMap;
+    private SimulationWorldMap worldMap;
     @Setter
     private Configuration configuration;
     private SimulationEngine simulationEngine;

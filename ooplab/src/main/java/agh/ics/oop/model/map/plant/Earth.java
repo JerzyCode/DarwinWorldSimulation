@@ -15,6 +15,7 @@ import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationWorldMap {
     private final Boundary boundary;
@@ -52,12 +53,9 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
 
     @Override
     public Collection<WorldElement> getElements() {
-        var elements = new ArrayList<WorldElement>(plants.values());
-        for (var entry : animals.entrySet()) {
-            elements.addAll(entry.getValue());
-        }
-
-        return Collections.unmodifiableCollection(elements);
+        return Stream
+                .concat(super.getElements().stream(), plants.values().stream())
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 
@@ -96,14 +94,11 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        var animalAt = super.objectAt(position);
-        if (animalAt == null) {
-            return plants.get(position);
-        }
-
-        return animalAt;
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        return super.objectAt(position)
+                .or(() -> Optional.ofNullable(plants.get(position)));
     }
+
 
     Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
@@ -161,8 +156,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
-                    } catch (Exception e) {
-                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    } catch (IncorrectPositionException e) {
+                        System.out.println("Couldn't place plant: " + e.getMessage());
                     }
                 });
     }
@@ -173,8 +168,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
-                    } catch (Exception e) {
-                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    } catch (IncorrectPositionException e) {
+                        System.out.println("Couldn't place plant: " + e.getMessage());
                     }
                 });
     }
