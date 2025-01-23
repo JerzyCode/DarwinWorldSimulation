@@ -1,9 +1,8 @@
-package agh.ics.oop.model.statistics;
+package agh.ics.oop.model.map.simulation;
 
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
-import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 
 import java.util.List;
 import java.util.Map;
