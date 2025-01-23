@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainPanelPresenter {
+    private static final double LEFT_PANEL_PREF_WIDTH = 160;
+    private static final int GRID_WIDTH = 15;
     private static final String CONFIGURATION_VIEW_RESOURCE = "/configuration_view.fxml";
     @FXML
     private StackPane contentContainer;
@@ -49,6 +51,7 @@ public class MainPanelPresenter {
 
         configureStage(stage, viewRoot);
         stage.setOnCloseRequest(event -> presenter.stopSimulation());
+        adjustWindowSize(stage, configuration.getWorldMapConfiguration().getWidth(), configuration.getWorldMapConfiguration().getHeight());
         stage.show();
     }
 
@@ -60,4 +63,14 @@ public class MainPanelPresenter {
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
+
+    private void adjustWindowSize(Stage stage, int simulationWidth, int simulationHeight) {
+        var adjustedWith = Math.min(1200, LEFT_PANEL_PREF_WIDTH + simulationWidth * GRID_WIDTH);
+        var adjustedHeight = Math.min(800, simulationHeight * GRID_WIDTH);
+
+        stage.setWidth(adjustedWith);
+        stage.setHeight(adjustedHeight);
+    }
+
+
 }
