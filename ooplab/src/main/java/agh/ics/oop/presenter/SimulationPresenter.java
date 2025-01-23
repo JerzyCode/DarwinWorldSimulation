@@ -3,14 +3,16 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Boundary;
-import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.event.EventType;
+import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
@@ -90,12 +92,18 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
-        Platform.runLater(() -> {
-            historyTextArea.appendText(message + "\n");
-            updateStatistics();
-            this.drawMap();
-        });
+    public void mapChanged(WorldMap worldMap, MapChangedEvent event) {
+        if (event.getEventType() == EventType.DAY_ENDS) {
+            Platform.runLater(() -> {
+                updateStatistics();
+                this.drawMap();
+            });
+        } else {
+            Platform.runLater(() -> {
+                historyTextArea.appendText(event.getMessage() + "\n");
+                updateStatistics();
+            });
+        }
     }
 
     public void onSimulationStartClicked() {
@@ -105,7 +113,9 @@ public class SimulationPresenter implements MapChangeListener {
 
         simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
-        simulationContext.setMapChangeListener(this);
+        simulationContext.addMapChangedListener(this);
+
+
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
         simulationEngine = new SimulationEngine(simulation);
 

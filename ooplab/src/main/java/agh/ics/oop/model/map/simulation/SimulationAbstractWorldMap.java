@@ -3,6 +3,7 @@ package agh.ics.oop.model.map.simulation;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.event.EventCreator;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import agh.ics.oop.model.map.AbstractWorldMap;
@@ -31,7 +32,7 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
         }
 
         placeAnimalAtNewPosition(animal);
-        notifyListeners("Animal was placed at position: " + position);
+        notifyListeners(EventCreator.createAnimalPlacedEvent(animal.getPosition()));
     }
 
     //TODO do wywalenia chyba
@@ -39,7 +40,6 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
     public void removeAnimal(Animal animal) {
         var animalsAtPosition = animals.get(animal.getPosition());
         animalsAtPosition.remove(animal);
-        notifyListeners("Animal was removed from position: " + animal.getPosition());
     }
 
     @Override
@@ -65,8 +65,15 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
         animals.values().forEach(animalSet -> animalSet.removeIf(Animal::isDead));
     }
 
+    @Override
+    public final void sendDayHasEndedNotification(int currentDay) {
+        notifyListeners(EventCreator.createDayEndsEvent(currentDay));
+    }
+
     protected void placeAnimalAtNewPosition(Animal animal) {
         var animalsAtPosition = animals.computeIfAbsent(animal.getPosition(), k -> new HashSet<>());
         animalsAtPosition.add(animal);
     }
+
+
 }

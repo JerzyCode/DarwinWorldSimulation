@@ -7,6 +7,7 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.event.EventCreator;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.map.plant.Earth;
@@ -54,7 +55,7 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
         if (canPlaceFire(position)) {
             fires.put(position, fire);
             removePlant(position);
-            notifyListeners("Fire was placed at position: " + position);
+            notifyListeners(EventCreator.createFirePlacedEvent(fire.getPosition()));
             return true;
         }
 
@@ -106,7 +107,6 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
 
     private void removeBurnedFires() {
         fires.entrySet().removeIf(entry -> entry.getValue().isBurned());
-        notifyListeners("Burned fires were removed from position.");
     }
 
     private void createFire() {

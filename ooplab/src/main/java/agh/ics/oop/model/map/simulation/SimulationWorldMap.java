@@ -11,4 +11,6 @@ public interface SimulationWorldMap extends WorldMap {
     void clearDeadAnimals();
 
     Set<Animal> getAnimals();
+
+    void sendDayHasEndedNotification(int currentDay);
 }

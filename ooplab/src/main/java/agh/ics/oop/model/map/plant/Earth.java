@@ -6,6 +6,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.event.EventCreator;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.Move;
@@ -90,7 +91,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
             animalsAtPosition.remove(animal);
             animal.move(this, this);
             placeAnimalAtNewPosition(animal);
-            notifyListeners("Animal moved to position: " + animal.getPosition());
+            notifyListeners(EventCreator.createAnimalMovedEvent(animal.getPosition()));
         }
     }
 

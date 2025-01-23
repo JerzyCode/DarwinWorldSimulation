@@ -2,7 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.factory.AnimalFactory;
 import agh.ics.oop.factory.WorldMapFactory;
-import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
@@ -42,6 +42,8 @@ public class SimulationContext {
         worldMap.clearDeadAnimals();
         worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
+        worldMap.sendDayHasEndedNotification(currentDay);
+
         currentDay++;
     }
 
@@ -80,9 +82,10 @@ public class SimulationContext {
     }
 
 
-    public void setMapChangeListener(MapChangeListener listener) {
+    public void addMapChangedListener(MapChangeListener listener) {
         ((AbstractWorldMap) worldMap).addListener(listener);
     }
+
 
     public WorldMap getWorldMap() {
         return worldMap;
