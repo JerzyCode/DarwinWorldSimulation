@@ -38,7 +38,6 @@ public class SimulationContext {
     }
 
     public void handleDayEnds() {
-        System.out.println("Current day: " + currentDay + ", animalsCount=" + getAnimalCount());
         worldMap.clearDeadAnimals();
         worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
