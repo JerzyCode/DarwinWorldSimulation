@@ -6,7 +6,6 @@ import agh.ics.oop.model.exceptions.WrongConfigurationParameterException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -24,8 +23,6 @@ public class MainPanelPresenter {
     private StackPane contentContainer;
     @FXML
     private Label errorLabel;
-    @FXML
-    private Button startSimulationButton;
 
     private ConfigurationPresenter configurationPresenter;
 
@@ -58,6 +55,7 @@ public class MainPanelPresenter {
             SimulationPresenter presenter = loader.getController();
             presenter.setConfiguration(configuration);
 
+            hideErrorMessage();
             configureStage(stage, viewRoot);
             stage.setOnCloseRequest(event -> presenter.stopSimulation());
             adjustWindowSize(stage, configuration.getWorldMapConfiguration().getWidth(), configuration.getWorldMapConfiguration().getHeight());

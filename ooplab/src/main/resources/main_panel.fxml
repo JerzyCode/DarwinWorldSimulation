@@ -9,7 +9,7 @@
     <VBox layoutY = "450.0" spacing = "10" alignment = "CENTER" prefWidth = "750"
           style = "-fx-padding: 20 0 10 0;">
         <Label fx:id = "errorLabel" style = "-fx-text-fill: red; -fx-font-weight: bold; -fx-alignment: center; "/>
-        <Button fx:id = "startSimulationButton" onAction = "#openSimulationWindow"
+        <Button onAction = "#openSimulationWindow"
                 prefHeight = "25.0" prefWidth = "150.0" text = "Start Simulation"/>
     </VBox>
 
