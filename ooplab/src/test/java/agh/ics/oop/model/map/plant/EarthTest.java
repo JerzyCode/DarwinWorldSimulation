@@ -418,7 +418,7 @@ class EarthTest {
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         var plant = new Plant(new Vector2d(2, 2), 5);
         var animal = Animal.builder()
-                .position(new Vector2d(2, 3))
+                .position(new Vector2d(2, 2))
                 .genome(new Genome(List.of(new Gen(4))))
                 .energy(10)
                 .orientation(MapDirection.NORTH)
@@ -432,7 +432,7 @@ class EarthTest {
         }
 
         //when
-        earth.move(animal, MoveDirection.FORWARD);
+        earth.handleDayEnds(2);
 
         //then
         assertEquals(new Vector2d(2, 2), animal.getPosition());
@@ -466,13 +466,8 @@ class EarthTest {
 
         var factory = new AnimalFactory(animalConfiguration);
         AnimalBreeder breeder = (animal1, animal2) -> factory.birthAnimal(animal1, animal2, 1);
-        var parent1 = Animal.builder()
-                .position(new Vector2d(0, 4))
-                .genome(new Genome(List.of(new Gen(4))))
-                .energy(20)
-                .orientation(MapDirection.NORTH)
-                .build();
 
+        var parent1 = factory.createAnimal(new Vector2d(0, 3), 1);
         var parent2 = factory.createAnimal(new Vector2d(0, 3), 1);
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
 
@@ -484,7 +479,7 @@ class EarthTest {
         }
 
         //when
-        earth.move(parent1, MoveDirection.FORWARD);
+        earth.handleDayEnds(1);
 
         //then
         var animalsAtPosition = earth.getAnimalsAtPosition(new Vector2d(0, 3));
@@ -495,7 +490,7 @@ class EarthTest {
         assertTrue(bornAnimalOptional.isPresent());
         var bornAnimal = bornAnimalOptional.get();
 
-        assertEquals(15, parent1.getEnergy());
+        assertEquals(45, parent1.getEnergy());
         assertEquals(45, parent2.getEnergy());
         assertEquals(10, bornAnimal.getEnergy());
         assertTrue(animalsAtPosition.contains(parent1));

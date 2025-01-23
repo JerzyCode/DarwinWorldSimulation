@@ -13,6 +13,7 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationWorldMap {
     private final Boundary boundary;
@@ -30,7 +31,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
 
     @Override
     public void handleDayEnds(int currentDay) {
-        super.handleDayEnds(currentDay);
+        consumePlants();
+        copulateAnimals();
         growPlantsDaily();
     }
 
@@ -90,12 +92,9 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
             placeAnimalAtNewPosition(animal);
             notifyListeners("Animal moved to position: " + animal.getPosition());
         }
-
-        handleAnimalStepOnPlant(animal);
-        handleAnimalCopulate(animal);
     }
 
-    public Set<Animal> getAnimalsAtPosition(Vector2d position) {
+    Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
             return animals.get(position);
         }
@@ -116,6 +115,10 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
         return getSize() - (int) countOfOccupiedFields;
     }
 
+    private void consumePlants() {
+        getAnimals().forEach(this::handleAnimalStepOnPlant);
+    }
+
     private void handleAnimalStepOnPlant(Animal animal) {
         var position = animal.getPosition();
         if (isPlantAtPosition(position)) {
@@ -124,19 +127,16 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
         }
     }
 
-    private void handleAnimalCopulate(Animal animal) {
-        if (!animal.canMakeChild()) {
-            return;
-        }
+    private void copulateAnimals() {
+        var animalsWhichCanBreed = getAnimals()
+                .stream()
+                .filter(Animal::canMakeChild)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        var position = animal.getPosition();
-        var other = animals.get(position).stream()
-                .filter(otherAnimal -> otherAnimal != animal &&
-                        otherAnimal.canMakeChild())
-                .findAny();
-
-        if (other.isPresent()) {
-            var child = breeder.breed(animal, other.get());
+        while (animalsWhichCanBreed.size() >= 2) {
+            var parent1 = animalsWhichCanBreed.removeFirst();
+            var parent2 = animalsWhichCanBreed.removeLast();
+            var child = breeder.breed(parent1, parent2);
             try {
                 place(child);
             } catch (IncorrectPositionException e) {

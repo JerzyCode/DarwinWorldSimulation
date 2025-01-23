@@ -12,6 +12,7 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
+import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
@@ -22,12 +23,15 @@ public class SimulationContext {
     private final AnimalFactory animalFactory;
     private final SimulationWorldMap worldMap;
     private int currentDay;
+    private final Set<Animal> deadAnimals;
+
 
     public SimulationContext(Configuration configuration) {
         this.configuration = configuration;
         this.animalFactory = new AnimalFactory(configuration.getAnimalConfiguration());
         WorldMapFactory worldMapFactory = new WorldMapFactory(configuration.getWorldMapConfiguration(), this::breedAnimals);
         this.worldMap = worldMapFactory.createWorldMap();
+        deadAnimals = new HashSet<>();
         currentDay = 1;
 
         initAnimals();
@@ -35,6 +39,8 @@ public class SimulationContext {
 
     public void handleDayEnds() {
         System.out.println("Current day: " + currentDay + ", animalsCount=" + getAnimalCount());
+        worldMap.clearDeadAnimals();
+        worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
         currentDay++;
     }
@@ -63,6 +69,16 @@ public class SimulationContext {
         }
     }
 
+    private void handleAnimalDayEnds(Animal animal) {
+        animal.decreaseEnergy(1);
+        worldMap.move(animal, MoveDirection.FORWARD);
+
+        if (animal.isDead()) {
+            deadAnimals.add(animal);
+            animal.setEndDay(currentDay);
+        }
+    }
+
 
     public void setMapChangeListener(MapChangeListener listener) {
         ((AbstractWorldMap) worldMap).addListener(listener);
@@ -83,7 +99,7 @@ public class SimulationContext {
     }
 
     public OptionalDouble getAverageDeadAnimalTimeLife() {
-        return worldMap.getDeadAnimals().stream()
+        return deadAnimals.stream()
                 .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
                 .average();
     }
