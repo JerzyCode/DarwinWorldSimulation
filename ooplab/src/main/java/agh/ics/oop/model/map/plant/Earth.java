@@ -163,7 +163,6 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     private void growPlantsDaily() {
-
         gardener.createPlantsDaily(plants.size(), calculateSize(), boundary, plants.keySet())
                 .forEach(plant -> {
                     try {

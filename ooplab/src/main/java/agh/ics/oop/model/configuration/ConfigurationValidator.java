@@ -3,13 +3,13 @@ package agh.ics.oop.model.configuration;
 import agh.ics.oop.model.exceptions.WrongConfigurationParameterException;
 
 public class ConfigurationValidator {
-    static final int MAX_HEIGHT = 100;
-    static final int MAX_WIDTH = 200;
+    static final int MAX_HEIGHT = 200;
+    static final int MAX_WIDTH = 400;
     static final int MIN_HEIGHT = 5;
     static final int MIN_WIDTH = 5;
     static final int MAX_PLANT_GROWTH = 500;
     static final int MAX_GENOME_LENGTH = 100;
-    static final int MAX_START_ANIMAL_COUNT = 100;
+    static final int MAX_START_ANIMAL_COUNT = 1000;
 
     public void validate(Configuration configuration) throws WrongConfigurationParameterException {
         validateWorldMapConfiguration(configuration.getWorldMapConfiguration());

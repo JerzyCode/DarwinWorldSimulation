@@ -96,15 +96,11 @@ public class SimulationPresenter implements MapChangeListener {
     @Override
     public void mapChanged(WorldMap worldMap, MapChangedEvent event) {
         if (event.getEventType() == EventType.DAY_ENDS) {
-            Platform.runLater(() -> {
-                updateStatistics();
-                this.drawMap();
-            });
+            Platform.runLater(this::drawMap);
+            Platform.runLater(this::updateStatistics);
         } else {
-            Platform.runLater(() -> {
-                historyTextArea.appendText(event.getMessage() + "\n");
-                updateStatistics();
-            });
+//            Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
+            //TODO to powoduje duże opóźnienia
         }
     }
 
@@ -121,7 +117,6 @@ public class SimulationPresenter implements MapChangeListener {
 
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
         simulationEngine = new SimulationEngine(simulation);
-
         simulationEngine.runAsyncInThreadPool();
         startButton.setDisable(true);
     }
