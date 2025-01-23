@@ -35,13 +35,6 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
         notifyListeners(EventCreator.createAnimalPlacedEvent(animal.getPosition()));
     }
 
-    //TODO do wywalenia chyba
-    @Override
-    public void removeAnimal(Animal animal) {
-        var animalsAtPosition = animals.get(animal.getPosition());
-        animalsAtPosition.remove(animal);
-    }
-
     @Override
     public boolean isOccupied(Vector2d position) {
         return !animals.get(position).isEmpty();

@@ -396,34 +396,6 @@ class EarthTest {
     }
 
     @Test
-    void shouldRemoveAnimal() {
-        //given
-        var animal1 = Animal.builder()
-                .position(new Vector2d(2, 2))
-                .build();
-
-        var animal2 = Animal.builder()
-                .position(new Vector2d(2, 2))
-                .build();
-
-        try {
-            map.place(animal1);
-            map.place(animal2);
-        } catch (IncorrectPositionException e) {
-            fail("Should not fail placing animal, e=" + e.getMessage());
-        }
-
-        //when
-        map.removeAnimal(animal2);
-
-        //then
-        var animalsAtPosition = map.getAnimalsAtPosition(new Vector2d(2, 2));
-        assertEquals(1, animalsAtPosition.size());
-        assertTrue(animalsAtPosition.contains(animal1));
-        assertFalse(animalsAtPosition.contains(animal2));
-    }
-
-    @Test
     void animalStepOnPlantShouldIncreaseEnergy() {
         // given
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);

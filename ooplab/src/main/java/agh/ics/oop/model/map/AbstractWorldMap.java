@@ -44,13 +44,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public void removeAnimal(Animal animal) {
-        if (animals.containsKey(animal.getPosition())) {
-            animals.remove(animal.getPosition());
-        }
-    }
-
-    @Override
     public void move(Animal animal, MoveDirection direction) {
         if (animals.containsValue(animal)) {
             animals.remove(animal.getPosition());
