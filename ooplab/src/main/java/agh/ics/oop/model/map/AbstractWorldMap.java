@@ -75,8 +75,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public abstract Boundary getCurrentBounds();
 
-    @Override
-    public boolean isPositionWithinMapBoundary(Vector2d position) {
+    protected final boolean isPositionWithinMapBoundary(Vector2d position) {
         var boundary = getCurrentBounds();
         return position.follows(boundary.leftBottomCorner()) &&
                 position.precedes(boundary.rightTopCorner());
