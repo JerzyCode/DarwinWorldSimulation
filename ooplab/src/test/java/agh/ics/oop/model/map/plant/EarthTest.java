@@ -440,7 +440,7 @@ class EarthTest {
         assertFalse(earth.isPlantAtPosition(new Vector2d(2, 2)));
     }
 
-    //    @Test TODO poprawić gardenera tak że ma działać
+    @Test
     void handleDayEndsShouldGrowNewPlants() {
         // given
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
