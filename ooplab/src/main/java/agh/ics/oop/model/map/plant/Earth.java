@@ -113,7 +113,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .distinct()
                 .count();
 
-        return getSize() - (int) countOfOccupiedFields;
+        return calculateSize() - (int) countOfOccupiedFields;
     }
 
     private void consumePlants() {
@@ -147,7 +147,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     private void initPlants(int startPlantCount) {
-        gardener.createPlants(plants.size(), getSize(), boundary, startPlantCount, plants.keySet())
+        gardener.createPlants(plants.size(), calculateSize(), boundary, startPlantCount, plants.keySet())
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
@@ -159,7 +159,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
 
     private void growPlantsDaily() {
 
-        gardener.createPlantsDaily(plants.size(), getSize(), boundary, plants.keySet())
+        gardener.createPlantsDaily(plants.size(), calculateSize(), boundary, plants.keySet())
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
@@ -167,6 +167,10 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                         //TODO zastanowic sie czy place plant powinno wyjatkiem walic
                     }
                 });
+    }
+
+    private int calculateSize() {
+        return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
     }
 
 }

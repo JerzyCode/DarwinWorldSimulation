@@ -33,8 +33,13 @@ class WorldMapFactoryTest {
         var map = factory.createWorldMap();
 
         //then
+        var mapBoundary = map.getCurrentBounds();
+
         assertInstanceOf(Earth.class, map);
-        assertEquals(100 * 100, map.getSize());
+        assertEquals(99, mapBoundary.rightTopCorner().getX());
+        assertEquals(0, mapBoundary.leftBottomCorner().getX());
+        assertEquals(0, mapBoundary.leftBottomCorner().getY());
+        assertEquals(99, mapBoundary.rightTopCorner().getY());
         assertEquals(new Boundary(new Vector2d(0, 0), new Vector2d(99, 99)), map.getCurrentBounds());
         assertEquals(10, calculatePlantCount(map));
     }
@@ -56,8 +61,13 @@ class WorldMapFactoryTest {
         var map = factory.createWorldMap();
 
         //then
+        var mapBoundary = map.getCurrentBounds();
+
         assertInstanceOf(FireEarth.class, map);
-        assertEquals(500 * 500, map.getSize());
+        assertEquals(499, mapBoundary.rightTopCorner().getX());
+        assertEquals(0, mapBoundary.leftBottomCorner().getX());
+        assertEquals(0, mapBoundary.leftBottomCorner().getY());
+        assertEquals(499, mapBoundary.rightTopCorner().getY());
         assertEquals(new Boundary(new Vector2d(0, 0), new Vector2d(499, 499)), map.getCurrentBounds());
         assertEquals(10, calculatePlantCount(map));
     }

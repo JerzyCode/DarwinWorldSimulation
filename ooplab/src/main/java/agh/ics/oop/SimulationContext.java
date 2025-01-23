@@ -42,7 +42,6 @@ public class SimulationContext {
         worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
         worldMap.sendDayHasEndedNotification(currentDay);
-
         currentDay++;
     }
 

@@ -363,8 +363,19 @@ class EarthTest {
     void getSizeShouldReturn() {
         var map1 = new Earth(4, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         var map2 = new Earth(14, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
-        assertEquals(4 * 10, map1.getSize());
-        assertEquals(14 * 5, map2.getSize());
+
+
+        var mapBoundary1 = map1.getCurrentBounds();
+        assertEquals(3, mapBoundary1.rightTopCorner().getX());
+        assertEquals(0, mapBoundary1.leftBottomCorner().getX());
+        assertEquals(0, mapBoundary1.leftBottomCorner().getY());
+        assertEquals(9, mapBoundary1.rightTopCorner().getY());
+
+        var mapBoundary2 = map2.getCurrentBounds();
+        assertEquals(13, mapBoundary2.rightTopCorner().getX());
+        assertEquals(0, mapBoundary2.leftBottomCorner().getX());
+        assertEquals(0, mapBoundary2.leftBottomCorner().getY());
+        assertEquals(4, mapBoundary2.rightTopCorner().getY());
     }
 
     private static Stream<Arguments> provideAdjustMoveArguments() {
