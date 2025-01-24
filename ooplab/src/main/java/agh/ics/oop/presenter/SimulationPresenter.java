@@ -8,15 +8,12 @@ import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.event.EventType;
 import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
-import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
-import agh.ics.oop.model.statistics.SimulationStatistics;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -29,9 +26,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.Setter;
-
-import java.util.List;
-import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
     private static final int GRID_SIZE = 20;
@@ -68,7 +62,7 @@ public class SimulationPresenter implements MapChangeListener {
     @Setter
     private Configuration configuration;
     private SimulationEngine simulationEngine;
-    private SimulationStatistics simulationStatistics;
+    private SimulationContext simulationContext;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -84,7 +78,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     public void drawMap() {
-        synchronized (worldMap.getElements()) {
+        synchronized (simulationContext) {
             var mapBoundary = worldMap.getCurrentBounds();
             clearGrid();
             fillGrid(mapBoundary);
@@ -96,7 +90,7 @@ public class SimulationPresenter implements MapChangeListener {
     public void mapChanged(WorldMap worldMap, MapChangedEvent event) {
         if (event.getEventType() == EventType.DAY_ENDS) {
             Platform.runLater(this::drawMap);
-            Platform.runLater(this::updateStatistics);
+            Platform.runLater(this::updateStatisticsDisplay);
         }
     }
 
@@ -108,10 +102,14 @@ public class SimulationPresenter implements MapChangeListener {
         var simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
+        this.simulationContext = simulationContext;
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
-        simulationStatistics = new SimulationStatistics(simulationContext);
-        var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
+        var simulation = new Simulation(simulationContext,
+                configuration.getSimulationConfiguration().getDaysCount(),
+                configuration.getSimulationConfiguration().isSaveStatisticsCsv());
+
+
         simulationEngine = new SimulationEngine(simulation);
         simulationEngine.runAsyncInThreadPool();
         startButton.setDisable(true);
@@ -199,20 +197,21 @@ public class SimulationPresenter implements MapChangeListener {
         return Math.abs(leftBot.subtract(rightTop).getY());
     }
 
-    private void updateStatistics() {
-        animalCountLabel.setText(String.format("%d", simulationStatistics.getAnimalCount()));
-        plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
-        freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
-        avgEnergyLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalEnergy().orElse(0.0)));
-        Optional<List<Gen>> mostPopularGenotype = simulationStatistics.getMostPopularGenotype();
-        if (mostPopularGenotype.isPresent()) {
-            popularGenotypeLabel.setText(mostPopularGenotype.get().toString());
+    private void updateStatisticsDisplay() {
+        var statistics = simulationContext.getStatistics();
+        animalCountLabel.setText(String.valueOf(statistics.getAnimalCount()));
+        plantCountLabel.setText(String.format("%d", statistics.getPlantCount()));
+        freeFieldsLabel.setText(String.format("%d", statistics.getFreeFieldsCount()));
+        avgEnergyLabel.setText(String.format("%.2f", statistics.getAverageEnergy()));
+        var mostPopularGenotype = statistics.getMostPopularGenotype();
+        if (mostPopularGenotype != null && !mostPopularGenotype.isEmpty()) {
+            popularGenotypeLabel.setText(mostPopularGenotype.toString());
         } else {
             popularGenotypeLabel.setText("No animals");
         }
-        avgLifespanLabel.setText(String.format("%.2f", simulationStatistics.getAverageDeadAnimalTimeLife().orElse(0.0)));
-        avgChildrenLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalCountOfChildren().orElse(0.0)));
-        currentDayLabel.setText(String.format("%d", simulationStatistics.getCurrentDay()));
+        avgLifespanLabel.setText(String.format("%.2f", statistics.getAverageLifespan()));
+        avgChildrenLabel.setText(String.format("%.2f", statistics.getAverageChildren()));
+        currentDayLabel.setText(String.format("%d", statistics.getCurrentDay()));
     }
 
     private void setGridOnScrollEvent() {

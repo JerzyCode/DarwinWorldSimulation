@@ -3,8 +3,8 @@ package agh.ics.oop.model.configuration;
 import agh.ics.oop.model.exceptions.WrongConfigurationParameterException;
 
 public class ConfigurationValidator {
-    static final int MAX_HEIGHT = 150;
-    static final int MAX_WIDTH = 200;
+    static final int MAX_HEIGHT = 120;
+    static final int MAX_WIDTH = 150;
     static final int MIN_HEIGHT = 5;
     static final int MIN_WIDTH = 5;
     static final int MAX_PLANT_GROWTH = 500;

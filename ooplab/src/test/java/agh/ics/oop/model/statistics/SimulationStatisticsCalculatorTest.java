@@ -2,11 +2,13 @@ package agh.ics.oop.model.statistics;
 
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.TestConfigurationHelper;
+import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
+import agh.ics.oop.model.elements.Plant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,18 +16,19 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-class SimulationStatisticsTest {
+class SimulationStatisticsCalculatorTest {
 
     SimulationContext simulationWithAnimals;
     SimulationContext simulationWithoutAnimals;
     SimulationContext simulationWithoutPlantsAndFires;
 
-    SimulationStatistics simulationWithAnimalsStatistics;
-    SimulationStatistics simulationWithoutAnimalsStatistics;
-    SimulationStatistics simulationWithoutPlantsAndFiresStatistics;
+    SimulationStatisticsCalculator simulationWithAnimalsStatistics;
+    SimulationStatisticsCalculator simulationWithoutAnimalsStatistics;
+    SimulationStatisticsCalculator simulationWithoutPlantsAndFiresStatistics;
 
     @BeforeEach
     void setUp() {
@@ -37,9 +40,9 @@ class SimulationStatisticsTest {
         this.simulationWithoutAnimals = new SimulationContext(configuration2);
         this.simulationWithoutPlantsAndFires = new SimulationContext(configuration3);
 
-        this.simulationWithAnimalsStatistics = new SimulationStatistics(simulationWithAnimals);
-        this.simulationWithoutAnimalsStatistics = new SimulationStatistics(simulationWithoutAnimals);
-        this.simulationWithoutPlantsAndFiresStatistics = new SimulationStatistics(simulationWithoutPlantsAndFires);
+        this.simulationWithAnimalsStatistics = new SimulationStatisticsCalculator(simulationWithAnimals);
+        this.simulationWithoutAnimalsStatistics = new SimulationStatisticsCalculator(simulationWithoutAnimals);
+        this.simulationWithoutPlantsAndFiresStatistics = new SimulationStatisticsCalculator(simulationWithoutPlantsAndFires);
     }
 
 
@@ -58,16 +61,16 @@ class SimulationStatisticsTest {
 
     @Test
     void getAnimalCountShouldReturnProperCountOfAnimalsEveryday() {
-        for(int i=0; i < 16; i++){
-            assertEquals(10 , simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
+        for (int i = 0; i < 16; i++) {
+            assertEquals(10, simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
             simulationWithoutPlantsAndFires.handleDayEnds();
         }
-        assertEquals(0 , simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
+        assertEquals(0, simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
     }
 
     @Test
     void getAverageAnimalEnergy() {
-        for(int i=0; i < 15; i++){
+        for (int i = 0; i < 15; i++) {
             assertTrue(simulationWithoutPlantsAndFiresStatistics.getAverageAnimalEnergy().isPresent());
             assertEquals(15 - i, simulationWithoutPlantsAndFiresStatistics.getAverageAnimalEnergy().getAsDouble(), 0.01);
             simulationWithoutPlantsAndFires.handleDayEnds();
@@ -80,7 +83,7 @@ class SimulationStatisticsTest {
     void getAverageDeadAnimalTimeLife() {
 
         // given & when
-        for(int i=0; i < 16; i++){
+        for (int i = 0; i < 16; i++) {
             simulationWithoutPlantsAndFires.handleDayEnds();
         }
         var averageTimeLifeOnMapWithOnlyAnimals = simulationWithoutPlantsAndFiresStatistics.getAverageDeadAnimalTimeLife();
@@ -145,12 +148,12 @@ class SimulationStatisticsTest {
         SimulationContext mockSimulationContext = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext.getAliveAnimals()).thenReturn(Set.of(animal1, animal2, animal3, animal4));
         when(mockSimulationContext.getDeadAnimals()).thenReturn(Set.of(animal5));
-        var simulationStatistics = new SimulationStatistics(mockSimulationContext);
+        var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
 
         SimulationContext mockSimulationContext2 = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext2.getAliveAnimals()).thenReturn(Set.of());
         when(mockSimulationContext2.getDeadAnimals()).thenReturn(Set.of(animal5));
-        var simulationStatistics2 = new SimulationStatistics(mockSimulationContext2);
+        var simulationStatistics2 = new SimulationStatisticsCalculator(mockSimulationContext2);
 
         // when
         var average = simulationStatistics.getAverageAnimalCountOfChildren();
@@ -220,12 +223,12 @@ class SimulationStatisticsTest {
         SimulationContext mockSimulationContext = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext.getAliveAnimals()).thenReturn(Set.of(animal1, animal2, animal3, animal4));
         when(mockSimulationContext.getDeadAnimals()).thenReturn(Set.of(animal5, animal6));
-        var simulationStatistics = new SimulationStatistics(mockSimulationContext);
+        var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
 
         SimulationContext mockSimulationContext2 = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext2.getAliveAnimals()).thenReturn(Set.of());
         when(mockSimulationContext2.getDeadAnimals()).thenReturn(Set.of(animal5));
-        var simulationStatistics2 = new SimulationStatistics(mockSimulationContext2);
+        var simulationStatistics2 = new SimulationStatisticsCalculator(mockSimulationContext2);
 
         // when
         var mostPopularGenotypeSimulation1 = simulationStatistics.getMostPopularGenotype();
@@ -236,4 +239,27 @@ class SimulationStatisticsTest {
         assertTrue(mostPopularGenotypeSimulation2.isEmpty());
         assertEquals(mostPopularGenotypeSimulation1.get(), mostPopularGenotypeSimulation1.get());
     }
+
+    @Test
+    void getEmptyFieldsCount() {
+        // given
+        SimulationContext mockSimulationContext = Mockito.mock(SimulationContext.class);
+        var animal1 = Animal.builder().position(new Vector2d(2, 2)).build();
+        var animal2 = Animal.builder().position(new Vector2d(2, 2)).build();
+        var plant1 = new Plant(new Vector2d(3, 3));
+        var plant2 = new Plant(new Vector2d(4, 3));
+        var plant3 = new Plant(new Vector2d(2, 2));
+
+        when(mockSimulationContext.getMapElements()).thenReturn(Set.of(animal1, animal2, plant1, plant2, plant3));
+        var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
+
+        // when
+        var emptyFieldsCount = simulationStatistics.getEmptyFieldsCount(new Boundary(new Vector2d(0, 0), new Vector2d(5, 5)));
+        var plantCount = simulationStatistics.getPlantCount();
+
+        // then
+        assertEquals(33, emptyFieldsCount);
+        assertEquals(3, plantCount);
+    }
+
 }

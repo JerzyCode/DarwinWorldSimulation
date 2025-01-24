@@ -6,17 +6,18 @@ import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.statistics.SimulationStatisticsCalculator;
+import agh.ics.oop.model.statistics.Statistics;
 import agh.ics.oop.model.statistics.StatisticsDataProvider;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SimulationContext implements StatisticsDataProvider {
     private final Configuration configuration;
@@ -25,6 +26,8 @@ public class SimulationContext implements StatisticsDataProvider {
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
+    private final Statistics simulationStatistics = new Statistics();
+    private final SimulationStatisticsCalculator statisticsCalculator = new SimulationStatisticsCalculator(this);
 
 
     public SimulationContext(Configuration configuration) {
@@ -43,6 +46,7 @@ public class SimulationContext implements StatisticsDataProvider {
         worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
         worldMap.sendDayHasEndedNotification(currentDay);
+        updateStatistics();
         currentDay++;
     }
 
@@ -96,9 +100,26 @@ public class SimulationContext implements StatisticsDataProvider {
     }
 
     @Override
-    public int getCurrentDay() {
-        return currentDay;
+    public Set<WorldElement> getMapElements() {
+        return (Set<WorldElement>) worldMap.getElements();
     }
 
+    public Statistics getStatistics() {
+        return simulationStatistics;
+    }
 
+    public UUID getWorldMapUuid() {
+        return worldMap.getId();
+    }
+
+    private void updateStatistics() {
+        simulationStatistics.setCurrentDay(currentDay);
+        simulationStatistics.setAnimalCount(statisticsCalculator.getAnimalCount());
+        simulationStatistics.setPlantCount((statisticsCalculator.getPlantCount()));
+        simulationStatistics.setFreeFieldsCount(statisticsCalculator.getEmptyFieldsCount(worldMap.getCurrentBounds()));
+        simulationStatistics.setAverageEnergy(statisticsCalculator.getAverageAnimalEnergy().orElse(0));
+        simulationStatistics.setMostPopularGenotype(statisticsCalculator.getMostPopularGenotype().orElse(new ArrayList<>()));
+        simulationStatistics.setAverageLifespan(statisticsCalculator.getAverageDeadAnimalTimeLife().orElse(0));
+        simulationStatistics.setAverageChildren(statisticsCalculator.getAverageAnimalCountOfChildren().orElse(0));
+    }
 }

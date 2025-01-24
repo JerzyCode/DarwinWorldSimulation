@@ -113,19 +113,6 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
 
-    public int getPlantCount() {
-        return plants.size();
-    }
-
-    public int getCountOfEmptyFields() {
-        long countOfOccupiedFields = getElements().stream()
-                .map(WorldElement::getPosition)
-                .distinct()
-                .count();
-
-        return calculateSize() - (int) countOfOccupiedFields;
-    }
-
     private void consumePlants() {
         animals.keySet().stream()
                 .filter(this::isPlantAtPosition)
@@ -164,8 +151,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
         var child = breeder.breed(parent1, parent2);
         try {
             place(child);
-        } catch (IncorrectPositionException e) {
-            System.out.println("Child can not be placed: " + e.getMessage());
+        } catch (IncorrectPositionException ignored) {
         }
     }
 
@@ -174,8 +160,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
-                    } catch (IncorrectPositionException e) {
-                        System.out.println("Couldn't place plant: " + e.getMessage());
+                    } catch (IncorrectPositionException ignored) {
                     }
                 });
     }
@@ -186,7 +171,6 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                     try {
                         placePlant(plant);
                     } catch (IncorrectPositionException e) {
-                        System.out.println("Couldn't place plant: " + e.getMessage());
                     }
                 });
     }

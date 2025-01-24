@@ -26,8 +26,6 @@ public class ConfigurationPresenter {
     private TextField saveNameInput;
     @FXML
     private Label errorLabel;
-
-    //  Map configuration elements
     @FXML
     private MenuButton menuButton;
     @FXML
@@ -40,8 +38,6 @@ public class ConfigurationPresenter {
     private TextField widthInput;
     @FXML
     private TextField startAnimalCountInput;
-
-    //  Animal configuration elements
     @FXML
     private MenuButton mutationVariantMenuButton;
     @FXML
@@ -56,8 +52,6 @@ public class ConfigurationPresenter {
     private TextField maxMutationCountInput;
     @FXML
     private TextField genomeLengthInput;
-
-    //  Simulation configuration elements
     @FXML
     private MenuButton plantVariantMenuButton;
     @FXML
@@ -78,6 +72,8 @@ public class ConfigurationPresenter {
     private TextField fireDurationInput;
     @FXML
     private TextField startPlantCountInput;
+    @FXML
+    public CheckBox saveStatisticsToggle;
 
     private WorldMapVariant mapVariant;
     private PlantVariant plantVariant;
@@ -117,6 +113,7 @@ public class ConfigurationPresenter {
         var simulationConfiguration = SimulationConfiguration.builder()
                 .daysCount(Integer.parseInt(daysCountInput.getText()))
                 .startAnimalCount(Integer.parseInt(startAnimalCountInput.getText()))
+                .saveStatisticsCsv(saveStatisticsToggle.isSelected())
                 .build();
 
         var worldMapConfiguration = WorldMapConfiguration.builder()

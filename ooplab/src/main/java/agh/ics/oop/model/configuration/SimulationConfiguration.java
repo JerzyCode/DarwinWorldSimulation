@@ -14,12 +14,15 @@ import lombok.ToString;
 public class SimulationConfiguration {
     private final int daysCount;
     private final int startAnimalCount;
+    private final boolean saveStatisticsCsv;
 
     @JsonCreator
     SimulationConfiguration(
             @JsonProperty("daysCount") int daysCount,
-            @JsonProperty("startAnimalCount") int startAnimalCount) {
+            @JsonProperty("startAnimalCount") int startAnimalCount,
+            @JsonProperty("saveStatisticsCsv") boolean saveStatisticsCsv) {
         this.daysCount = daysCount;
         this.startAnimalCount = startAnimalCount;
+        this.saveStatisticsCsv = saveStatisticsCsv;
     }
 }

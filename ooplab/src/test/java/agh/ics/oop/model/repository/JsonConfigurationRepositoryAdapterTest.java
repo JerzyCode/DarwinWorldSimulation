@@ -25,7 +25,7 @@ class JsonConfigurationRepositoryAdapterTest {
 
     @AfterEach
     void tearDown() {
-        deleteTestDirectory();
+        DirectoryRemover.deleteTestDirectory(TEST_PATH);
     }
 
     @Test
@@ -149,27 +149,6 @@ class JsonConfigurationRepositoryAdapterTest {
         // when & then
         assertThrows(DeleteSaveException.class, () -> sut.delete("no exist"));
     }
-
-
-    private void deleteTestDirectory() {
-        File directory = new File(TEST_PATH);
-        if (directory.exists()) {
-            File[] files = directory.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (!file.delete()) {
-                        System.out.println("Couldn't delete file: " + file.getAbsolutePath());
-                    }
-                }
-            }
-
-            if (!directory.delete()) {
-                System.out.println("Couldn't delete directory: " + directory.getAbsolutePath());
-            }
-        }
-        assertFalse(directory.exists(), "The directory should be deleted.");
-    }
-
 
     private boolean isFileSaved(String saveName, File[] directoryFiles) {
         return Arrays.stream(directoryFiles).anyMatch(file -> file.getName().equals(String.format("%s.json", saveName)));
