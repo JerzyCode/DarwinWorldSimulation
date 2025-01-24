@@ -72,7 +72,6 @@ public class SimulationPresenter implements MapChangeListener {
     @Setter
     private Configuration configuration;
     private SimulationEngine simulationEngine;
-//    private SimulationContext simulationContext;
     private SimulationStatistics simulationStatistics;
 
     private double scaleFactor = 1.0;

@@ -7,5 +7,6 @@ import java.util.Set;
 public interface AnimalDataProvider {
 
     Set<Animal> getDeadAnimals();
+
     Set<Animal> getAliveAnimals();
 }

@@ -37,19 +37,13 @@ public class SimulationStatistics {
     }
 
     public Optional<List<Gen>> getMostPopularGenotype() {
-        Map<List<Gen>, Long> genotypeCount = animalDataProvider.getAliveAnimals().stream()
+        return animalDataProvider.getAliveAnimals().stream()
                 .map(Animal::getGenome)
                 .map(Genome::getGens)
-                .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()));
-
-        long maxCount = genotypeCount.values().stream()
-                .max(Long::compareTo)
-                .orElse(0L);
-
-        return genotypeCount.entrySet().stream()
-                .filter(entry -> entry.getValue() == maxCount)
-                .map(Map.Entry::getKey)
-                .findFirst();
+                .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey);
     }
 
 }
