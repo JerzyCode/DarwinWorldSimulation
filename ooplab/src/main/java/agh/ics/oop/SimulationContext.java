@@ -10,13 +10,15 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
-import agh.ics.oop.model.statistics.AnimalDataProvider;
+import agh.ics.oop.model.statistics.StatisticsDataProvider;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-public class SimulationContext implements AnimalDataProvider {
+public class SimulationContext implements StatisticsDataProvider {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
     @Getter
@@ -92,5 +94,11 @@ public class SimulationContext implements AnimalDataProvider {
     public Set<Animal> getAliveAnimals() {
         return worldMap.getAnimals();
     }
+
+    @Override
+    public int getCurrentDay() {
+        return currentDay;
+    }
+
 
 }
