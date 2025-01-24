@@ -105,7 +105,9 @@ public class SimulationPresenter implements MapChangeListener {
         this.simulationContext = simulationContext;
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
-        var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount(), true);
+        var simulation = new Simulation(simulationContext,
+                configuration.getSimulationConfiguration().getDaysCount(),
+                configuration.getSimulationConfiguration().isSaveStatisticsCsv());
 
 
         simulationEngine = new SimulationEngine(simulation);

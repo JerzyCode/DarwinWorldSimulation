@@ -120,6 +120,9 @@
         <Label text = "Start Animal Count:" GridPane.columnIndex = "2" GridPane.rowIndex = "9"/>
         <TextField fx:id = "startAnimalCountInput" GridPane.columnIndex = "3" GridPane.rowIndex = "9"/>
 
+        <HBox GridPane.columnIndex = "2" GridPane.rowIndex = "10" GridPane.columnSpan = "2" alignment = "CENTER">
+            <CheckBox fx:id = "saveStatisticsToggle" text = "Save Statistics To Csv"/>
+        </HBox>
 
         <Label text = "Saved Configurations" GridPane.columnIndex = "4" GridPane.rowIndex = "0">
             <font>
