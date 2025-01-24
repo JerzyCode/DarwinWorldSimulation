@@ -4,7 +4,8 @@ import agh.ics.oop.model.exceptions.DirectoryNotCreatedException;
 
 import java.io.File;
 
-class DirectoryHelper {
+class DirectoryInitializer {
+
     static File getDirectory(String path) {
         File directory = new File(path);
         if (!directory.exists()) {

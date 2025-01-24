@@ -43,7 +43,7 @@ class CsvStatisticsRepositoryAdapterTest {
     void tearDown() {
         try {
             sut.close();
-            FileHelper.deleteTestDirectory(TEST_PATH);
+            DirectoryRemover.deleteTestDirectory(TEST_PATH);
         } catch (IOException e) {
             fail("Cannot close test writer, e=" + e.getMessage());
             throw new RuntimeException();

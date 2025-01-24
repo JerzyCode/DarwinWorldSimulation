@@ -4,7 +4,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class FileHelper {
+class DirectoryRemover {
 
     static void deleteTestDirectory(String path) {
         File directory = new File(path);

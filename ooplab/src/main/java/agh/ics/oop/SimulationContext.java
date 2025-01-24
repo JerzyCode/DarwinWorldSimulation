@@ -17,10 +17,7 @@ import agh.ics.oop.model.statistics.StatisticsDataProvider;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SimulationContext implements StatisticsDataProvider {
     private final Configuration configuration;
@@ -111,8 +108,8 @@ public class SimulationContext implements StatisticsDataProvider {
         return simulationStatistics;
     }
 
-    public String getWorldMapUuid() {
-        return worldMap.getId().toString();
+    public UUID getWorldMapUuid() {
+        return worldMap.getId();
     }
 
     private void updateStatistics() {

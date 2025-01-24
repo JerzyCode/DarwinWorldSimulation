@@ -17,7 +17,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
     private final File directory;
 
     JsonConfigurationRepositoryAdapter(String path) {
-        directory = DirectoryHelper.getDirectory(path);
+        directory = DirectoryInitializer.getDirectory(path);
         loadSaveNames();
     }
 

@@ -10,7 +10,7 @@ public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort,
     private BufferedWriter writer;
 
     CsvStatisticsRepositoryAdapter(String path) {
-        directory = DirectoryHelper.getDirectory(path);
+        directory = DirectoryInitializer.getDirectory(path);
     }
 
     public CsvStatisticsRepositoryAdapter() {
@@ -43,7 +43,7 @@ public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort,
 
     private void initializeWriter(File file) throws IOException {
         if (writer == null) {
-            writer = new BufferedWriter(new FileWriter(file, true)); // "true" oznacza dopisanie
+            writer = new BufferedWriter(new FileWriter(file, true));
             if (file.exists() && file.length() == 0) {
                 writer.write(getHeaders());
                 writer.newLine();

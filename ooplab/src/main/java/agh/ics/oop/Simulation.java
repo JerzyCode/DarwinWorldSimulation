@@ -32,7 +32,7 @@ public class Simulation implements Runnable {
 
                 if (statisticsSaveEnabled) {
                     Statistics statistics = simulationContext.getStatistics();
-                    String worldMapUuid = simulationContext.getWorldMapUuid();
+                    String worldMapUuid = simulationContext.getWorldMapUuid().toString();
                     statisticsRepositoryPort.save(statistics, worldMapUuid);
                 }
 

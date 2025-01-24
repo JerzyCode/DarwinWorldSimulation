@@ -25,7 +25,7 @@ class JsonConfigurationRepositoryAdapterTest {
 
     @AfterEach
     void tearDown() {
-        FileHelper.deleteTestDirectory(TEST_PATH);
+        DirectoryRemover.deleteTestDirectory(TEST_PATH);
     }
 
     @Test
