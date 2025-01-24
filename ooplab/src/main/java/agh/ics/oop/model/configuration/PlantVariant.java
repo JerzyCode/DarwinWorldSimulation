@@ -1,7 +1,7 @@
 package agh.ics.oop.model.configuration;
 
 public enum PlantVariant {
-    NONE("None"),
+    FULL_RANDOM("Full random"),
     FORESTED_EQUATORS("Forest Equators");
 
     private final String displayText;
