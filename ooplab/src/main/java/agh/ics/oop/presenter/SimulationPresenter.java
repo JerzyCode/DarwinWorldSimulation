@@ -15,6 +15,8 @@ import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
+import agh.ics.oop.model.repository.CsvStatisticsRepositoryAdapter;
+import agh.ics.oop.model.repository.StatisticsRepositoryPort;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,6 +69,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Configuration configuration;
     private SimulationEngine simulationEngine;
     private SimulationContext simulationContext;
+    private StatisticsRepositoryPort statisticsRepository;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -95,11 +98,13 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         if (event.getEventType() == EventType.DAY_ENDS) {
             Platform.runLater(this::drawMap);
             Platform.runLater(this::updateStatisticsDisplay);
+            Platform.runLater(this::saveStatistics);
         }
     }
 
     @Override
     public void onSimulationFinished() {
+        closeRepositoryPort();
         Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader();
@@ -125,12 +130,11 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
         this.simulationContext = simulationContext;
+        this.statisticsRepository = new CsvStatisticsRepositoryAdapter();
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
         this.simulationContext.addSimulationFinishedListener(this);
-        var simulation = new Simulation(simulationContext,
-                configuration.getSimulationConfiguration().getDaysCount(),
-                configuration.getSimulationConfiguration().isSaveStatisticsCsv());
+        var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
 
 
         simulationEngine = new SimulationEngine(simulation);
@@ -235,6 +239,22 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         avgLifespanLabel.setText(String.format("%.2f", statistics.getAverageLifespan()));
         avgChildrenLabel.setText(String.format("%.2f", statistics.getAverageChildren()));
         currentDayLabel.setText(String.format("%d", statistics.getCurrentDay()));
+    }
+
+    private void saveStatistics() {
+        if (configuration.getSimulationConfiguration().isSaveStatisticsCsv()) {
+            statisticsRepository.save(simulationContext.getStatistics(), worldMap.getId().toString());
+        }
+    }
+
+    private void closeRepositoryPort() {
+        if (configuration.getSimulationConfiguration().isSaveStatisticsCsv()) {
+            try {
+                statisticsRepository.close();
+            } catch (IOException e) {
+                System.out.println("Error closing statistics repository");
+            }
+        }
     }
 
     private void setGridOnScrollEvent() {
