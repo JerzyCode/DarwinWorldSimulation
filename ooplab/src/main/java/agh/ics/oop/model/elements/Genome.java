@@ -9,7 +9,7 @@ import java.util.random.RandomGenerator;
 
 public class Genome {
     private final List<Gen> gens;
-    private int currentIndex = 0;
+    private int currentIndex;
     private final MutationVariant mutation;
 
     public Genome(List<Gen> gens) {
@@ -17,8 +17,13 @@ public class Genome {
     }
 
     public Genome(List<Gen> gens, MutationVariant mutation) {
+        this(gens, mutation, 0);
+    }
+
+    public Genome(List<Gen> gens, MutationVariant mutation, int index) {
         this.gens = gens;
         this.mutation = mutation;
+        this.currentIndex = index;
     }
 
     public void mutate(int count) {
