@@ -6,19 +6,17 @@ import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Gen;
-import agh.ics.oop.model.elements.Genome;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.statistics.AnimalDataProvider;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class SimulationContext {
+public class SimulationContext implements AnimalDataProvider {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
     @Getter
@@ -85,42 +83,14 @@ public class SimulationContext {
         ((AbstractWorldMap) worldMap).addListener(listener);
     }
 
-
-    public int getAnimalCount() {
-        return worldMap.getAnimals().size();
+    @Override
+    public Set<Animal> getDeadAnimals() {
+        return Collections.unmodifiableSet(deadAnimals);
     }
 
-    public OptionalDouble getAverageAnimalEnergy() {
-        return worldMap.getAnimals().stream()
-                .mapToDouble(Animal::getEnergy)
-                .average();
+    @Override
+    public Set<Animal> getAliveAnimals() {
+        return worldMap.getAnimals();
     }
 
-    public OptionalDouble getAverageDeadAnimalTimeLife() {
-        return deadAnimals.stream()
-                .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
-                .average();
-    }
-
-    public OptionalDouble getAverageAnimalCountOfChildren() {
-        return worldMap.getAnimals().stream()
-                .mapToInt(Animal::getCountOfChildren)
-                .average();
-    }
-
-    public Optional<List<Gen>> getMostPopularGenotype() {
-        Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
-                .map(Animal::getGenome)
-                .map(Genome::getGens)
-                .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()));
-
-        long maxCount = genotypeCount.values().stream()
-                .max(Long::compareTo)
-                .orElse(0L);
-
-        return genotypeCount.entrySet().stream()
-                .filter(entry -> entry.getValue() == maxCount)
-                .map(Map.Entry::getKey)
-                .findFirst();
-    }
 }

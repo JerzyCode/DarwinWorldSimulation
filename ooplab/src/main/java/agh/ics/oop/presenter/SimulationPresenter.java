@@ -16,6 +16,7 @@ import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
+import agh.ics.oop.model.statistics.SimulationStatistics;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -70,7 +71,7 @@ public class SimulationPresenter implements MapChangeListener {
     @Setter
     private Configuration configuration;
     private SimulationEngine simulationEngine;
-    private SimulationContext simulationContext;
+    private SimulationStatistics simulationStatistics;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -111,7 +112,7 @@ public class SimulationPresenter implements MapChangeListener {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
         }
 
-        simulationContext = new SimulationContext(configuration);
+        var simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
 //        simulationContext.addMapChangedListener(new LoggerListener());
@@ -206,18 +207,18 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void updateStatistics() {
-        animalCountLabel.setText(String.format("%d", simulationContext.getAnimalCount()));
+        animalCountLabel.setText(String.format("%d", simulationStatistics.getAnimalCount()));
         plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
         freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
-        avgEnergyLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalEnergy().orElse(0.0)));
-        Optional<List<Gen>> mostPopularGenotype = simulationContext.getMostPopularGenotype();
+        avgEnergyLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalEnergy().orElse(0.0)));
+        Optional<List<Gen>> mostPopularGenotype = simulationStatistics.getMostPopularGenotype();
         if (mostPopularGenotype.isPresent()) {
             popularGenotypeLabel.setText(mostPopularGenotype.get().toString());
         } else {
             popularGenotypeLabel.setText("No animals");
         }
-        avgLifespanLabel.setText(String.format("%.2f", simulationContext.getAverageDeadAnimalTimeLife().orElse(0.0)));
-        avgChildrenLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalCountOfChildren().orElse(0.0)));
+        avgLifespanLabel.setText(String.format("%.2f", simulationStatistics.getAverageDeadAnimalTimeLife().orElse(0.0)));
+        avgChildrenLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalCountOfChildren().orElse(0.0)));
     }
 
     private void setGridOnScrollEvent() {

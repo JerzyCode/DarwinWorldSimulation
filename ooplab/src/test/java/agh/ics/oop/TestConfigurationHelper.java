@@ -94,4 +94,15 @@ public class TestConfigurationHelper {
                 .simulationConfiguration(defaultSimulationConfiguration(2000, 0))
                 .build();
     }
+
+    public static Configuration createFireConfigurationNoPlantsNoFire() {
+        return Configuration.builder()
+                .animalConfiguration(animalConfigurationWithNoCopulation())
+                .worldMapConfiguration(defaultWorldMapConfiguration(
+                        WorldMapVariant.FIRE, 0, 0, 0, 0))
+                .simulationConfiguration(defaultSimulationConfiguration(2000, 10))
+                .build();
+    }
+
+
 }

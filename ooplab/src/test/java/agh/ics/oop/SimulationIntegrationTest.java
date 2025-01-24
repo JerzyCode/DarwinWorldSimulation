@@ -47,10 +47,13 @@ class SimulationIntegrationTest {
         //then
         var createdMap = simulationContext.getWorldMap();
         var elements = createdMap.getElements();
+        var animalCount = elements.stream()
+                .filter(element -> element instanceof Animal)
+                .count();
 
         assertEquals(mapConfiguration.getStartPlantCount(), countElements(elements, Plant.class));
         assertEquals(simulationConfiguration.getStartAnimalCount(), countElements(elements, Animal.class));
-        assertEquals(simulationConfiguration.getStartAnimalCount(), simulationContext.getAnimalCount());
+        assertEquals(simulationConfiguration.getStartAnimalCount(), animalCount);
     }
 
     @Test
