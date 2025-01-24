@@ -1,15 +1,15 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.configuration.*;
+import agh.ics.oop.model.exceptions.DeleteSaveException;
 import agh.ics.oop.model.exceptions.LoadConfigurationException;
 import agh.ics.oop.model.exceptions.SaveFailedException;
 import agh.ics.oop.model.repository.ConfigurationRepositoryPort;
 import agh.ics.oop.model.repository.JsonConfigurationRepositoryAdapter;
+import agh.ics.oop.presenter.components.ConfigurationButton;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.function.UnaryOperator;
@@ -22,8 +22,6 @@ public class ConfigurationPresenter {
     private ScrollPane savedScrollPane;
     @FXML
     private VBox configurationListContainer;
-    @FXML
-    private Button saveConfigurationButton;
     @FXML
     private TextField saveNameInput;
     @FXML
@@ -65,8 +63,6 @@ public class ConfigurationPresenter {
     @FXML
     private MenuItem forestEquatorsVariant;
     @FXML
-    private MenuItem noneVariant;
-    @FXML
     private TextField daysCountInput;
     @FXML
     private TextField energyGainInput;
@@ -96,7 +92,7 @@ public class ConfigurationPresenter {
         forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
         earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
         fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
-        configurationRepositoryPort.getSaveNames().forEach(this::addLoadSavedConfigurationButton);
+        configurationRepositoryPort.getSaveNames().forEach(this::addLoadSavedConfigurationPane);
         savedScrollPane.setFitToWidth(true);
         saveNameInput.textProperty().addListener((observable, oldValue, newValue) -> clearError());
         errorLabel.setMaxWidth(200);
@@ -257,7 +253,7 @@ public class ConfigurationPresenter {
         var inputName = saveNameInput.getText();
         try {
             configurationRepositoryPort.save(createConfiguration(), inputName);
-            addLoadSavedConfigurationButton(inputName);
+            addLoadSavedConfigurationPane(inputName);
         } catch (SaveFailedException e) {
             System.out.println(e.getMessage());
             displayError(e.getMessage());
@@ -274,13 +270,18 @@ public class ConfigurationPresenter {
         }
     }
 
-    private void addLoadSavedConfigurationButton(String saveName) {
-        Button button = new Button(saveName);
-        button.setMaxWidth(Double.MAX_VALUE);
-        VBox.setVgrow(button, Priority.ALWAYS);
-        HBox.setHgrow(button, Priority.ALWAYS);
-        configurationListContainer.getChildren().add(button);
-        button.setOnAction(event -> loadSavedConfiguration(saveName));
+    private void deleteSavedConfiguration(String saveName) {
+        try {
+            configurationRepositoryPort.delete(saveName);
+        } catch (DeleteSaveException e) {
+            System.out.println(e.getMessage());
+            displayError(e.getMessage());
+        }
+    }
+
+    private void addLoadSavedConfigurationPane(String saveName) {
+        var newButton = new ConfigurationButton(saveName, event -> loadSavedConfiguration(saveName), event -> deleteSavedConfiguration(saveName));
+        configurationListContainer.getChildren().add(newButton);
     }
 
     private void displayError(String message) {

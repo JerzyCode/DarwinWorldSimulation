@@ -1,10 +1,12 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.configuration.ConfigurationValidator;
+import agh.ics.oop.model.exceptions.WrongConfigurationParameterException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -18,9 +20,11 @@ public class MainPanelPresenter {
     @FXML
     private StackPane contentContainer;
     @FXML
-    private Button startSimulationButton;
+    private Label errorLabel;
 
     private ConfigurationPresenter configurationPresenter;
+
+    private final ConfigurationValidator validator = new ConfigurationValidator();
 
     public void initialize() throws IOException {
         loadConfigurationViews();
@@ -41,15 +45,24 @@ public class MainPanelPresenter {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
 
-        var configuration = configurationPresenter.createConfiguration();
-        System.out.println("Starting simulation with configuration: " + configuration);
+        try {
+            var configuration = configurationPresenter.createConfiguration();
+            validator.validate(configuration);
+            System.out.println("Starting simulation with configuration: " + configuration);
 
-        SimulationPresenter presenter = loader.getController();
-        presenter.setConfiguration(configuration);
+            SimulationPresenter presenter = loader.getController();
+            presenter.setConfiguration(configuration);
 
-        configureStage(stage, viewRoot);
-        stage.setOnCloseRequest(event -> presenter.stopSimulation());
-        stage.show();
+            hideErrorMessage();
+            configureStage(stage, viewRoot);
+            stage.setOnCloseRequest(event -> presenter.stopSimulation());
+            stage.show();
+
+        } catch (WrongConfigurationParameterException e) {
+            System.out.println(e.getMessage());
+            showErrorMessage(e.getMessage());
+        }
+
     }
 
     private void configureStage(Stage primaryStage, BorderPane viewRoot) {
@@ -60,4 +73,14 @@ public class MainPanelPresenter {
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
+
+    private void showErrorMessage(String message) {
+        errorLabel.setText(message);
+    }
+
+    private void hideErrorMessage() {
+        errorLabel.setText("");
+    }
+
+
 }

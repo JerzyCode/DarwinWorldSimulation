@@ -108,7 +108,6 @@ public class SimulationContext {
                 .average();
     }
 
-    // TODO: nie wiem czy to chodzi o cały Genom czy to mogą być podciągi z Genomu też, ale wtedy najpopularniejszy genotyp to byłby zawsze jakiś jeden gen
     public Optional<List<Gen>> getMostPopularGenotype() {
         Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
                 .map(Animal::getGenome)
