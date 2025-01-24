@@ -440,6 +440,44 @@ class EarthTest {
     }
 
     @Test
+    void animalStepOnPlantShouldIncreaseEnergyByStrongerAnimal() {
+        // given
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
+        var plant = new Plant(new Vector2d(2, 2), 5);
+        var strongerAnimal = Animal.builder()
+                .position(new Vector2d(2, 2))
+                .genome(new Genome(List.of(new Gen(4))))
+                .energy(25)
+                .orientation(MapDirection.NORTH)
+                .build();
+
+        var weakerAnimal = Animal.builder()
+                .position(new Vector2d(2, 2))
+                .genome(new Genome(List.of(new Gen(4))))
+                .energy(10)
+                .orientation(MapDirection.NORTH)
+                .build();
+
+        try {
+            earth.place(strongerAnimal);
+            earth.place(weakerAnimal);
+            earth.placePlant(plant);
+        } catch (IncorrectPositionException e) {
+            fail("Placing element should not throw exception");
+        }
+
+        //when
+        earth.handleDayEnds(2);
+
+        //then
+        assertEquals(new Vector2d(2, 2), strongerAnimal.getPosition());
+        assertEquals(new Vector2d(2, 2), weakerAnimal.getPosition());
+        assertEquals(30, strongerAnimal.getEnergy());
+        assertEquals(10, weakerAnimal.getEnergy());
+        assertFalse(earth.isPlantAtPosition(new Vector2d(2, 2)));
+    }
+
+    @Test
     void handleDayEndsShouldGrowNewPlants() {
         // given
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
@@ -501,6 +539,71 @@ class EarthTest {
         assertTrue(bornAnimal.getParents().contains(parent2));
     }
 
+    @Test
+    void animalIntegrationStepOnEachOtherShouldCopulateOnlyStrongest() {
+        // given
+        var animalConfiguration = AnimalConfiguration
+                .builder()
+                .wellFedEnergy(15)
+                .genomeLength(3)
+                .lossCopulateEnergy(5)
+                .startEnergy(50)
+                .build();
+
+        var factory = new AnimalFactory(animalConfiguration);
+        AnimalBreeder breeder = (animal1, animal2) -> factory.birthAnimal(animal1, animal2, 1);
+
+        var parent1 = factory.createAnimal(new Vector2d(0, 3), 1);
+        var parent2 = factory.createAnimal(new Vector2d(0, 3), 1);
+        var weakAnimal1 = Animal.builder()
+                .position(new Vector2d(0, 3))
+                .energy(34)
+                .startDay(1)
+                .build();
+
+        var weakAnimal2 = Animal.builder()
+                .position(new Vector2d(0, 3))
+                .energy(25)
+                .startDay(1)
+                .build();
+
+
+        var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
+
+        try {
+            earth.place(parent1);
+            earth.place(parent2);
+            earth.place(weakAnimal1);
+            earth.place(weakAnimal2);
+        } catch (IncorrectPositionException e) {
+            fail("Placing element should not throw exception");
+        }
+        assertEquals(4, earth.getAnimalsAtPosition(new Vector2d(0, 3)).size());
+
+        //when
+        earth.handleDayEnds(1);
+
+        //then
+        var animalsAtPosition = earth.getAnimalsAtPosition(new Vector2d(0, 3));
+        var bornAnimalOptional = animalsAtPosition.stream()
+                .filter(animal -> animal != parent1 && animal != parent2 && animal != weakAnimal1 && animal != weakAnimal2)
+                .findAny();
+
+        assertTrue(bornAnimalOptional.isPresent());
+        var bornAnimal = bornAnimalOptional.get();
+
+        assertEquals(45, parent1.getEnergy());
+        assertEquals(45, parent2.getEnergy());
+        assertEquals(10, bornAnimal.getEnergy());
+        assertTrue(animalsAtPosition.contains(parent1));
+        assertTrue(animalsAtPosition.contains(parent2));
+        assertTrue(animalsAtPosition.contains(bornAnimal));
+        assertTrue(parent1.getChildren().contains(bornAnimal));
+        assertTrue(parent2.getChildren().contains(bornAnimal));
+        assertTrue(bornAnimal.getParents().contains(parent1));
+        assertTrue(bornAnimal.getParents().contains(parent2));
+    }
+
     private static Stream<Arguments> providePlacePlantArgumentsSuccess() {
         return Stream.of(
                 Arguments.of(new Plant(new Vector2d(0, 0))),
@@ -520,5 +623,4 @@ class EarthTest {
                 Arguments.of(new Plant(new Vector2d(5, 5)))
         );
     }
-
 }

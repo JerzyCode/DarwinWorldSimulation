@@ -14,7 +14,7 @@ public class Simulation implements Runnable {
         for (int i = 0; i < daysCount; i++) {
             try {
                 simulationContext.handleDayEnds();
-                Thread.sleep(50);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 System.out.println("Simulation was interrupted!!");
                 return;

@@ -3,7 +3,6 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.listener.LoggerListener;
 import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
@@ -161,12 +160,12 @@ public class SimulationPresenter implements MapChangeListener {
 
             Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
 
-            if (element instanceof Animal animal) {
-                var animalDrawing = createAnimalDrawing(animal.getEnergy());
-                mapGrid.add(animalDrawing, x, y);
-            } else if (element instanceof Plant) {
+            if (element instanceof Plant) {
                 rectangle.setFill(Color.LIGHTGREEN);
                 mapGrid.add(rectangle, x, y);
+            } else if (element instanceof Animal animal) {
+                var animalDrawing = createAnimalDrawing(animal.getEnergy());
+                mapGrid.add(animalDrawing, x, y);
             } else {
                 rectangle.setFill(Color.RED);
                 mapGrid.add(rectangle, x, y);
