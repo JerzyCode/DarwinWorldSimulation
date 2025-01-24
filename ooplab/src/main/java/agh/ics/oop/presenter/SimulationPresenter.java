@@ -46,7 +46,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     @FXML
     private GridPane mapGrid;
     @FXML
-    private Button startButton;
+    private Button startStopButton;
 
     //    Stats
     @FXML
@@ -139,13 +139,28 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
         simulationEngine = new SimulationEngine(simulation);
         simulationEngine.runAsyncInThreadPool();
-        startButton.setDisable(true);
+
+//        startStopButton.setDisable(true);
+        startStopButton.setText("Stop");
+        startStopButton.setOnAction(event -> stopSimulation());
     }
 
-    public void stopSimulation() {
+    public void endSimulation() {
         if (simulationEngine != null) {
-            simulationEngine.shutDown();
+            simulationEngine.stopAll();
         }
+    }
+
+    private void stopSimulation() {
+        startStopButton.setText("Start");
+        startStopButton.setOnAction(event -> resumeSimulation());
+        simulationEngine.pauseAll();
+    }
+
+    private void resumeSimulation() {
+        startStopButton.setText("Stop");
+        simulationEngine.resumeAll();
+        startStopButton.setOnAction(event -> stopSimulation());
     }
 
     private void clearGrid() {

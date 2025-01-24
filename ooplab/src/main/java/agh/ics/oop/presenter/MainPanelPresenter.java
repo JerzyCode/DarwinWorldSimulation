@@ -55,7 +55,7 @@ public class MainPanelPresenter {
 
             hideErrorMessage();
             configureStage(stage, viewRoot);
-            stage.setOnCloseRequest(event -> presenter.stopSimulation());
+            stage.setOnCloseRequest(event -> presenter.endSimulation());
             stage.show();
 
         } catch (WrongConfigurationParameterException e) {
