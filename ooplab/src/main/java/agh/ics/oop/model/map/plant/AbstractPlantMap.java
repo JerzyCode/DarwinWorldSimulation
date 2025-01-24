@@ -2,6 +2,7 @@ package agh.ics.oop.model.map.plant;
 
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.event.EventCreator;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
@@ -28,20 +29,14 @@ public abstract class AbstractPlantMap extends SimulationAbstractWorldMap implem
         }
 
         plants.put(plant.getPosition(), plant);
-        notifyListeners("Plant was placed on position: " + plant.getPosition());
+        notifyListeners(EventCreator.createPlantPlacedEvent(plant.getPosition()));
     }
 
     @Override
     public void removePlant(Vector2d position) {
         if (isPlantAtPosition(position)) {
             plants.remove(position);
-            notifyListeners("Plant was removed from position: " + position);
         }
-    }
-
-    @Override
-    public Plant getPlantAtPosition(Vector2d position) {
-        return plants.get(position);
     }
 
     @Override

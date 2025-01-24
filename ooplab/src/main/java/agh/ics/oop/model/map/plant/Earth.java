@@ -6,6 +6,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.event.EventCreator;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.Move;
@@ -13,6 +14,8 @@ import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationWorldMap {
     private final Boundary boundary;
@@ -30,7 +33,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
 
     @Override
     public void handleDayEnds(int currentDay) {
-        super.handleDayEnds(currentDay);
+        consumePlants();
+        copulateAnimals();
         growPlantsDaily();
     }
 
@@ -49,12 +53,9 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
 
     @Override
     public Collection<WorldElement> getElements() {
-        var elements = new ArrayList<WorldElement>(plants.values());
-        for (var entry : animals.entrySet()) {
-            elements.addAll(entry.getValue());
-        }
-
-        return Collections.unmodifiableCollection(elements);
+        return Stream
+                .concat(super.getElements().stream(), plants.values().stream())
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 
@@ -88,14 +89,18 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
             animalsAtPosition.remove(animal);
             animal.move(this, this);
             placeAnimalAtNewPosition(animal);
-            notifyListeners("Animal moved to position: " + animal.getPosition());
+            notifyListeners(EventCreator.createAnimalMovedEvent(animal.getPosition()));
         }
-
-        handleAnimalStepOnPlant(animal);
-        handleAnimalCopulate(animal);
     }
 
-    public Set<Animal> getAnimalsAtPosition(Vector2d position) {
+    @Override
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        return super.objectAt(position)
+                .or(() -> Optional.ofNullable(plants.get(position)));
+    }
+
+
+    Set<Animal> getAnimalsAtPosition(Vector2d position) {
         if (animals.containsKey(position)) {
             return animals.get(position);
         }
@@ -113,7 +118,11 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .distinct()
                 .count();
 
-        return getSize() - (int) countOfOccupiedFields;
+        return calculateSize() - (int) countOfOccupiedFields;
+    }
+
+    private void consumePlants() {
+        getAnimals().forEach(this::handleAnimalStepOnPlant);
     }
 
     private void handleAnimalStepOnPlant(Animal animal) {
@@ -124,19 +133,16 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
         }
     }
 
-    private void handleAnimalCopulate(Animal animal) {
-        if (!animal.canMakeChild()) {
-            return;
-        }
+    private void copulateAnimals() {
+        var animalsWhichCanBreed = getAnimals()
+                .stream()
+                .filter(Animal::canMakeChild)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        var position = animal.getPosition();
-        var other = animals.get(position).stream()
-                .filter(otherAnimal -> otherAnimal != animal &&
-                        otherAnimal.canMakeChild())
-                .findAny();
-
-        if (other.isPresent()) {
-            var child = breeder.breed(animal, other.get());
+        while (animalsWhichCanBreed.size() >= 2) {
+            var parent1 = animalsWhichCanBreed.removeFirst();
+            var parent2 = animalsWhichCanBreed.removeLast();
+            var child = breeder.breed(parent1, parent2);
             try {
                 place(child);
             } catch (IncorrectPositionException e) {
@@ -146,26 +152,30 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     private void initPlants(int startPlantCount) {
-        gardener.createPlants(plants.size(), getSize(), boundary, startPlantCount, plants.keySet())
+        gardener.createPlants(plants.size(), calculateSize(), boundary, startPlantCount, plants.keySet())
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
-                    } catch (Exception e) {
-                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    } catch (IncorrectPositionException e) {
+                        System.out.println("Couldn't place plant: " + e.getMessage());
                     }
                 });
     }
 
     private void growPlantsDaily() {
 
-        gardener.createPlantsDaily(plants.size(), getSize(), boundary, plants.keySet())
+        gardener.createPlantsDaily(plants.size(), calculateSize(), boundary, plants.keySet())
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
-                    } catch (Exception e) {
-                        //TODO zastanowic sie czy place plant powinno wyjatkiem walic
+                    } catch (IncorrectPositionException e) {
+                        System.out.println("Couldn't place plant: " + e.getMessage());
                     }
                 });
+    }
+
+    private int calculateSize() {
+        return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
     }
 
 }

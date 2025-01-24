@@ -8,7 +8,9 @@ import java.util.Set;
 public interface SimulationWorldMap extends WorldMap {
     void handleDayEnds(int currentDay);
 
+    void clearDeadAnimals();
+
     Set<Animal> getAnimals();
 
-    Set<Animal> getDeadAnimals();
+    void sendDayHasEndedNotification(int currentDay);
 }

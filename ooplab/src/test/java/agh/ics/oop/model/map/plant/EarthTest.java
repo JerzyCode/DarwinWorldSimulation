@@ -145,7 +145,10 @@ class EarthTest {
         //when && then
         assertThrows(PositionOccupiedByWorldElementException.class, () -> map.placePlant(plantToPlace));
         assertEquals(1, map.getPlantCount());
-        assertEquals(plantPlaced, map.getPlantAtPosition(plantPlaced.getPosition()));
+
+        var elementAtPosition = map.objectAt(plantPlaced.getPosition());
+        assertTrue(elementAtPosition.isPresent());
+        assertInstanceOf(Plant.class, elementAtPosition.get());
     }
 
     @Test
@@ -268,8 +271,14 @@ class EarthTest {
         assertEquals(2, map.getElements().size());
         assertEquals(new Vector2d(4, 3), animalW.getPosition());
         assertEquals(new Vector2d(0, 2), animalE.getPosition());
-        assertEquals(animalE, map.objectAt(animalE.getPosition()));
-        assertEquals(animalW, map.objectAt(animalW.getPosition()));
+
+        var animalAtMap1Opt = map.objectAt(animalE.getPosition());
+        assertTrue(animalAtMap1Opt.isPresent());
+        assertEquals(animalE, animalAtMap1Opt.get());
+
+        var animalAtMap2Opt = map.objectAt(animalW.getPosition());
+        assertTrue(animalAtMap2Opt.isPresent());
+        assertEquals(animalW, animalAtMap2Opt.get());
     }
 
     @Test
@@ -303,8 +312,15 @@ class EarthTest {
         assertEquals(new Vector2d(1, 0), animalS.getPosition());
         assertEquals(MapDirection.SOUTH, animalN.getOrientation());
         assertEquals(MapDirection.NORTH, animalS.getOrientation());
-        assertEquals(animalN, map.objectAt(animalN.getPosition()));
-        assertEquals(animalS, map.objectAt(animalS.getPosition()));
+
+        var animalOnMapOpt1 = map.objectAt(animalN.getPosition());
+        assertTrue(animalOnMapOpt1.isPresent());
+        assertEquals(animalN, animalOnMapOpt1.get());
+
+
+        var animalOnMapOpt2 = map.objectAt(animalS.getPosition());
+        assertTrue(animalOnMapOpt2.isPresent());
+        assertEquals(animalS, animalOnMapOpt2.get());
     }
 
     @Test
@@ -363,8 +379,19 @@ class EarthTest {
     void getSizeShouldReturn() {
         var map1 = new Earth(4, 10, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         var map2 = new Earth(14, 5, 5, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
-        assertEquals(4 * 10, map1.getSize());
-        assertEquals(14 * 5, map2.getSize());
+
+
+        var mapBoundary1 = map1.getCurrentBounds();
+        assertEquals(3, mapBoundary1.rightTopCorner().getX());
+        assertEquals(0, mapBoundary1.leftBottomCorner().getX());
+        assertEquals(0, mapBoundary1.leftBottomCorner().getY());
+        assertEquals(9, mapBoundary1.rightTopCorner().getY());
+
+        var mapBoundary2 = map2.getCurrentBounds();
+        assertEquals(13, mapBoundary2.rightTopCorner().getX());
+        assertEquals(0, mapBoundary2.leftBottomCorner().getX());
+        assertEquals(0, mapBoundary2.leftBottomCorner().getY());
+        assertEquals(4, mapBoundary2.rightTopCorner().getY());
     }
 
     private static Stream<Arguments> provideAdjustMoveArguments() {
@@ -385,40 +412,12 @@ class EarthTest {
     }
 
     @Test
-    void shouldRemoveAnimal() {
-        //given
-        var animal1 = Animal.builder()
-                .position(new Vector2d(2, 2))
-                .build();
-
-        var animal2 = Animal.builder()
-                .position(new Vector2d(2, 2))
-                .build();
-
-        try {
-            map.place(animal1);
-            map.place(animal2);
-        } catch (IncorrectPositionException e) {
-            fail("Should not fail placing animal, e=" + e.getMessage());
-        }
-
-        //when
-        map.removeAnimal(animal2);
-
-        //then
-        var animalsAtPosition = map.getAnimalsAtPosition(new Vector2d(2, 2));
-        assertEquals(1, animalsAtPosition.size());
-        assertTrue(animalsAtPosition.contains(animal1));
-        assertFalse(animalsAtPosition.contains(animal2));
-    }
-
-    @Test
     void animalStepOnPlantShouldIncreaseEnergy() {
         // given
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
         var plant = new Plant(new Vector2d(2, 2), 5);
         var animal = Animal.builder()
-                .position(new Vector2d(2, 3))
+                .position(new Vector2d(2, 2))
                 .genome(new Genome(List.of(new Gen(4))))
                 .energy(10)
                 .orientation(MapDirection.NORTH)
@@ -432,7 +431,7 @@ class EarthTest {
         }
 
         //when
-        earth.move(animal, MoveDirection.FORWARD);
+        earth.handleDayEnds(2);
 
         //then
         assertEquals(new Vector2d(2, 2), animal.getPosition());
@@ -440,7 +439,7 @@ class EarthTest {
         assertFalse(earth.isPlantAtPosition(new Vector2d(2, 2)));
     }
 
-    //    @Test TODO poprawić gardenera tak że ma działać
+    @Test
     void handleDayEndsShouldGrowNewPlants() {
         // given
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
@@ -466,13 +465,8 @@ class EarthTest {
 
         var factory = new AnimalFactory(animalConfiguration);
         AnimalBreeder breeder = (animal1, animal2) -> factory.birthAnimal(animal1, animal2, 1);
-        var parent1 = Animal.builder()
-                .position(new Vector2d(0, 4))
-                .genome(new Genome(List.of(new Gen(4))))
-                .energy(20)
-                .orientation(MapDirection.NORTH)
-                .build();
 
+        var parent1 = factory.createAnimal(new Vector2d(0, 3), 1);
         var parent2 = factory.createAnimal(new Vector2d(0, 3), 1);
         var earth = new Earth(10, 10, 10, 0, 5, PlantVariant.FORESTED_EQUATORS, breeder);
 
@@ -484,7 +478,7 @@ class EarthTest {
         }
 
         //when
-        earth.move(parent1, MoveDirection.FORWARD);
+        earth.handleDayEnds(1);
 
         //then
         var animalsAtPosition = earth.getAnimalsAtPosition(new Vector2d(0, 3));
@@ -495,7 +489,7 @@ class EarthTest {
         assertTrue(bornAnimalOptional.isPresent());
         var bornAnimal = bornAnimalOptional.get();
 
-        assertEquals(15, parent1.getEnergy());
+        assertEquals(45, parent1.getEnergy());
         assertEquals(45, parent2.getEnergy());
         assertEquals(10, bornAnimal.getEnergy());
         assertTrue(animalsAtPosition.contains(parent1));
