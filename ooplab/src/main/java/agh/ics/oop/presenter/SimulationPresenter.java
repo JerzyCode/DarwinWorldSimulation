@@ -3,14 +3,16 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.listener.LoggerListener;
+import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Boundary;
-import agh.ics.oop.model.MapChangeListener;
-import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.event.EventType;
+import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
@@ -18,9 +20,11 @@ import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.map.simulation.SimulationStatistics;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -32,14 +36,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
-    private static final int GRID_WIDTH = 15;
+    private static final int GRID_SIZE = 20;
 
     @FXML
+    public BorderPane mainBorderPane;
+    @FXML
+    public HBox bottomContainer;
+    @FXML
+    public VBox statisticsContainer;
+    @FXML
     private GridPane mapGrid;
-    @FXML
-    private GridPane leftCoordinates;
-    @FXML
-    private GridPane topCoordinates;
     @FXML
     private TextArea historyTextArea;
     @FXML
@@ -69,18 +75,17 @@ public class SimulationPresenter implements MapChangeListener {
 //    private SimulationContext simulationContext;
     private SimulationStatistics simulationStatistics;
 
+    private double scaleFactor = 1.0;
+    private double initialX;
+    private double initialY;
+
+
+    @FXML
     public void initialize() {
         System.out.println("initialize()");
-        AnchorPane.setTopAnchor(topCoordinates, 0.0);
-        AnchorPane.setLeftAnchor(topCoordinates, 0.0);
 
-        AnchorPane.setTopAnchor(leftCoordinates, (double) GRID_WIDTH);
-        AnchorPane.setLeftAnchor(leftCoordinates, 0.0);
-
-        AnchorPane.setTopAnchor(mapGrid, (double) GRID_WIDTH);
-        AnchorPane.setLeftAnchor(mapGrid, (double) GRID_WIDTH);
-
-        leftCoordinates.setPrefWidth(GRID_WIDTH);
+        setGridOnScrollEvent();
+        onGridDrag();
     }
 
     public void drawMap() {
@@ -93,12 +98,15 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
-        Platform.runLater(() -> {
-            historyTextArea.appendText(message + "\n");
-            updateStatistics();
-            this.drawMap();
-        });
+    public void mapChanged(WorldMap worldMap, MapChangedEvent event) {
+        if (event.getEventType() == EventType.DAY_ENDS) {
+            Platform.runLater(this::drawMap);
+            Platform.runLater(this::updateStatistics);
+            Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
+        } else {
+            //TODO to powoduje duże opóźnienia
+            //Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
+        }
     }
 
     public void onSimulationStartClicked() {
@@ -108,11 +116,12 @@ public class SimulationPresenter implements MapChangeListener {
 
         var simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
+        simulationContext.addMapChangedListener(this);
+        simulationContext.addMapChangedListener(new LoggerListener());
         simulationStatistics = new SimulationStatistics(worldMap);
-        simulationContext.setMapChangeListener(this);
+
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
         simulationEngine = new SimulationEngine(simulation);
-
         simulationEngine.runAsyncInThreadPool();
         startButton.setDisable(true);
     }
@@ -128,16 +137,6 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         }
 
-        if (topCoordinates.getChildren() != null) {
-            topCoordinates.getChildren().retainAll(topCoordinates.getChildren().getFirst());
-        }
-
-        if (leftCoordinates.getChildren() != null) {
-            leftCoordinates.getChildren().retainAll(leftCoordinates.getChildren().getFirst());
-        }
-
-        topCoordinates.getColumnConstraints().clear();
-        leftCoordinates.getRowConstraints().clear();
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }
@@ -148,11 +147,11 @@ public class SimulationPresenter implements MapChangeListener {
         int height = calculateGridHeight(mapBoundary.leftBottomCorner(), mapBoundary.rightTopCorner());
 
         for (int i = 0; i <= width; i++) {
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(GRID_WIDTH));
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(GRID_SIZE));
         }
 
         for (int i = 0; i <= height; i++) {
-            mapGrid.getRowConstraints().add(new RowConstraints(GRID_WIDTH));
+            mapGrid.getRowConstraints().add(new RowConstraints(GRID_SIZE));
         }
 
     }
@@ -162,10 +161,10 @@ public class SimulationPresenter implements MapChangeListener {
             int x = element.getPosition().getX();
             int y = element.getPosition().getY();
 
-            Shape rectangle = new Rectangle(GRID_WIDTH, GRID_WIDTH);
+            Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
 
             if (element instanceof Animal animal) {
-                var animalDrawing = createAnimalDrawing(animal.getOrientation(), animal.getEnergy());
+                var animalDrawing = createAnimalDrawing(animal.getEnergy());
                 mapGrid.add(animalDrawing, x, y);
             } else if (element instanceof Plant) {
                 rectangle.setFill(Color.LIGHTGREEN);
@@ -178,11 +177,11 @@ public class SimulationPresenter implements MapChangeListener {
         });
     }
 
-    private Pane createAnimalDrawing(MapDirection orientation, int animalEnergy) {
+    private Pane createAnimalDrawing(int animalEnergy) {
         Pane pane = new Pane();
-        double centerX = (double) GRID_WIDTH / 2;
-        double centerY = (double) GRID_WIDTH / 2;
-        double radius = (double) GRID_WIDTH / 2 - 2;
+        double centerX = (double) GRID_SIZE / 2;
+        double centerY = (double) GRID_SIZE / 2;
+        double radius = (double) GRID_SIZE / 2 - 2;
         Circle head = new Circle(centerX, centerY, radius);
         head.setFill(calculateColor(animalEnergy));
         pane.getChildren().add(head);
@@ -194,9 +193,9 @@ public class SimulationPresenter implements MapChangeListener {
         animalEnergy = Math.max(0, Math.min(animalEnergy, maxEnergy));
         double energyFactor = (double) animalEnergy / maxEnergy;
 
-        int red = (int) (255 * energyFactor);
-        int green = 0;
-        int blue = (int) (255 * energyFactor);
+        int red = 0;
+        int green = (int) (255 * energyFactor);
+        int blue = (int) (128 + (127 * energyFactor));
 
         return Color.rgb(red, green, blue);
     }
@@ -222,6 +221,47 @@ public class SimulationPresenter implements MapChangeListener {
         }
         avgLifespanLabel.setText(String.format("%.2f", simulationStatistics.getAverageDeadAnimalTimeLife().orElse(0.0)));
         avgChildrenLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalCountOfChildren().orElse(0.0)));
+    }
+
+    private void setGridOnScrollEvent() {
+
+        mapGrid.setOnScroll((ScrollEvent event) -> {
+            double delta = event.getDeltaY();
+            double zoomFactor = 1.1;
+
+            if (delta < 0) {
+                zoomFactor = 0.9;
+            }
+
+            scaleFactor *= zoomFactor;
+
+            mapGrid.setScaleX(scaleFactor);
+            mapGrid.setScaleY(scaleFactor);
+        });
+    }
+
+    private void onGridDrag() {
+        mapGrid.setOnMousePressed(event -> {
+            initialX = event.getSceneX();
+            initialY = event.getSceneY();
+            mapGrid.setCursor(Cursor.CLOSED_HAND);
+
+        });
+
+        mapGrid.setOnMouseDragged(event -> {
+            double deltaX = event.getSceneX() - initialX;
+            double deltaY = event.getSceneY() - initialY;
+            double newTranslateX = mapGrid.getTranslateX() + deltaX;
+            double newTranslateY = mapGrid.getTranslateY() + deltaY;
+
+            mapGrid.setTranslateX(newTranslateX);
+            mapGrid.setTranslateY(newTranslateY);
+
+            initialX = event.getSceneX();
+            initialY = event.getSceneY();
+        });
+
+        mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
 
 }

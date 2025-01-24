@@ -1,6 +1,7 @@
 package agh.ics.oop.model.repository;
 
 import agh.ics.oop.TestConfigurationHelper;
+import agh.ics.oop.model.exceptions.DeleteSaveException;
 import agh.ics.oop.model.exceptions.LoadConfigurationException;
 import agh.ics.oop.model.exceptions.SaveFailedException;
 import org.junit.jupiter.api.AfterEach;
@@ -112,6 +113,41 @@ class JsonConfigurationRepositoryAdapterTest {
         } catch (LoadConfigurationException e) {
             fail("Test should not fail loading configuraton!, e=" + e.getMessage());
         }
+    }
+
+    @Test
+    void deleteSaveShouldSucceed() {
+        // given
+        var configuration = TestConfigurationHelper.createFireConfiguration();
+        var saveName = "saveToDelete";
+        var saveFile = new File(TEST_PATH, saveName + ".json");
+
+
+        try {
+            sut.save(configuration, saveName);
+        } catch (SaveFailedException e) {
+            fail("Saving configurations should not fail: e=" + e.getMessage());
+        }
+
+        assertTrue(saveFile.exists(), "Save file should exist before deletion");
+        assertTrue(sut.getSaveNames().contains(saveName));
+
+        // when
+        try {
+            sut.delete(saveName);
+        } catch (DeleteSaveException e) {
+            fail("Deleting the save should not fail: e=" + e.getMessage());
+        }
+
+        // then
+        assertFalse(saveFile.exists());
+        assertFalse(sut.getSaveNames().contains(saveName));
+    }
+
+    @Test
+    void deleteSaveThatNoExistsShouldThrowException() {
+        // when & then
+        assertThrows(DeleteSaveException.class, () -> sut.delete("no exist"));
     }
 
 

@@ -1,10 +1,12 @@
 package agh.ics.oop.model.map;
 
+import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Boundary;
-import agh.ics.oop.model.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
+import agh.ics.oop.model.event.EventCreator;
+import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
 import agh.ics.oop.model.move.MoveDirection;
@@ -38,15 +40,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
         animals.put(position, animal);
-        notifyListeners("Animal was placed at position: " + position);
-    }
-
-    @Override
-    public void removeAnimal(Animal animal) {
-        if (animals.containsKey(animal.getPosition())) {
-            animals.remove(animal.getPosition());
-            notifyListeners("Animal was removed from position: " + animal.getPosition());
-        }
+        notifyListeners(EventCreator.createAnimalPlacedEvent(animal.getPosition()));
     }
 
     @Override
@@ -55,7 +49,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             animals.remove(animal.getPosition());
             animal.move(direction, this);
             animals.put(animal.getPosition(), animal);
-            notifyListeners("Animal moved to position: " + animal.getPosition());
+            notifyListeners(EventCreator.createAnimalMovedEvent(animal.getPosition()));
         }
     }
 
@@ -65,27 +59,18 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        return animals.get(position);
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        return Optional.ofNullable(animals.get(position));
     }
 
     @Override
     public Collection<WorldElement> getElements() {
-        return Collections.unmodifiableCollection(new ArrayList<>(animals.values()));
+        return Collections.unmodifiableCollection(animals.values());
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
         return !isOccupied(position);
-    }
-
-    public abstract Boundary getCurrentBounds();
-
-    @Override
-    public boolean isPositionWithinMapBoundary(Vector2d position) {
-        var boundary = getCurrentBounds();
-        return position.follows(boundary.leftBottomCorner()) &&
-                position.precedes(boundary.rightTopCorner());
     }
 
     @Override
@@ -94,11 +79,14 @@ public abstract class AbstractWorldMap implements WorldMap {
         return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
     }
 
-    @Override
-    public int getSize() {
-        var boundary = this.getCurrentBounds();
-        return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1);
+    public abstract Boundary getCurrentBounds();
+
+    protected final boolean isPositionWithinMapBoundary(Vector2d position) {
+        var boundary = getCurrentBounds();
+        return position.follows(boundary.leftBottomCorner()) &&
+                position.precedes(boundary.rightTopCorner());
     }
+
 
     public void addListener(MapChangeListener listener) {
         mapChangeListeners.add(listener);
@@ -108,7 +96,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         mapChangeListeners.remove(listener);
     }
 
-    protected void notifyListeners(String message) {
-        mapChangeListeners.forEach(listener -> listener.mapChanged(this, message));
+    protected void notifyListeners(MapChangedEvent event) {
+        mapChangeListeners.forEach(listener -> listener.mapChanged(this, event));
     }
 }
