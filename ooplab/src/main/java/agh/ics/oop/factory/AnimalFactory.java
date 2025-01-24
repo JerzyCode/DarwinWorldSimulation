@@ -76,10 +76,12 @@ public class AnimalFactory {
         var dominatingGensSize = (int) Math.ceil(percentage * animalConfiguration.getGenomeLength());
         var otherGensSize = animalConfiguration.getGenomeLength() - dominatingGensSize;
 
+        var activatedGenIndex = random.nextInt(0, animalConfiguration.getGenomeLength());
+
         var childGens = new ArrayList<Gen>();
         childGens.addAll(dominating.getPartOfGens(dominatingGensSize, dominatingLeft));
         childGens.addAll(other.getPartOfGens(otherGensSize, !dominatingLeft));
-        var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant());
+        var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant(), activatedGenIndex);
         childGenome.mutate(random.nextInt(
                 animalConfiguration.getMinimumMutationCount(),
                 animalConfiguration.getMaximumMutationCount() + 1));

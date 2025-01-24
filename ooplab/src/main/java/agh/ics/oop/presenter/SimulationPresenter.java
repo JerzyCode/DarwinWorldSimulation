@@ -3,7 +3,6 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.listener.LoggerListener;
 import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
@@ -17,6 +16,7 @@ import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
+import agh.ics.oop.model.statistics.SimulationStatistics;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -71,7 +71,7 @@ public class SimulationPresenter implements MapChangeListener {
     @Setter
     private Configuration configuration;
     private SimulationEngine simulationEngine;
-    private SimulationContext simulationContext;
+    private SimulationStatistics simulationStatistics;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -100,7 +100,7 @@ public class SimulationPresenter implements MapChangeListener {
         if (event.getEventType() == EventType.DAY_ENDS) {
             Platform.runLater(this::drawMap);
             Platform.runLater(this::updateStatistics);
-            Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
+//            Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
         } else {
             //TODO to powoduje duże opóźnienia
             //Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
@@ -112,10 +112,10 @@ public class SimulationPresenter implements MapChangeListener {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
         }
 
-        simulationContext = new SimulationContext(configuration);
+        var simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
-        simulationContext.addMapChangedListener(new LoggerListener());
+//        simulationContext.addMapChangedListener(new LoggerListener());
 
 
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
@@ -161,12 +161,12 @@ public class SimulationPresenter implements MapChangeListener {
 
             Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
 
-            if (element instanceof Animal animal) {
-                var animalDrawing = createAnimalDrawing(animal.getEnergy());
-                mapGrid.add(animalDrawing, x, y);
-            } else if (element instanceof Plant) {
+            if (element instanceof Plant) {
                 rectangle.setFill(Color.LIGHTGREEN);
                 mapGrid.add(rectangle, x, y);
+            } else if (element instanceof Animal animal) {
+                var animalDrawing = createAnimalDrawing(animal.getEnergy());
+                mapGrid.add(animalDrawing, x, y);
             } else {
                 rectangle.setFill(Color.RED);
                 mapGrid.add(rectangle, x, y);
@@ -207,18 +207,18 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void updateStatistics() {
-        animalCountLabel.setText(String.format("%d", simulationContext.getAnimalCount()));
+        animalCountLabel.setText(String.format("%d", simulationStatistics.getAnimalCount()));
         plantCountLabel.setText(String.format("%d", ((Earth) worldMap).getPlantCount()));
         freeFieldsLabel.setText(String.format("%d", ((Earth) worldMap).getCountOfEmptyFields()));
-        avgEnergyLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalEnergy().orElse(0.0)));
-        Optional<List<Gen>> mostPopularGenotype = simulationContext.getMostPopularGenotype();
+        avgEnergyLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalEnergy().orElse(0.0)));
+        Optional<List<Gen>> mostPopularGenotype = simulationStatistics.getMostPopularGenotype();
         if (mostPopularGenotype.isPresent()) {
             popularGenotypeLabel.setText(mostPopularGenotype.get().toString());
         } else {
             popularGenotypeLabel.setText("No animals");
         }
-        avgLifespanLabel.setText(String.format("%.2f", simulationContext.getAverageDeadAnimalTimeLife().orElse(0.0)));
-        avgChildrenLabel.setText(String.format("%.2f", simulationContext.getAverageAnimalCountOfChildren().orElse(0.0)));
+        avgLifespanLabel.setText(String.format("%.2f", simulationStatistics.getAverageDeadAnimalTimeLife().orElse(0.0)));
+        avgChildrenLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalCountOfChildren().orElse(0.0)));
     }
 
     private void setGridOnScrollEvent() {

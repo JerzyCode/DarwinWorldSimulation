@@ -247,4 +247,43 @@ class AnimalFactoryTest {
         //when & then
         assertThrows(AnimalNotBirthException.class, () -> factory.birthAnimal(parent1, parent2, 10));
     }
+
+    @Test
+    void bornAnimalShouldHaveActivatedRandomGen() {
+        // given
+        var randomWrapperMock = mock(RandomWrapper.class);
+        var configuration = AnimalConfiguration.builder()
+                .startEnergy(10)
+                .minimumMutationCount(0)
+                .maximumMutationCount(0)
+                .wellFedEnergy(15)
+                .mutationVariant(MutationVariant.FULL_RANDOM)
+                .genomeLength(3)
+                .build();
+
+        when(randomWrapperMock.nextInt(2)).thenReturn(1);
+        when(randomWrapperMock.nextInt(0, 3)).thenReturn(2);
+
+
+        var factory = new AnimalFactory(configuration, randomWrapperMock);
+
+        var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2)));
+        var parent1 = Animal.builder()
+                .position(new Vector2d(0, 0))
+                .energy(60)
+                .genome(genome)
+                .build();
+        var parent2 = Animal.builder()
+                .position(new Vector2d(0, 0))
+                .energy(60)
+                .genome(genome)
+                .build();
+
+        // when
+        var child = factory.birthAnimal(parent1, parent2, 10);
+
+        // then
+        var childGenome = child.getGenome();
+        assertEquals(childGenome.getActivatedGen(), new Gen(2));
+    }
 }

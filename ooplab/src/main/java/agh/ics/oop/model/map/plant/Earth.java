@@ -12,8 +12,12 @@ import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
 import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.util.AnimalComparator;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +25,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     private final Boundary boundary;
     private final Gardener gardener;
     private final AnimalBreeder breeder;
+    private final AnimalComparator animalComparator = new AnimalComparator();
 
 
     public Earth(int width, int height, int plantGrowth, int startPlantCount, int energyGain, PlantVariant plantVariant, AnimalBreeder breeder) {
@@ -122,32 +127,45 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
     }
 
     private void consumePlants() {
-        getAnimals().forEach(this::handleAnimalStepOnPlant);
+        animals.keySet().stream()
+                .filter(this::isPlantAtPosition)
+                .map(pos -> getAnimalsAtPosition(pos)
+                        .stream()
+                        .max(animalComparator))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(this::handleAnimalStepOnPlant);
     }
 
     private void handleAnimalStepOnPlant(Animal animal) {
         var position = animal.getPosition();
-        if (isPlantAtPosition(position)) {
-            animal.eat(plants.get(position));
-            removePlant(position);
-        }
+        animal.eat(plants.get(position));
+        removePlant(position);
     }
 
     private void copulateAnimals() {
-        var animalsWhichCanBreed = getAnimals()
-                .stream()
-                .filter(Animal::canMakeChild)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        animals.keySet().stream()
+                .filter(animalsAtPosition -> animals.get(animalsAtPosition).size() >= 2)
+                .map(pos -> getAnimalsAtPosition(pos)
+                        .stream()
+                        .filter(Animal::canMakeChild)
+                        .sorted(animalComparator.reversed())
+                        .limit(2)
+                        .collect(Collectors.toList()))
+                .filter(animals -> animals.size() == 2)
+                .forEach(animalsToBreed -> {
+                    var parent1 = animalsToBreed.getFirst();
+                    var parent2 = animalsToBreed.getLast();
+                    breedChild(parent1, parent2);
+                });
+    }
 
-        while (animalsWhichCanBreed.size() >= 2) {
-            var parent1 = animalsWhichCanBreed.removeFirst();
-            var parent2 = animalsWhichCanBreed.removeLast();
-            var child = breeder.breed(parent1, parent2);
-            try {
-                place(child);
-            } catch (IncorrectPositionException e) {
-                System.out.println("Child can not be placed: " + e.getMessage());
-            }
+    private void breedChild(Animal parent1, Animal parent2) {
+        var child = breeder.breed(parent1, parent2);
+        try {
+            place(child);
+        } catch (IncorrectPositionException e) {
+            System.out.println("Child can not be placed: " + e.getMessage());
         }
     }
 
