@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns = "http://javafx.com/javafx/17.0.12" xmlns:fx = "http://javafx.com/fxml/1"
+            fx:controller = "agh.ics.oop.presenter.SimulationSummaryPresenter">
+
+    <VBox spacing = "10" AnchorPane.topAnchor = "0.0" AnchorPane.bottomAnchor = "0.0"
+          AnchorPane.leftAnchor = "0.0" AnchorPane.rightAnchor = "0.0"
+          minHeight = "500" prefHeight = "Infinity">
+
+        <Label text = "Simulation Summary" VBox.vgrow = "NEVER"
+               style = "-fx-font-size: 24px; -fx-text-fill: green;">
+            <VBox.margin>
+                <Insets top = "10.0" left = "10.0" right = "10.0"/>
+            </VBox.margin>
+        </Label>
+
+        <ScrollPane fitToHeight = "true" fitToWidth = "true" VBox.vgrow = "ALWAYS" hbarPolicy = "NEVER">
+            <LineChart fx:id = "chart" VBox.vgrow = "ALWAYS">
+                <VBox.margin>
+                    <Insets top = "10.0" left = "10.0" right = "10.0" bottom = "10.0"/>
+                </VBox.margin>
+                <xAxis>
+                    <NumberAxis label = "Day" fx:id = "xAxis"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id = "yAxis" label = "World Elements Count"/>
+                </yAxis>
+            </LineChart>
+        </ScrollPane>
+
+    </VBox>
+</AnchorPane>

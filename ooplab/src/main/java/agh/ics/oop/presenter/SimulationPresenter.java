@@ -4,6 +4,7 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.listener.MapChangeListener;
+import agh.ics.oop.listener.SimulationFinishedListener;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
@@ -16,7 +17,9 @@ import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.ScrollEvent;
@@ -27,7 +30,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.Setter;
 
-public class SimulationPresenter implements MapChangeListener {
+import java.io.IOException;
+
+public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener {
     private static final int GRID_SIZE = 20;
 
     @FXML
@@ -57,7 +62,6 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label avgChildrenLabel;
 
-
     private SimulationWorldMap worldMap;
     @Setter
     private Configuration configuration;
@@ -70,7 +74,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     @FXML
-    public void initialize() {
+    void initialize() {
         System.out.println("initialize()");
 
         setGridOnScrollEvent();
@@ -94,6 +98,24 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
+    @Override
+    public void onSimulationFinished() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getClassLoader().getResource("simulation_summary_view.fxml"));
+                Parent finishedView = loader.load();
+                mainBorderPane.setCenter(finishedView);
+                mainBorderPane.setLeft(null);
+
+                SimulationSummaryPresenter presenter = loader.getController();
+                presenter.setGraphData(simulationContext.getGraphData());
+            } catch (IOException e) {
+                System.out.println("Couldn't load simulation summary view, e=" + e.getMessage());
+            }
+        });
+    }
+
     public void onSimulationStartClicked() {
         if (configuration == null) {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
@@ -105,6 +127,7 @@ public class SimulationPresenter implements MapChangeListener {
         this.simulationContext = simulationContext;
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
+        this.simulationContext.addSimulationFinishedListener(this);
         var simulation = new Simulation(simulationContext,
                 configuration.getSimulationConfiguration().getDaysCount(),
                 configuration.getSimulationConfiguration().isSaveStatisticsCsv());
@@ -254,5 +277,6 @@ public class SimulationPresenter implements MapChangeListener {
 
         mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
+
 
 }

@@ -1,5 +1,6 @@
 package agh.ics.oop.model.statistics;
 
+import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
 
@@ -12,4 +13,6 @@ public interface StatisticsDataProvider {
     Set<Animal> getAliveAnimals();
 
     Set<WorldElement> getMapElements();
+
+    Boundary getCurrentBoundary();
 }

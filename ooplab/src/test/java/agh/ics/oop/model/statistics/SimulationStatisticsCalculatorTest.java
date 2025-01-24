@@ -251,10 +251,11 @@ class SimulationStatisticsCalculatorTest {
         var plant3 = new Plant(new Vector2d(2, 2));
 
         when(mockSimulationContext.getMapElements()).thenReturn(Set.of(animal1, animal2, plant1, plant2, plant3));
+        when(mockSimulationContext.getCurrentBoundary()).thenReturn(new Boundary(new Vector2d(0, 0), new Vector2d(5, 5)));
         var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
 
         // when
-        var emptyFieldsCount = simulationStatistics.getEmptyFieldsCount(new Boundary(new Vector2d(0, 0), new Vector2d(5, 5)));
+        var emptyFieldsCount = simulationStatistics.getEmptyFieldsCount();
         var plantCount = simulationStatistics.getPlantCount();
 
         // then
