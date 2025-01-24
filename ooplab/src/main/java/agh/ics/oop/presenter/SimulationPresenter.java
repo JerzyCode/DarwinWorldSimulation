@@ -242,10 +242,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     private void saveStatistics() {
         if (configuration.getSimulationConfiguration().isSaveStatisticsCsv()) {
-            System.out.println("should save start");
             statisticsRepository.save(simulationContext.getStatistics(), worldMap.getId().toString());
-            System.out.println("should sav end");
-
         }
     }
 
