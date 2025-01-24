@@ -3,6 +3,7 @@ package agh.ics.oop;
 import agh.ics.oop.factory.AnimalFactory;
 import agh.ics.oop.factory.WorldMapFactory;
 import agh.ics.oop.listener.MapChangeListener;
+import agh.ics.oop.listener.SimulationFinishedListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
@@ -17,10 +18,7 @@ import agh.ics.oop.model.statistics.StatisticsDataProvider;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SimulationContext implements StatisticsDataProvider {
     private final Configuration configuration;
@@ -29,6 +27,7 @@ public class SimulationContext implements StatisticsDataProvider {
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
+    private final List<SimulationFinishedListener> listeners = new ArrayList<>();
     private final Statistics simulationStatistics = new Statistics();
     private final SimulationStatisticsCalculator statisticsCalculator = new SimulationStatisticsCalculator(this);
 
@@ -87,10 +86,19 @@ public class SimulationContext implements StatisticsDataProvider {
         }
     }
 
+    void notifySimulationFinished() {
+        listeners.forEach(SimulationFinishedListener::onSimulationFinished);
+    }
+
 
     public void addMapChangedListener(MapChangeListener listener) {
         ((AbstractWorldMap) worldMap).addListener(listener);
     }
+
+    public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {
+        listeners.add(simulationFinishedListener);
+    }
+
 
     @Override
     public Set<Animal> getDeadAnimals() {

@@ -4,6 +4,7 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.listener.MapChangeListener;
+import agh.ics.oop.listener.SimulationFinishedListener;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
@@ -27,7 +28,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.Setter;
 
-public class SimulationPresenter implements MapChangeListener {
+public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener {
     private static final int GRID_SIZE = 20;
 
     @FXML
@@ -56,7 +57,6 @@ public class SimulationPresenter implements MapChangeListener {
     private Label avgLifespanLabel;
     @FXML
     private Label avgChildrenLabel;
-
 
     private SimulationWorldMap worldMap;
     @Setter
@@ -105,6 +105,7 @@ public class SimulationPresenter implements MapChangeListener {
         this.simulationContext = simulationContext;
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
+        this.simulationContext.addSimulationFinishedListener(this);
         var simulation = new Simulation(simulationContext,
                 configuration.getSimulationConfiguration().getDaysCount(),
                 configuration.getSimulationConfiguration().isSaveStatisticsCsv());
@@ -255,4 +256,8 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
 
+    @Override
+    public void onSimulationFinished() {
+        System.out.println("Simulation finished");
+    }
 }

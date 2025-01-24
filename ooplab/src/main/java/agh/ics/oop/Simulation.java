@@ -50,6 +50,8 @@ public class Simulation implements Runnable {
                 System.out.println("Can not close statistics repository");
             }
         }
+
+        simulationContext.notifySimulationFinished();
     }
 
 }
