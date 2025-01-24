@@ -17,7 +17,9 @@ import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.ScrollEvent;
@@ -27,6 +29,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.Setter;
+
+import java.io.IOException;
 
 public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener {
     private static final int GRID_SIZE = 20;
@@ -70,7 +74,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
 
     @FXML
-    public void initialize() {
+    void initialize() {
         System.out.println("initialize()");
 
         setGridOnScrollEvent();
@@ -92,6 +96,24 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
             Platform.runLater(this::drawMap);
             Platform.runLater(this::updateStatisticsDisplay);
         }
+    }
+
+    @Override
+    public void onSimulationFinished() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getClassLoader().getResource("simulation_summary_view.fxml"));
+                Parent finishedView = loader.load();
+                mainBorderPane.setCenter(finishedView);
+                mainBorderPane.setLeft(null);
+
+                SimulationSummaryPresenter presenter = loader.getController();
+                presenter.setGraphData(simulationContext.getGraphData());
+            } catch (IOException e) {
+                System.out.println("Couldn't load simulation summary view, e=" + e.getMessage());
+            }
+        });
     }
 
     public void onSimulationStartClicked() {
@@ -256,8 +278,5 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
 
-    @Override
-    public void onSimulationFinished() {
-        System.out.println("Simulation finished");
-    }
+
 }

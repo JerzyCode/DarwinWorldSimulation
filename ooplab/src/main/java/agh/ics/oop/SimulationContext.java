@@ -12,6 +12,7 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.statistics.GraphData;
 import agh.ics.oop.model.statistics.SimulationStatisticsCalculator;
 import agh.ics.oop.model.statistics.Statistics;
 import agh.ics.oop.model.statistics.StatisticsDataProvider;
@@ -27,6 +28,8 @@ public class SimulationContext implements StatisticsDataProvider {
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
+    @Getter
+    private final List<GraphData> graphData = new ArrayList<>();
     private final List<SimulationFinishedListener> listeners = new ArrayList<>();
     private final Statistics simulationStatistics = new Statistics();
     private final SimulationStatisticsCalculator statisticsCalculator = new SimulationStatisticsCalculator(this);
@@ -124,9 +127,13 @@ public class SimulationContext implements StatisticsDataProvider {
     }
 
     private void updateStatistics() {
+        var animalCount = statisticsCalculator.getAnimalCount();
+        var plantCount = statisticsCalculator.getPlantCount();
+        graphData.add(new GraphData(currentDay, animalCount, plantCount));
+
         simulationStatistics.setCurrentDay(currentDay);
-        simulationStatistics.setAnimalCount(statisticsCalculator.getAnimalCount());
-        simulationStatistics.setPlantCount((statisticsCalculator.getPlantCount()));
+        simulationStatistics.setAnimalCount(animalCount);
+        simulationStatistics.setPlantCount((plantCount));
         simulationStatistics.setFreeFieldsCount(statisticsCalculator.getEmptyFieldsCount(worldMap.getCurrentBounds()));
         simulationStatistics.setAverageEnergy(statisticsCalculator.getAverageAnimalEnergy().orElse(0));
         simulationStatistics.setMostPopularGenotype(statisticsCalculator.getMostPopularGenotype().orElse(new ArrayList<>()));
