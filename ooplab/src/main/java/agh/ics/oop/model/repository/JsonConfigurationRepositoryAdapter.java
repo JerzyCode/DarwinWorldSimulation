@@ -1,6 +1,7 @@
 package agh.ics.oop.model.repository;
 
 import agh.ics.oop.model.configuration.Configuration;
+import agh.ics.oop.model.exceptions.DeleteSaveException;
 import agh.ics.oop.model.exceptions.DirectoryNotCreatedException;
 import agh.ics.oop.model.exceptions.LoadConfigurationException;
 import agh.ics.oop.model.exceptions.SaveFailedException;
@@ -37,6 +38,22 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
             saveNames.add(saveName);
         } catch (IOException e) {
             throw new SaveFailedException(String.format("Couldn't save configuration: %s, error: %s", saveName, e.getMessage()));
+        }
+    }
+
+    @Override
+    public void delete(String saveName) throws DeleteSaveException {
+        if (!doesSaveExist(saveName)) {
+            throw new DeleteSaveException(String.format("Save %s does not exist.", saveName));
+        }
+
+        var saveToDelete = new File(directory, String.format("%s.json", saveName));
+        var deleted = saveToDelete.delete();
+
+        if (!deleted) {
+            throw new DeleteSaveException(String.format("Couldn't delete save %s", saveName));
+        } else {
+            saveNames.remove(saveName);
         }
     }
 

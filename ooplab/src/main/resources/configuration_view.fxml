@@ -142,7 +142,7 @@
             </HBox>
         </VBox>
 
-        <Button fx:id = "saveConfigurationButton" onAction = "#onSaveConfiguration" GridPane.columnIndex = "4"
+        <Button onAction = "#onSaveConfiguration" GridPane.columnIndex = "4"
                 GridPane.rowIndex = "10">
             Save Configuration
         </Button>
