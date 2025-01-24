@@ -60,7 +60,7 @@ public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort,
                 String.format("%f.2", statistics.getAverageEnergy()) + DELIMITER +
                 statistics.getMostPopularGenotype().toString() + DELIMITER +
                 String.format("%f.2", statistics.getAverageLifespan()) + DELIMITER +
-                String.format("%f.2", statistics.getAverageChildren()) + DELIMITER;
+                String.format("%f.2", statistics.getAverageChildren());
     }
 
     private String getHeaders() {
