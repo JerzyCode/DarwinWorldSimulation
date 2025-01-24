@@ -69,7 +69,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Configuration configuration;
     private SimulationEngine simulationEngine;
     private SimulationContext simulationContext;
-    private final StatisticsRepositoryPort statisticsRepository = new CsvStatisticsRepositoryAdapter();
+    private StatisticsRepositoryPort statisticsRepository;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -130,6 +130,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
         this.simulationContext = simulationContext;
+        this.statisticsRepository = new CsvStatisticsRepositoryAdapter();
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
         this.simulationContext.addSimulationFinishedListener(this);
