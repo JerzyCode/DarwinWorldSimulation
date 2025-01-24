@@ -15,19 +15,20 @@ import agh.ics.oop.model.move.MoveDirection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FireEarth extends Earth implements FireWorldMap, FireValidator {
-    private final HashMap<Vector2d, Fire> fires;
+    private final Map<Vector2d, Fire> fires;
     private final int fireFrequency;
     private final FireSpreader fireSpreader;
 
     public FireEarth(int width, int height, int fireFrequency, int fireDuration, int plantGrowth, int startPlantCount, int energyGain, PlantVariant plantVariant, AnimalBreeder breeder) {
         super(width, height, plantGrowth, startPlantCount, energyGain, plantVariant, breeder);
         this.fireFrequency = fireFrequency;
-        this.fires = new HashMap<>();
+        this.fires = new ConcurrentHashMap<>();
         this.fireSpreader = new FireSpreader(fireDuration);
     }
 

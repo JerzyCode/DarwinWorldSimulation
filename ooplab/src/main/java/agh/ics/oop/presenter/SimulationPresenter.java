@@ -78,7 +78,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     public void drawMap() {
-        synchronized (worldMap.getElements()) {
+        synchronized (simulationContext) {
             var mapBoundary = worldMap.getCurrentBounds();
             clearGrid();
             fillGrid(mapBoundary);
@@ -204,7 +204,7 @@ public class SimulationPresenter implements MapChangeListener {
         freeFieldsLabel.setText(String.format("%d", statistics.getFreeFieldsCount()));
         avgEnergyLabel.setText(String.format("%.2f", statistics.getAverageEnergy()));
         var mostPopularGenotype = statistics.getMostPopularGenotype();
-        if (!mostPopularGenotype.isEmpty()) {
+        if (mostPopularGenotype != null && !mostPopularGenotype.isEmpty()) {
             popularGenotypeLabel.setText(mostPopularGenotype.toString());
         } else {
             popularGenotypeLabel.setText("No animals");
