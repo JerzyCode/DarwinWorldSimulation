@@ -17,7 +17,7 @@ import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
 import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
-import agh.ics.oop.model.map.simulation.SimulationStatistics;
+import agh.ics.oop.model.statistics.SimulationStatistics;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -118,7 +118,7 @@ public class SimulationPresenter implements MapChangeListener {
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
         simulationContext.addMapChangedListener(new LoggerListener());
-        simulationStatistics = new SimulationStatistics(worldMap);
+        simulationStatistics = new SimulationStatistics(simulationContext);
 
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
         simulationEngine = new SimulationEngine(simulation);

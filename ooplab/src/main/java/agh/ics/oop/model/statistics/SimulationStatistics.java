@@ -1,46 +1,43 @@
-package agh.ics.oop.model.map.simulation;
+package agh.ics.oop.model.statistics;
 
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalDouble;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SimulationStatistics {
-    private final SimulationWorldMap worldMap;
+    private final AnimalDataProvider animalDataProvider;
 
-    public SimulationStatistics(SimulationWorldMap worldMap) {
-        this.worldMap = worldMap;
+    public SimulationStatistics(AnimalDataProvider animalDataProvider) {
+        this.animalDataProvider = animalDataProvider;
     }
 
     public int getAnimalCount() {
-        return worldMap.getAnimals().size();
+        return animalDataProvider.getAliveAnimals().size();
     }
 
     public OptionalDouble getAverageAnimalEnergy() {
-        return worldMap.getAnimals().stream()
+        return animalDataProvider.getAliveAnimals().stream()
                 .mapToDouble(Animal::getEnergy)
                 .average();
     }
 
     public OptionalDouble getAverageDeadAnimalTimeLife() {
-        return worldMap.getDeadAnimals().stream()
+        return animalDataProvider.getDeadAnimals().stream()
                 .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
                 .average();
     }
 
     public OptionalDouble getAverageAnimalCountOfChildren() {
-        return worldMap.getAnimals().stream()
+        return animalDataProvider.getAliveAnimals().stream()
                 .mapToInt(Animal::getCountOfChildren)
                 .average();
     }
 
     public Optional<List<Gen>> getMostPopularGenotype() {
-        Map<List<Gen>, Long> genotypeCount = worldMap.getAnimals().stream()
+        Map<List<Gen>, Long> genotypeCount = animalDataProvider.getAliveAnimals().stream()
                 .map(Animal::getGenome)
                 .map(Genome::getGens)
                 .collect(Collectors.groupingBy(genome -> genome, Collectors.counting()));

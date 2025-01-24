@@ -10,12 +10,13 @@ import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
+import agh.ics.oop.model.statistics.AnimalDataProvider;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
 import java.util.*;
 
-public class SimulationContext {
+public class SimulationContext implements AnimalDataProvider {
     private final Configuration configuration;
     private final AnimalFactory animalFactory;
     @Getter
@@ -82,8 +83,14 @@ public class SimulationContext {
         ((AbstractWorldMap) worldMap).addListener(listener);
     }
 
-    public SimulationWorldMap getWorldMap() {
-        return worldMap;
+    @Override
+    public Set<Animal> getDeadAnimals() {
+        return Collections.unmodifiableSet(deadAnimals);
+    }
+
+    @Override
+    public Set<Animal> getAliveAnimals() {
+        return worldMap.getAnimals();
     }
 
 }
