@@ -26,7 +26,7 @@ public class SimulationStatistics {
 
     public OptionalDouble getAverageDeadAnimalTimeLife() {
         return animalDataProvider.getDeadAnimals().stream()
-                .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay())
+                .mapToDouble(animal -> animal.getEndDay() - animal.getStartDay() + 1)
                 .average();
     }
 

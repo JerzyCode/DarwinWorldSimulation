@@ -1,9 +1,7 @@
 package agh.ics.oop.model.statistics;
 
-import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.TestConfigurationHelper;
-import agh.ics.oop.model.configuration.SimulationConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -70,6 +68,23 @@ class SimulationStatisticsTest {
 
     @Test
     void getAverageDeadAnimalTimeLife() {
+
+        // given & when
+        for(int i=0; i < 16; i++){
+            simulationWithoutPlantsAndFires.handleDayEnds();
+        }
+        var averageTimeLifeOnMapWithOnlyAnimals = simulationWithoutPlantsAndFiresStatistics.getAverageDeadAnimalTimeLife();
+
+        // then
+        assertTrue(averageTimeLifeOnMapWithOnlyAnimals.isPresent());
+        assertEquals(15, averageTimeLifeOnMapWithOnlyAnimals.getAsDouble(), 0.01);
+        simulationWithoutPlantsAndFires.handleDayEnds();
+        averageTimeLifeOnMapWithOnlyAnimals = simulationWithoutPlantsAndFiresStatistics.getAverageDeadAnimalTimeLife();
+        assertTrue(averageTimeLifeOnMapWithOnlyAnimals.isPresent());
+        assertEquals(15, averageTimeLifeOnMapWithOnlyAnimals.getAsDouble(), 0.01);
+        assertTrue(simulationWithoutAnimalsStatistics.getAverageDeadAnimalTimeLife().isEmpty());
+        assertTrue(simulationWithAnimalsStatistics.getAverageDeadAnimalTimeLife().isEmpty());
+
     }
 
     @Test
