@@ -4,6 +4,7 @@ import agh.ics.oop.factory.AnimalFactory;
 import agh.ics.oop.factory.WorldMapFactory;
 import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.listener.SimulationFinishedListener;
+import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
@@ -28,8 +29,6 @@ public class SimulationContext implements StatisticsDataProvider {
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
-    @Getter
-    private final List<GraphData> graphData = new ArrayList<>();
     private final List<SimulationFinishedListener> listeners = new ArrayList<>();
     private final Statistics simulationStatistics = new Statistics();
     private final SimulationStatisticsCalculator statisticsCalculator = new SimulationStatisticsCalculator(this);
@@ -51,7 +50,7 @@ public class SimulationContext implements StatisticsDataProvider {
         worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
         worldMap.sendDayHasEndedNotification(currentDay);
-        updateStatistics();
+        simulationStatistics.updateStatistics(currentDay, statisticsCalculator);
         currentDay++;
     }
 
@@ -118,6 +117,15 @@ public class SimulationContext implements StatisticsDataProvider {
         return (Set<WorldElement>) worldMap.getElements();
     }
 
+    @Override
+    public Boundary getCurrentBoundary() {
+        return worldMap.getCurrentBounds();
+    }
+
+    public List<GraphData> getGraphData() {
+        return simulationStatistics.getHistory();
+    }
+
     public Statistics getStatistics() {
         return simulationStatistics;
     }
@@ -126,18 +134,4 @@ public class SimulationContext implements StatisticsDataProvider {
         return worldMap.getId().toString();
     }
 
-    private void updateStatistics() {
-        var animalCount = statisticsCalculator.getAnimalCount();
-        var plantCount = statisticsCalculator.getPlantCount();
-        graphData.add(new GraphData(currentDay, animalCount, plantCount));
-
-        simulationStatistics.setCurrentDay(currentDay);
-        simulationStatistics.setAnimalCount(animalCount);
-        simulationStatistics.setPlantCount((plantCount));
-        simulationStatistics.setFreeFieldsCount(statisticsCalculator.getEmptyFieldsCount(worldMap.getCurrentBounds()));
-        simulationStatistics.setAverageEnergy(statisticsCalculator.getAverageAnimalEnergy().orElse(0));
-        simulationStatistics.setMostPopularGenotype(statisticsCalculator.getMostPopularGenotype().orElse(new ArrayList<>()));
-        simulationStatistics.setAverageLifespan(statisticsCalculator.getAverageDeadAnimalTimeLife().orElse(0));
-        simulationStatistics.setAverageChildren(statisticsCalculator.getAverageAnimalCountOfChildren().orElse(0));
-    }
 }

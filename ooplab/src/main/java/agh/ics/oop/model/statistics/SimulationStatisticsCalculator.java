@@ -1,6 +1,5 @@
 package agh.ics.oop.model.statistics;
 
-import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.elements.*;
 
 import java.util.List;
@@ -55,7 +54,8 @@ public class SimulationStatisticsCalculator {
     }
 
 
-    public int getEmptyFieldsCount(Boundary boundary) {
+    public int getEmptyFieldsCount() {
+        var boundary = statisticsDataProvider.getCurrentBoundary();
         int countOfOccupiedFields = (int) statisticsDataProvider.getMapElements().stream()
                 .map(WorldElement::getPosition)
                 .distinct()
