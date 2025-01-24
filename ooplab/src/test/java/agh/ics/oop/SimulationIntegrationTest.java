@@ -25,6 +25,7 @@ class SimulationIntegrationTest {
                 .height(100)
                 .width(50)
                 .mapVariant(mapVariant)
+                .plantVariant(PlantVariant.FULL_RANDOM)
                 .plantGrowth(10)
                 .startPlantCount(15)
                 .build();

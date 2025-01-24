@@ -57,6 +57,8 @@ public class ConfigurationPresenter {
     @FXML
     private MenuItem forestEquatorsVariant;
     @FXML
+    public MenuItem fullRandomPlantVariant;
+    @FXML
     private TextField daysCountInput;
     @FXML
     private TextField energyGainInput;
@@ -86,6 +88,7 @@ public class ConfigurationPresenter {
         littleCorrectionVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.LITTLE_CORRECTION));
         fullRandomVariant.setOnAction(event -> chooseMutationVariant(MutationVariant.FULL_RANDOM));
         forestEquatorsVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FORESTED_EQUATORS));
+        fullRandomPlantVariant.setOnAction(event -> choosePlantVariant(PlantVariant.FULL_RANDOM));
         earthItem.setOnAction(event -> chooseMap(WorldMapVariant.EARTH));
         fireEarthItem.setOnAction(event -> chooseMap(WorldMapVariant.FIRE));
         configurationRepositoryPort.getSaveNames().forEach(this::addLoadSavedConfigurationPane);

@@ -26,7 +26,7 @@ class Gardener {
 
     }
 
-    private Set<Plant> createPlants(int currentPlantsCount, int mapCellsCount, Boundary boundary, int plantCount, Set<Vector2d> unavailablePositions) {
+    public Set<Plant> createPlants(int currentPlantsCount, int mapCellsCount, Boundary boundary, int plantCount, Set<Vector2d> unavailablePositions) {
         var plants = new HashSet<Plant>();
         var countOfAvailablePlacesForPlants = mapCellsCount - currentPlantsCount;
         plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
