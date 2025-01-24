@@ -144,7 +144,6 @@ class EarthTest {
 
         //when && then
         assertThrows(PositionOccupiedByWorldElementException.class, () -> map.placePlant(plantToPlace));
-        assertEquals(1, map.getPlantCount());
 
         var elementAtPosition = map.objectAt(plantPlaced.getPosition());
         assertTrue(elementAtPosition.isPresent());
@@ -173,7 +172,6 @@ class EarthTest {
         map.removePlant(wrongPosition);
 
         //then
-        assertEquals(1, map.getPlantCount());
         assertFalse(map.isPlantAtPosition(plantPlaced1.getPosition()));
         assertFalse(map.isPlantAtPosition(plantPlaced2.getPosition()));
         assertTrue(map.isPlantAtPosition(plantPlaced3.getPosition()));

@@ -2,11 +2,13 @@ package agh.ics.oop.model.statistics;
 
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.TestConfigurationHelper;
+import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Gen;
 import agh.ics.oop.model.elements.Genome;
+import agh.ics.oop.model.elements.Plant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,7 +16,8 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 class SimulationStatisticsCalculatorTest {
@@ -58,16 +61,16 @@ class SimulationStatisticsCalculatorTest {
 
     @Test
     void getAnimalCountShouldReturnProperCountOfAnimalsEveryday() {
-        for(int i=0; i < 16; i++){
-            assertEquals(10 , simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
+        for (int i = 0; i < 16; i++) {
+            assertEquals(10, simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
             simulationWithoutPlantsAndFires.handleDayEnds();
         }
-        assertEquals(0 , simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
+        assertEquals(0, simulationWithoutPlantsAndFiresStatistics.getAnimalCount());
     }
 
     @Test
     void getAverageAnimalEnergy() {
-        for(int i=0; i < 15; i++){
+        for (int i = 0; i < 15; i++) {
             assertTrue(simulationWithoutPlantsAndFiresStatistics.getAverageAnimalEnergy().isPresent());
             assertEquals(15 - i, simulationWithoutPlantsAndFiresStatistics.getAverageAnimalEnergy().getAsDouble(), 0.01);
             simulationWithoutPlantsAndFires.handleDayEnds();
@@ -80,7 +83,7 @@ class SimulationStatisticsCalculatorTest {
     void getAverageDeadAnimalTimeLife() {
 
         // given & when
-        for(int i=0; i < 16; i++){
+        for (int i = 0; i < 16; i++) {
             simulationWithoutPlantsAndFires.handleDayEnds();
         }
         var averageTimeLifeOnMapWithOnlyAnimals = simulationWithoutPlantsAndFiresStatistics.getAverageDeadAnimalTimeLife();
@@ -236,4 +239,27 @@ class SimulationStatisticsCalculatorTest {
         assertTrue(mostPopularGenotypeSimulation2.isEmpty());
         assertEquals(mostPopularGenotypeSimulation1.get(), mostPopularGenotypeSimulation1.get());
     }
+
+    @Test
+    void getEmptyFieldsCount() {
+        // given
+        SimulationContext mockSimulationContext = Mockito.mock(SimulationContext.class);
+        var animal1 = Animal.builder().position(new Vector2d(2, 2)).build();
+        var animal2 = Animal.builder().position(new Vector2d(2, 2)).build();
+        var plant1 = new Plant(new Vector2d(3, 3));
+        var plant2 = new Plant(new Vector2d(4, 3));
+        var plant3 = new Plant(new Vector2d(2, 2));
+
+        when(mockSimulationContext.getMapElements()).thenReturn(Set.of(animal1, animal2, plant1, plant2, plant3));
+        var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
+
+        // when
+        var emptyFieldsCount = simulationStatistics.getEmptyFieldsCount(new Boundary(new Vector2d(0, 0), new Vector2d(5, 5)));
+        var plantCount = simulationStatistics.getPlantCount();
+
+        // then
+        assertEquals(33, emptyFieldsCount);
+        assertEquals(3, plantCount);
+    }
+
 }

@@ -1,8 +1,7 @@
 package agh.ics.oop.model.statistics;
 
-import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Gen;
-import agh.ics.oop.model.elements.Genome;
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.elements.*;
 
 import java.util.List;
 import java.util.Map;
@@ -49,8 +48,20 @@ public class SimulationStatisticsCalculator {
                 .map(Map.Entry::getKey);
     }
 
-    public int getCurrentDay() {
-        return statisticsDataProvider.getCurrentDay();
+    public int getPlantCount() {
+        return (int) statisticsDataProvider.getMapElements().stream()
+                .filter(element -> element instanceof Plant)
+                .count();
+    }
+
+
+    public int getEmptyFieldsCount(Boundary boundary) {
+        int countOfOccupiedFields = (int) statisticsDataProvider.getMapElements().stream()
+                .map(WorldElement::getPosition)
+                .distinct()
+                .count();
+
+        return (boundary.rightTopCorner().getX() + 1) * (boundary.rightTopCorner().getY() + 1) - countOfOccupiedFields;
     }
 
 }

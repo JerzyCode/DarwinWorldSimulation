@@ -6,9 +6,9 @@ import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.map.AbstractWorldMap;
-import agh.ics.oop.model.map.plant.Earth;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.MoveDirection;
 import agh.ics.oop.model.statistics.SimulationStatisticsCalculator;
@@ -103,8 +103,8 @@ public class SimulationContext implements StatisticsDataProvider {
     }
 
     @Override
-    public int getCurrentDay() {
-        return currentDay;
+    public Set<WorldElement> getMapElements() {
+        return (Set<WorldElement>) worldMap.getElements();
     }
 
     public Statistics getStatistics() {
@@ -118,8 +118,8 @@ public class SimulationContext implements StatisticsDataProvider {
     private void updateStatistics() {
         simulationStatistics.setCurrentDay(currentDay);
         simulationStatistics.setAnimalCount(statisticsCalculator.getAnimalCount());
-        simulationStatistics.setPlantCount(((Earth) worldMap).getPlantCount());  //TODO przenieść do calculator a nie przez worldMap
-        simulationStatistics.setFreeFieldsCount(((Earth) worldMap).getCountOfEmptyFields()); //TODO przenieść do daclulator anie przez worldMap
+        simulationStatistics.setPlantCount((statisticsCalculator.getPlantCount()));
+        simulationStatistics.setFreeFieldsCount(statisticsCalculator.getEmptyFieldsCount(worldMap.getCurrentBounds()));
         simulationStatistics.setAverageEnergy(statisticsCalculator.getAverageAnimalEnergy().orElse(0));
         simulationStatistics.setMostPopularGenotype(statisticsCalculator.getMostPopularGenotype().orElse(new ArrayList<>()));
         simulationStatistics.setAverageLifespan(statisticsCalculator.getAverageDeadAnimalTimeLife().orElse(0));
