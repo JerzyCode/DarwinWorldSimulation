@@ -3,6 +3,7 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationContext;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.listener.LoggerListener;
 import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
@@ -99,6 +100,7 @@ public class SimulationPresenter implements MapChangeListener {
         if (event.getEventType() == EventType.DAY_ENDS) {
             Platform.runLater(this::drawMap);
             Platform.runLater(this::updateStatistics);
+            Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
         } else {
             //TODO to powoduje duże opóźnienia
             //Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
@@ -113,7 +115,7 @@ public class SimulationPresenter implements MapChangeListener {
         simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
-//        simulationContext.addMapChangedListener(new LoggerListener());
+        simulationContext.addMapChangedListener(new LoggerListener());
 
 
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
@@ -189,9 +191,9 @@ public class SimulationPresenter implements MapChangeListener {
         animalEnergy = Math.max(0, Math.min(animalEnergy, maxEnergy));
         double energyFactor = (double) animalEnergy / maxEnergy;
 
-        int red = (int) (255 * energyFactor);
-        int green = 0;
-        int blue = (int) (255 * energyFactor);
+        int red = 0;
+        int green = (int) (255 * energyFactor);
+        int blue = (int) (128 + (127 * energyFactor));
 
         return Color.rgb(red, green, blue);
     }
