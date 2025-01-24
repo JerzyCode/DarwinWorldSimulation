@@ -22,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -40,13 +39,11 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     public BorderPane mainBorderPane;
     @FXML
-    public HBox bottomContainer;
-    @FXML
     public VBox statisticsContainer;
     @FXML
-    private GridPane mapGrid;
+    public Label currentDayLabel;
     @FXML
-    private TextArea historyTextArea;
+    private GridPane mapGrid;
     @FXML
     private Button startButton;
 
@@ -100,10 +97,6 @@ public class SimulationPresenter implements MapChangeListener {
         if (event.getEventType() == EventType.DAY_ENDS) {
             Platform.runLater(this::drawMap);
             Platform.runLater(this::updateStatistics);
-//            Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
-        } else {
-            //TODO to powoduje duże opóźnienia
-            //Platform.runLater(() -> historyTextArea.appendText(event.getMessage() + "\n"));
         }
     }
 
@@ -117,7 +110,7 @@ public class SimulationPresenter implements MapChangeListener {
         simulationContext.addMapChangedListener(this);
 //        simulationContext.addMapChangedListener(new LoggerListener());
 
-
+        simulationStatistics = new SimulationStatistics(simulationContext);
         var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
         simulationEngine = new SimulationEngine(simulation);
         simulationEngine.runAsyncInThreadPool();
@@ -219,6 +212,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
         avgLifespanLabel.setText(String.format("%.2f", simulationStatistics.getAverageDeadAnimalTimeLife().orElse(0.0)));
         avgChildrenLabel.setText(String.format("%.2f", simulationStatistics.getAverageAnimalCountOfChildren().orElse(0.0)));
+        currentDayLabel.setText(String.format("%d", simulationStatistics.getCurrentDay()));
     }
 
     private void setGridOnScrollEvent() {
