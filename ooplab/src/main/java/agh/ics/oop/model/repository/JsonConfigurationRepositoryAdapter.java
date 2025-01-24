@@ -2,7 +2,6 @@ package agh.ics.oop.model.repository;
 
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.exceptions.DeleteSaveException;
-import agh.ics.oop.model.exceptions.DirectoryNotCreatedException;
 import agh.ics.oop.model.exceptions.LoadConfigurationException;
 import agh.ics.oop.model.exceptions.SaveFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +17,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
     private final File directory;
 
     JsonConfigurationRepositoryAdapter(String path) {
-        directory = getDirectory(path);
+        directory = DirectoryHelper.getDirectory(path);
         loadSaveNames();
     }
 
@@ -81,21 +80,6 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
         return saveNames.stream().anyMatch(el -> el.equals(saveName));
     }
 
-
-    private File getDirectory(String path) {
-        File directory = new File(path);
-        if (!directory.exists()) {
-            var createdDirectory = directory.mkdirs();
-            if (createdDirectory) {
-                System.out.println("Created configuration directory");
-            } else {
-                System.out.println("Failed to create configuration directory");
-                throw new DirectoryNotCreatedException("Could not create configuration directory");
-            }
-        }
-
-        return directory;
-    }
 
     private void loadSaveNames() {
         File[] files = directory.listFiles();

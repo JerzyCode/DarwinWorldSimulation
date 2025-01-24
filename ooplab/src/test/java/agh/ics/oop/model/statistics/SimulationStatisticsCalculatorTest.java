@@ -17,15 +17,15 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class SimulationStatisticsTest {
+class SimulationStatisticsCalculatorTest {
 
     SimulationContext simulationWithAnimals;
     SimulationContext simulationWithoutAnimals;
     SimulationContext simulationWithoutPlantsAndFires;
 
-    SimulationStatistics simulationWithAnimalsStatistics;
-    SimulationStatistics simulationWithoutAnimalsStatistics;
-    SimulationStatistics simulationWithoutPlantsAndFiresStatistics;
+    SimulationStatisticsCalculator simulationWithAnimalsStatistics;
+    SimulationStatisticsCalculator simulationWithoutAnimalsStatistics;
+    SimulationStatisticsCalculator simulationWithoutPlantsAndFiresStatistics;
 
     @BeforeEach
     void setUp() {
@@ -37,9 +37,9 @@ class SimulationStatisticsTest {
         this.simulationWithoutAnimals = new SimulationContext(configuration2);
         this.simulationWithoutPlantsAndFires = new SimulationContext(configuration3);
 
-        this.simulationWithAnimalsStatistics = new SimulationStatistics(simulationWithAnimals);
-        this.simulationWithoutAnimalsStatistics = new SimulationStatistics(simulationWithoutAnimals);
-        this.simulationWithoutPlantsAndFiresStatistics = new SimulationStatistics(simulationWithoutPlantsAndFires);
+        this.simulationWithAnimalsStatistics = new SimulationStatisticsCalculator(simulationWithAnimals);
+        this.simulationWithoutAnimalsStatistics = new SimulationStatisticsCalculator(simulationWithoutAnimals);
+        this.simulationWithoutPlantsAndFiresStatistics = new SimulationStatisticsCalculator(simulationWithoutPlantsAndFires);
     }
 
 
@@ -145,12 +145,12 @@ class SimulationStatisticsTest {
         SimulationContext mockSimulationContext = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext.getAliveAnimals()).thenReturn(Set.of(animal1, animal2, animal3, animal4));
         when(mockSimulationContext.getDeadAnimals()).thenReturn(Set.of(animal5));
-        var simulationStatistics = new SimulationStatistics(mockSimulationContext);
+        var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
 
         SimulationContext mockSimulationContext2 = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext2.getAliveAnimals()).thenReturn(Set.of());
         when(mockSimulationContext2.getDeadAnimals()).thenReturn(Set.of(animal5));
-        var simulationStatistics2 = new SimulationStatistics(mockSimulationContext2);
+        var simulationStatistics2 = new SimulationStatisticsCalculator(mockSimulationContext2);
 
         // when
         var average = simulationStatistics.getAverageAnimalCountOfChildren();
@@ -220,12 +220,12 @@ class SimulationStatisticsTest {
         SimulationContext mockSimulationContext = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext.getAliveAnimals()).thenReturn(Set.of(animal1, animal2, animal3, animal4));
         when(mockSimulationContext.getDeadAnimals()).thenReturn(Set.of(animal5, animal6));
-        var simulationStatistics = new SimulationStatistics(mockSimulationContext);
+        var simulationStatistics = new SimulationStatisticsCalculator(mockSimulationContext);
 
         SimulationContext mockSimulationContext2 = Mockito.mock(SimulationContext.class);
         when(mockSimulationContext2.getAliveAnimals()).thenReturn(Set.of());
         when(mockSimulationContext2.getDeadAnimals()).thenReturn(Set.of(animal5));
-        var simulationStatistics2 = new SimulationStatistics(mockSimulationContext2);
+        var simulationStatistics2 = new SimulationStatisticsCalculator(mockSimulationContext2);
 
         // when
         var mostPopularGenotypeSimulation1 = simulationStatistics.getMostPopularGenotype();

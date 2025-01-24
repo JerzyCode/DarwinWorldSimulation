@@ -10,10 +10,10 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
-public class SimulationStatistics {
+public class SimulationStatisticsCalculator {
     private final StatisticsDataProvider statisticsDataProvider;
 
-    public SimulationStatistics(StatisticsDataProvider animalDataProvider) {
+    public SimulationStatisticsCalculator(StatisticsDataProvider animalDataProvider) {
         this.statisticsDataProvider = animalDataProvider;
     }
 
