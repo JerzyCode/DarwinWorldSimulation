@@ -3,14 +3,11 @@ package agh.ics.oop.model.repository;
 import agh.ics.oop.model.statistics.Statistics;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort, Closeable {
     private static final String DELIMITER = ";";
-    private final Map<String, BufferedWriter> writers = new HashMap<>();
     private final File directory;
-
+    private BufferedWriter writer;
 
     CsvStatisticsRepositoryAdapter(String path) {
         directory = DirectoryInitializer.getDirectory(path);
@@ -26,7 +23,7 @@ public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort,
         var file = new File(directory, fileName);
 
         try {
-            var writer = getOrInitializeWriter(fileName, file);
+            initializeWriter(file);
             var csvData = createRow(statistics);
             writer.write(csvData);
             writer.newLine();
@@ -38,23 +35,20 @@ public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort,
 
 
     @Override
-    public synchronized void close() throws IOException {
-        for (var writer : writers.values()) {
+    public void close() throws IOException {
+        if (writer != null) {
             writer.close();
         }
-        writers.clear();
     }
 
-    private BufferedWriter getOrInitializeWriter(String fileName, File file) throws IOException {
-        if (!writers.containsKey(fileName)) {
-            var writer = new BufferedWriter(new FileWriter(file, true));
-            if (file.length() == 0) {
+    private void initializeWriter(File file) throws IOException {
+        if (writer == null) {
+            writer = new BufferedWriter(new FileWriter(file, true));
+            if (file.exists() && file.length() == 0) {
                 writer.write(getHeaders());
                 writer.newLine();
             }
-            writers.put(fileName, writer);
         }
-        return writers.get(fileName);
     }
 
 
