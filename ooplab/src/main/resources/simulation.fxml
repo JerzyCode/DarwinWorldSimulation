@@ -47,7 +47,7 @@
 
             <VBox alignment = "CENTER" prefHeight = "129.0" prefWidth = "187.0" spacing = "10">
                 <Button fx:id = "startStopButton" onAction = "#onSimulationStartClicked" text = "Simulation start"/>
-                <Button fx:id = "chooseAnimalButton" onAction = "#onChooseAnimalClicked" text = "Choose animal"/>
+                <Button fx:id = "chooseAnimalButton" onAction = "#onChooseAnimalClicked" text = "Choose animal" disable="true"/>
             </VBox>
         </VBox>
     </left>

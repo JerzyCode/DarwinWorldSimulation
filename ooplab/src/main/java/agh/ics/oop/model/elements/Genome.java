@@ -62,8 +62,9 @@ public class Genome {
         return gens.get(index);
     }
 
+    // TODO: coś jest chyba nie tak jeżeli to działa wcześniej, bo  było mez modulo
     public Gen getActivatedGen() {
-        return gens.get(currentIndex);
+        return gens.get(currentIndex % gens.size());
     }
 
     public List<Gen> getGens() {
