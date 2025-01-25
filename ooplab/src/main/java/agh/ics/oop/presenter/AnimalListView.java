@@ -10,10 +10,10 @@ import lombok.Setter;
 
 import java.util.Set;
 
-public class AnimalsListView {
+public class AnimalListView {
 
     @FXML
-    private ListView<Animal> animalsListView;
+    private ListView<Animal> animalListView;
 
     @FXML
     private Button cancelButton;
@@ -22,7 +22,7 @@ public class AnimalsListView {
     private SimulationPresenter presenter;
 
     public void initialize() {
-        animalsListView.setCellFactory(param -> new ListCell<>() {
+        animalListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Animal item, boolean empty) {
                 super.updateItem(item, empty);
@@ -33,9 +33,7 @@ public class AnimalsListView {
                     setStyle("-fx-background-color: lightblue;");
                     setCursor(Cursor.HAND);
                 });
-                setOnMouseExited(event -> {
-                    setStyle("");
-                });
+                setOnMouseExited(event -> setStyle(""));
             }
         });
 
@@ -43,13 +41,13 @@ public class AnimalsListView {
     }
 
     public void setAnimals(Set<Animal> animals) {
-        if (animalsListView != null) {
-            animalsListView.getItems().setAll(animals);
+        if (animalListView != null) {
+            animalListView.getItems().setAll(animals);
         }
     }
 
     private void onAnimalSelected() {
-        Animal selectedAnimal = animalsListView.getSelectionModel().getSelectedItem();
+        Animal selectedAnimal = animalListView.getSelectionModel().getSelectedItem();
         if (selectedAnimal != null) {
             presenter.selectAnimal(selectedAnimal);
             presenter.displayAnimalStatistics();

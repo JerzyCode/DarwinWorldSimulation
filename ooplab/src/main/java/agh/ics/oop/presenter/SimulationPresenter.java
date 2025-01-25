@@ -35,7 +35,7 @@ import lombok.Setter;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener, AnimalClickHandler {
+public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener, PositionClickHandler {
     private static final int GRID_SIZE = 20;
 
 
@@ -77,7 +77,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private StatisticsRepositoryPort statisticsRepository;
     private Animal selectedAnimal;
     private AnimalStatisticsView animalStatisticsViewController;
-    private AnimalsListView animalsListViewController;
+    private AnimalListView animalListViewController;
     private boolean shouldHighlightAnimalsWithMostPopularGenotype = false;
 
     private double scaleFactor = 1.0;
@@ -202,7 +202,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
 
     @Override
-    public void onAnimalClick(Vector2d position) {
+    public void onPositionClick(Vector2d position) {
         if (isRunning) {
             return;
         }
@@ -212,9 +212,9 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getClassLoader().getResource("animals_list_view.fxml"));
                 Parent animalsView = loader.load();
-                animalsListViewController = loader.getController();
-                animalsListViewController.setPresenter(this);
-                animalsListViewController.setAnimals(worldMap.getAnimals()
+                animalListViewController = loader.getController();
+                animalListViewController.setPresenter(this);
+                animalListViewController.setAnimals(worldMap.getAnimals()
                         .stream()
                         .filter(animal -> animal.getPosition() == position)
                         .collect(Collectors.toSet()));
@@ -271,14 +271,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                         if (element instanceof Plant) {
                             positionContainer.getChildren().add(createPlantRectangle());
                         } else if (element instanceof Animal animal) {
-                            boolean isSelected = animal.equals(selectedAnimal);
-                            if (simulationContext.getStatistics().getMostPopularGenotype() == null) {
-                                System.out.println("TUTAJ NIE MOZE BYC NULL> CO ZNACZY ZE JEST PROBLEM Z WATKAMI");
-                            } else {
-                                boolean isHighlighted = simulationContext.getStatistics().getMostPopularGenotype().equals(animal.getGenome().getGens()) && shouldHighlightAnimalsWithMostPopularGenotype;
-                                AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE, isHighlighted, this);
-                                positionContainer.getChildren().add(animalComponent);
-                            }
+                            positionContainer.getChildren().add(createAnimalComponent(animal));
                         } else {
                             positionContainer.getChildren().add(createFireRectangle());
                         }
@@ -373,6 +366,11 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
         shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
+        if (shouldHighlightAnimalsWithMostPopularGenotype) {
+            highlightAnimalsWithMostPopularGenotypeButton.setText("Disable Highlighting Popular Genotype");
+        } else {
+            highlightAnimalsWithMostPopularGenotypeButton.setText("Enable Highlighting Popular Genotype");
+        }
     }
 
 
@@ -387,6 +385,12 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         var rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
         rectangle.setFill(Color.RED);
         return rectangle;
+    }
+
+    private AnimalComponent createAnimalComponent(Animal animal) {
+        boolean isSelected = animal.equals(selectedAnimal);
+        boolean isHighlighted = simulationContext.getStatistics().getMostPopularGenotype().equals(animal.getGenome().getGens()) && shouldHighlightAnimalsWithMostPopularGenotype;
+        return new AnimalComponent(animal, isSelected, GRID_SIZE, isHighlighted, this);
     }
 
 
