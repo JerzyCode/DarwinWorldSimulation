@@ -28,11 +28,6 @@ public class AnimalComponent extends StackPane {
             getChildren().add(border);
         }
 
-        setOnMouseClicked(event -> handleClick());
-    }
-
-    private void handleClick() {
-        System.out.println("Clicked on animal: " + animal);
     }
 
     private Pane createAnimalDrawing(int animalEnergy) {

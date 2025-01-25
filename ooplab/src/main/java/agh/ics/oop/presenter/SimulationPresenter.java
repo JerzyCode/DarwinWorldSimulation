@@ -10,6 +10,7 @@ import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.event.EventType;
 import agh.ics.oop.model.event.MapChangedEvent;
 import agh.ics.oop.model.exceptions.PresenterHasNoConfigurationException;
@@ -33,6 +34,8 @@ import javafx.scene.shape.Shape;
 import lombok.Setter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener {
     private static final int GRID_SIZE = 20;
@@ -198,7 +201,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         });
     }
 
-    private void displayAnimalStatistics(){
+    private void displayAnimalStatistics() {
         Platform.runLater(() -> {
             try {
                 startStopButton.setDisable(false);
@@ -242,25 +245,47 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     }
 
     private void drawElements() {
-        worldMap.getElements().forEach(element -> {
-            int x = element.getPosition().getX();
-            int y = element.getPosition().getY();
+        worldMap.getElements().stream()
+                .collect(Collectors.groupingBy(WorldElement::getPosition))
+                .forEach((position, elements) -> {
+                    int x = position.getX();
+                    int y = position.getY();
 
-            Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
+                    StackPane positionContainer = new StackPane();
 
-            if (element instanceof Plant) {
-                rectangle.setFill(Color.LIGHTGREEN);
-                mapGrid.add(rectangle, x, y);
-            } else if (element instanceof Animal animal) {
-                boolean isSelected = animal.equals(selectedAnimal);
-                AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE);
-                mapGrid.add(animalComponent, x, y);
-            } else {
-                rectangle.setFill(Color.RED);
-                mapGrid.add(rectangle, x, y);
-            }
+                    for (WorldElement element : elements) {
+                        if (element instanceof Plant) {
+                            Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
+                            rectangle.setFill(Color.LIGHTGREEN);
+                            positionContainer.getChildren().add(rectangle);
+                        } else if (element instanceof Animal animal) {
+                            boolean isSelected = animal.equals(selectedAnimal);
+                            AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE);
+                            positionContainer.getChildren().add(animalComponent);
+                        } else {
+                            Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
+                            rectangle.setFill(Color.RED);
+                            positionContainer.getChildren().add(rectangle);
+                        }
+                    }
 
-        });
+                    positionContainer.setOnMouseClicked(event -> handlePositionClick(elements));
+
+                    mapGrid.add(positionContainer, x, y);
+                });
+    }
+
+    private void handlePositionClick(List<WorldElement> elements) {
+        System.out.println("Clicked on position with elements:");
+        elements.forEach(element -> System.out.println("- " + element));
+
+        elements.stream()
+                .filter(element -> element instanceof Animal)
+                .findFirst()
+                .ifPresent(animal -> {
+                    selectedAnimal = (Animal) animal;
+                    drawMap();
+                });
     }
 
     private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
@@ -286,7 +311,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         avgLifespanLabel.setText(String.format("%.2f", statistics.getAverageLifespan()));
         avgChildrenLabel.setText(String.format("%.2f", statistics.getAverageChildren()));
         currentDayLabel.setText(String.format("%d", statistics.getCurrentDay()));
-        if (animalStatisticsViewController != null){
+        if (animalStatisticsViewController != null) {
             animalStatisticsViewController.updateLabels(statistics.getCurrentDay());
         }
     }
