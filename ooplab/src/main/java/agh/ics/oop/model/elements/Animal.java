@@ -11,6 +11,7 @@ import agh.ics.oop.model.move.MoveValidator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,16 +27,19 @@ public class Animal implements WorldElement {
     private int energy;
     private Vector2d position;
     private MapDirection orientation;
-    private Set<Animal> parents;
+    @Builder.Default
+    private final Set<Animal> parents = new HashSet<>();
+    @Builder.Default
+    private final Set<Animal> children = new HashSet<>();
     private int countOfEatenPlants;
+    @Setter
     private int endDay;
     private final int wellFedEnergy;
     private final int startDay;
-    private final Set<Animal> children = new HashSet<>();
     private final Genome genome;
 
     public Animal(Vector2d position, Genome genome) {
-        this(25, position, MapDirection.NORTH, new HashSet<>(), 0, 0, 15, 0, genome);
+        this(25, position, MapDirection.NORTH, new HashSet<>(), new HashSet<>(), 0, 0, 15, 0, genome);
     }
 
     public boolean isAt(Vector2d position) {
@@ -136,6 +140,11 @@ public class Animal implements WorldElement {
         return genome.getActivatedGen();
     }
 
+    public void birthAnimal(Animal child, int lossCopulateEnergy) {
+        children.add(child);
+        energy -= lossCopulateEnergy;
+    }
+
     public int getCountOfChildren() {
         return children.size();
     }
@@ -151,7 +160,4 @@ public class Animal implements WorldElement {
         return endDay;
     }
 
-    public void setEndDay(int endDay) {
-        this.endDay = endDay;
-    }
 }

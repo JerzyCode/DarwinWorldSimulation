@@ -726,7 +726,7 @@ class AnimalTest {
     }
 
     @Test
-    void getCountOfDescendants(){
+    void testBirthAnimal(){
         // given
 
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));
@@ -759,8 +759,9 @@ class AnimalTest {
                 .parents(Set.of(animal1, animal2))
                 .startDay(1)
                 .build();
-        animal1.addChild(animal4);
-        animal2.addChild(animal4);
+
+        animal1.birthAnimal(animal4, 2);
+        animal2.birthAnimal(animal4, 2);
 
         var animal5 = Animal.builder()
                 .energy(10)
@@ -771,8 +772,8 @@ class AnimalTest {
                 .startDay(1)
                 .build();
 
-        animal2.addChild(animal5);
-        animal3.addChild(animal5);
+        animal2.birthAnimal(animal5, 2);
+        animal3.birthAnimal(animal5, 2);
 
 
         var animal6 = Animal.builder()
@@ -784,9 +785,9 @@ class AnimalTest {
                 .startDay(1)
                 .build();
 
-        animal4.addChild(animal6);
-        animal5.addChild(animal6);
 
+        animal4.birthAnimal(animal6, 2);
+        animal5.birthAnimal(animal6, 2);
         // when & then
 
         assertEquals(0, animal6.getCountOfDescendants());

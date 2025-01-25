@@ -59,11 +59,8 @@ public class AnimalFactory {
                     .genome(childGenome)
                     .build();
 
-
-            parent1.addChild(newAnimal);
-            parent2.addChild(newAnimal);
-            parent1.decreaseEnergy(animalConfiguration.getLossCopulateEnergy());
-            parent2.decreaseEnergy(animalConfiguration.getLossCopulateEnergy());
+            parent1.birthAnimal(newAnimal, animalConfiguration.getLossCopulateEnergy());
+            parent2.birthAnimal(newAnimal, animalConfiguration.getLossCopulateEnergy());
 
             return newAnimal;
         } catch (InvalidCountException e) {

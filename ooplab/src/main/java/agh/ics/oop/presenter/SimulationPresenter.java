@@ -42,8 +42,6 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     @FXML
     private BorderPane mainBorderPane;
     @FXML
-    private VBox statisticsContainer;
-    @FXML
     private Label currentDayLabel;
     @FXML
     private GridPane mapGrid;
@@ -214,7 +212,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 animalListViewController.setPresenter(this);
                 animalListViewController.setAnimals(worldMap.getAnimals()
                         .stream()
-                        .filter(animal -> animal.getPosition() == position)
+                        .filter(animal -> animal.getPosition().equals(position))
                         .collect(Collectors.toSet()));
                 mainBorderPane.setRight(animalsView);
             } catch (IOException e) {

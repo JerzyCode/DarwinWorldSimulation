@@ -19,6 +19,7 @@ public class Statistics {
     private int plantCount;
     private int freeFieldsCount;
     private double averageEnergy;
+    @Builder.Default
     private List<Gen> mostPopularGenotype = new ArrayList<>();
     private double averageLifespan;
     private double averageChildren;

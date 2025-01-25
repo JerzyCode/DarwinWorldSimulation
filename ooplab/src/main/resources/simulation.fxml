@@ -8,7 +8,7 @@
             fx:id = "mainBorderPane">
 
     <left>
-        <VBox fx:id = "statisticsContainer" prefWidth = "150.0" spacing = "10"
+        <VBox prefWidth = "150.0" spacing = "10"
               style = "-fx-background-color: #e0e0e0; -fx-padding: 10;">
             <Label style = "-fx-font-weight: bold;" text = "Statystyki"/>
 
@@ -47,7 +47,9 @@
 
             <VBox alignment = "CENTER" prefHeight = "129.0" prefWidth = "187.0" spacing = "10">
                 <Button fx:id = "startStopButton" onAction = "#onSimulationStartClicked" text = "Simulation start"/>
-                <Button fx:id = "highlightAnimalsWithMostPopularGenotypeButton" onAction = "#onHighlightAnimalsWithMostPopularGenotypeClicked" text = "Enable Highlighting Popular Genotype"/>
+                <Button fx:id = "highlightAnimalsWithMostPopularGenotypeButton"
+                        onAction = "#onHighlightAnimalsWithMostPopularGenotypeClicked"
+                        text = "Enable Highlighting Popular Genotype"/>
             </VBox>
         </VBox>
     </left>
