@@ -38,18 +38,6 @@ public class Animal implements WorldElement {
         this(25, position, MapDirection.NORTH, new HashSet<>(), 0, 0, 15, 0, genome);
     }
 
-    public Animal(int energy, Vector2d position, MapDirection orientation, Genome genome, int startDay, int wellFedEnergy, int lossCopulateEnergy) {
-        this.energy = energy;
-        this.orientation = orientation;
-        this.position = position;
-        this.genome = genome;
-        this.countOfEatenPlants = 0;
-        this.startDay = startDay;
-        this.wellFedEnergy = wellFedEnergy;
-        this.endDay = 0;
-    }
-
-
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
@@ -136,7 +124,7 @@ public class Animal implements WorldElement {
 
     @Override
     public String toString() {
-        return orientation.getSymbol();
+        return String.format("Animal - Energy: %s", energy);
     }
 
     @Override

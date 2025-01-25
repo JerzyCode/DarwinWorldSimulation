@@ -47,8 +47,7 @@
 
             <VBox alignment = "CENTER" prefHeight = "129.0" prefWidth = "187.0" spacing = "10">
                 <Button fx:id = "startStopButton" onAction = "#onSimulationStartClicked" text = "Simulation start"/>
-                <Button fx:id = "chooseAnimalButton" onAction = "#onChooseAnimalClicked" text = "Choose animal" disable="true"/>
-                <Button fx:id = "highlightAnimalsWithMostPopularGenotypeButton" onAction = "#onHighlightAnimalsWithMostPopularGenotypeClicked" text = "highlight most popular genotype"/>
+                <Button fx:id = "highlightAnimalsWithMostPopularGenotypeButton" onAction = "#onHighlightAnimalsWithMostPopularGenotypeClicked" text = "Enable Highlighting Popular Genotype"/>
             </VBox>
         </VBox>
     </left>

@@ -19,7 +19,7 @@ public class Statistics {
     private int plantCount;
     private int freeFieldsCount;
     private double averageEnergy;
-    private List<Gen> mostPopularGenotype;
+    private List<Gen> mostPopularGenotype = new ArrayList<>();
     private double averageLifespan;
     private double averageChildren;
 

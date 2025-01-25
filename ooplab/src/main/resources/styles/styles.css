@@ -8,6 +8,6 @@
 }
 
 .highlighted {
-    -fx-border-color: yellow;
-    -fx-border-width: 2;
+    -fx-border-color: #d4ff2f;
+    -fx-border-width: 3;
 }
