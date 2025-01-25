@@ -37,12 +37,13 @@ import java.io.IOException;
 public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener {
     private static final int GRID_SIZE = 20;
 
+
     @FXML
-    public BorderPane mainBorderPane;
+    private BorderPane mainBorderPane;
     @FXML
-    public VBox statisticsContainer;
+    private VBox statisticsContainer;
     @FXML
-    public Label currentDayLabel;
+    private Label currentDayLabel;
     @FXML
     private GridPane mapGrid;
     @FXML
@@ -63,6 +64,8 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Label avgLifespanLabel;
     @FXML
     private Label avgChildrenLabel;
+    @FXML
+    private Button chooseAnimalButton;
 
     private SimulationWorldMap worldMap;
     @Setter
@@ -161,6 +164,32 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         startStopButton.setText("Stop");
         simulationEngine.resumeAll();
         startStopButton.setOnAction(event -> stopSimulation());
+    }
+
+    public void onChooseAnimalClicked() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getClassLoader().getResource("animal_statistics_view.fxml"));
+                Parent animalStatsView = loader.load();
+
+                mainBorderPane.setRight(animalStatsView);
+
+                AnimalsStatisticsView statsController = loader.getController();
+//                statsController.updateStatistics(
+//                        "AGTCAGTC",   // genome
+//                        "AGT",        // active gene
+//                        100.0,        // energy
+//                        10,           // eaten plants
+//                        2,            // children
+//                        5,            // descendants
+//                        30,           // lifespan
+//                        "Alive"       // death day
+//                );
+            } catch (IOException e) {
+                System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
+            }
+        });
     }
 
     private void clearGrid() {
@@ -312,6 +341,5 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
         mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
-
 
 }
