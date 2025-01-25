@@ -4,6 +4,7 @@ import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.configuration.PlantVariant;
 import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.util.PlantPreferableAreaCalculator;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.HashSet;
@@ -21,7 +22,7 @@ class Gardener {
     }
 
     Set<Plant> createPlantsDaily(int currentPlantsCount, int mapCellsCount, Boundary boundary, Set<Vector2d> unavailablePositions) {
-            return createPlants(currentPlantsCount, mapCellsCount, boundary, plantGrowth, unavailablePositions);
+        return createPlants(currentPlantsCount, mapCellsCount, boundary, plantGrowth, unavailablePositions);
 
     }
 
@@ -32,29 +33,16 @@ class Gardener {
 
         RandomPositionGenerator randomizer = switch (plantVariant) {
             case FORESTED_EQUATORS -> new RandomPositionGenerator(plantCount, boundary.rightTopCorner().getX(),
-                    boundary.rightTopCorner().getY(), unavailablePositions , getPreferableArea(boundary));
+                    boundary.rightTopCorner().getY(), unavailablePositions, PlantPreferableAreaCalculator.getPreferableArea(boundary));
             case FULL_RANDOM -> new RandomPositionGenerator(plantCount, boundary.rightTopCorner().getX(),
                     boundary.rightTopCorner().getY(), unavailablePositions);
         };
 
-        for (Vector2d position: randomizer) {
+        for (Vector2d position : randomizer) {
             plants.add(new Plant(position, plantEnergyGain));
         }
 
         return plants;
     }
 
-    private Boundary getPreferableArea(Boundary boundary) {
-        var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY() + 1;
-
-        int countOfPreferableRows = Math.max(1, (int) (countOfRows * 0.2));
-        int notPreferableRows = countOfRows - countOfPreferableRows;
-        int minIndexOfPreferableRow = notPreferableRows / 2;
-        int maxIndexOfPreferableRow = minIndexOfPreferableRow + countOfPreferableRows - 1;
-
-        Vector2d leftBottomCorner = new Vector2d(boundary.leftBottomCorner().getX(), minIndexOfPreferableRow);
-        Vector2d rightTopCorner = new Vector2d(boundary.rightTopCorner().getX(), maxIndexOfPreferableRow);
-
-        return new Boundary(leftBottomCorner, rightTopCorner);
-    }
 }

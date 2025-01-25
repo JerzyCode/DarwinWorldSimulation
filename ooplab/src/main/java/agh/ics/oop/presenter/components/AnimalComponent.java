@@ -49,9 +49,9 @@ public class AnimalComponent extends Pane {
     }
 
     private Color calculateColor(int animalEnergy) {
-        int maxEnergy = 40;
+        int maxEnergy = 100;
         animalEnergy = Math.max(0, Math.min(animalEnergy, maxEnergy));
-        double energyFactor = (double) animalEnergy / maxEnergy;
+        double energyFactor = 1 - (double) animalEnergy / maxEnergy;
 
         int red = 0;
         int green = (int) (255 * energyFactor);

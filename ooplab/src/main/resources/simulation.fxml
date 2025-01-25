@@ -50,6 +50,8 @@
                 <Button fx:id = "highlightAnimalsWithMostPopularGenotypeButton"
                         onAction = "#onHighlightAnimalsWithMostPopularGenotypeClicked"
                         text = "Enable Highlighting Popular Genotype"/>
+                <Button fx:id = "showPreferredPlantPositionsButton"
+                        onAction = "#showPreferredPlantPositions" text = "Show Preferred Plant Positions"/>
             </VBox>
         </VBox>
     </left>

@@ -18,6 +18,7 @@ import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.repository.CsvStatisticsRepositoryAdapter;
 import agh.ics.oop.model.repository.StatisticsRepositoryPort;
+import agh.ics.oop.model.util.PlantPreferableAreaCalculator;
 import agh.ics.oop.presenter.components.AnimalComponent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -38,7 +39,6 @@ import java.util.stream.Collectors;
 public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener, PositionClickHandler {
     private static final int GRID_SIZE = 20;
 
-
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -50,8 +50,9 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     @FXML
     private Button highlightAnimalsWithMostPopularGenotypeButton;
+    @FXML
+    private Button showPreferredPlantPositionsButton;
 
-    //    Stats
     @FXML
     private Label animalCountLabel;
     @FXML
@@ -78,10 +79,12 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private AnimalListView animalListViewController;
     private boolean shouldHighlightAnimalsWithMostPopularGenotype = false;
 
+    private Boundary preferablePlantArea;
     private double scaleFactor = 1.0;
     private double initialX;
     private double initialY;
     private boolean isRunning;
+    private boolean preferredPlantPositionsVisible = false;
 
 
     @FXML
@@ -127,6 +130,29 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         });
     }
 
+    public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
+        shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
+        if (shouldHighlightAnimalsWithMostPopularGenotype) {
+            highlightAnimalsWithMostPopularGenotypeButton.setText("Disable Highlighting Popular Genotype");
+        } else {
+            highlightAnimalsWithMostPopularGenotypeButton.setText("Enable Highlighting Popular Genotype");
+        }
+    }
+
+    public void showPreferredPlantPositions() {
+        if (preferablePlantArea == null) {
+            return;
+        }
+
+        preferredPlantPositionsVisible = !preferredPlantPositionsVisible;
+        if (preferredPlantPositionsVisible) {
+            showPreferredPlantPositionsButton.setText("Hide Preferred Plant Positions");
+        } else {
+            showPreferredPlantPositionsButton.setText("Show Preferred Plant Positions");
+        }
+        Platform.runLater(this::drawMap);
+    }
+
     public void onSimulationStartClicked() {
         if (configuration == null) {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
@@ -136,6 +162,8 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
         var simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
+        preferablePlantArea = PlantPreferableAreaCalculator.getPreferableArea(worldMap.getCurrentBounds());
+
         simulationContext.addMapChangedListener(this);
         this.simulationContext = simulationContext;
         this.statisticsRepository = new CsvStatisticsRepositoryAdapter();
@@ -251,10 +279,23 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         for (int i = 0; i <= height; i++) {
             mapGrid.getRowConstraints().add(new RowConstraints(GRID_SIZE));
         }
+    }
+
+    private void highlightPlantPreferableArea() {
+        if (!preferredPlantPositionsVisible) {
+            return;
+        }
+
+        for (int x = preferablePlantArea.leftBottomCorner().getX(); x <= preferablePlantArea.rightTopCorner().getX(); x++) {
+            for (int y = preferablePlantArea.leftBottomCorner().getY(); y <= preferablePlantArea.rightTopCorner().getY(); y++) {
+                mapGrid.add(createRectangle(Color.valueOf("F3FAC4FF").brighter()), x, y);
+            }
+        }
 
     }
 
     private void drawElements() {
+        highlightPlantPreferableArea();
         worldMap.getElements().stream()
                 .collect(Collectors.groupingBy(WorldElement::getPosition))
                 .forEach((position, elements) -> {
@@ -265,11 +306,11 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
                     for (WorldElement element : elements) {
                         if (element instanceof Plant) {
-                            positionContainer.getChildren().add(createPlantRectangle());
+                            positionContainer.getChildren().add(createRectangle(Color.LIGHTGREEN));
                         } else if (element instanceof Animal animal) {
                             positionContainer.getChildren().add(createAnimalComponent(animal));
                         } else {
-                            positionContainer.getChildren().add(createFireRectangle());
+                            positionContainer.getChildren().add(createRectangle(Color.RED));
                         }
                     }
                     mapGrid.add(positionContainer, x, y);
@@ -360,26 +401,10 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
 
-    public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
-        shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
-        if (shouldHighlightAnimalsWithMostPopularGenotype) {
-            highlightAnimalsWithMostPopularGenotypeButton.setText("Disable Highlighting Popular Genotype");
-        } else {
-            highlightAnimalsWithMostPopularGenotypeButton.setText("Enable Highlighting Popular Genotype");
-        }
-    }
 
-
-    private Rectangle createPlantRectangle() {
+    private Rectangle createRectangle(Color color) {
         var rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
-        rectangle.setFill(Color.LIGHTGREEN);
-        return rectangle;
-    }
-
-
-    private Rectangle createFireRectangle() {
-        var rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
-        rectangle.setFill(Color.RED);
+        rectangle.setFill(color);
         return rectangle;
     }
 
