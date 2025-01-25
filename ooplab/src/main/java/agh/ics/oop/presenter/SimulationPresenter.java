@@ -30,7 +30,6 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -270,9 +269,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
                     for (WorldElement element : elements) {
                         if (element instanceof Plant) {
-                            Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
-                            rectangle.setFill(Color.LIGHTGREEN);
-                            positionContainer.getChildren().add(rectangle);
+                            positionContainer.getChildren().add(createPlantRectangle());
                         } else if (element instanceof Animal animal) {
                             boolean isSelected = animal.equals(selectedAnimal);
                             if (simulationContext.getStatistics().getMostPopularGenotype() == null) {
@@ -283,9 +280,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                                 positionContainer.getChildren().add(animalComponent);
                             }
                         } else {
-                            Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
-                            rectangle.setFill(Color.RED);
-                            positionContainer.getChildren().add(rectangle);
+                            positionContainer.getChildren().add(createFireRectangle());
                         }
                     }
                     mapGrid.add(positionContainer, x, y);
@@ -337,7 +332,6 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     }
 
     private void setGridOnScrollEvent() {
-
         mapGrid.setOnScroll((ScrollEvent event) -> {
             double delta = event.getDeltaY();
             double zoomFactor = 1.1;
@@ -379,6 +373,20 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
         shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
+    }
+
+
+    private Rectangle createPlantRectangle() {
+        var rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
+        rectangle.setFill(Color.LIGHTGREEN);
+        return rectangle;
+    }
+
+
+    private Rectangle createFireRectangle() {
+        var rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
+        rectangle.setFill(Color.RED);
+        return rectangle;
     }
 
 

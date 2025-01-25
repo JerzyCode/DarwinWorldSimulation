@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.Getter;
 
-public class AnimalComponent extends StackPane {
+public class AnimalComponent extends Pane {
     @Getter
     private final Animal animal;
     private final int gridSize;
