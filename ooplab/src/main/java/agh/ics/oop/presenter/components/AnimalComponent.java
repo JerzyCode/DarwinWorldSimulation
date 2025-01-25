@@ -1,5 +1,8 @@
 package agh.ics.oop.presenter.components;
+
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.presenter.AnimalClickHandler;
+import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -13,7 +16,8 @@ public class AnimalComponent extends StackPane {
     private final Animal animal;
     private final int gridSize;
 
-    public AnimalComponent(Animal animal, boolean isSelected, int gridSize, boolean isHighlighted) {
+
+    public AnimalComponent(Animal animal, boolean isSelected, int gridSize, boolean isHighlighted, AnimalClickHandler onAnimalClick) {
         this.animal = animal;
         this.gridSize = gridSize;
 
@@ -21,17 +25,15 @@ public class AnimalComponent extends StackPane {
         getChildren().add(animalDrawing);
 
         if (isSelected) {
-            Shape border = new Rectangle(gridSize, gridSize);
-            border.setFill(Color.TRANSPARENT);
-            border.setStroke(Color.BLUE);
-            border.setStrokeWidth(2.0);
-            getChildren().add(border);
+            displayBorder();
         }
 
         if (isHighlighted) {
             animalDrawing.getStyleClass().add("highlighted");
         }
 
+        setOnClickHandler(onAnimalClick);
+        setMouseHoverEffects(animalDrawing);
     }
 
     private Pane createAnimalDrawing(int animalEnergy) {
@@ -42,6 +44,8 @@ public class AnimalComponent extends StackPane {
         Circle head = new Circle(centerX, centerY, radius);
         head.setFill(calculateColor(animalEnergy));
         pane.getChildren().add(head);
+        pane.setPrefSize(gridSize, gridSize);
+
         return pane;
     }
 
@@ -55,6 +59,42 @@ public class AnimalComponent extends StackPane {
         int blue = (int) (128 + (127 * energyFactor));
 
         return Color.rgb(red, green, blue);
+    }
+
+
+    private void setOnClickHandler(AnimalClickHandler animalHandler) {
+        this.setOnMouseClicked(event -> {
+            animalHandler.onAnimalClick(animal.getPosition());
+            displayBorder();
+        });
+    }
+
+    private void setMouseHoverEffects(Pane animalDrawing) {
+        Circle head = (Circle) animalDrawing.getChildren().getFirst();
+        this.setOnMouseEntered(event -> {
+            animalDrawing.setOpacity(0.8);
+            head.setFill(Color.ORANGE);
+            this.setCursor(Cursor.HAND);
+        });
+
+        this.setOnMouseExited(event -> {
+            animalDrawing.setOpacity(1.0);
+            head.setFill(calculateColor(animal.getEnergy()));
+            this.setCursor(Cursor.DEFAULT);
+        });
+    }
+
+
+    private void displayBorder() {
+        Shape border = new Rectangle(gridSize, gridSize);
+        border.setFill(Color.TRANSPARENT);
+        border.setStroke(Color.HOTPINK);
+        border.setStrokeWidth(3);
+
+        border.setLayoutX(0);
+        border.setLayoutY(0);
+
+        getChildren().add(border);
     }
 }
 

@@ -2,9 +2,10 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.elements.Animal;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import lombok.Setter;
 
 import java.util.Set;
@@ -15,7 +16,7 @@ public class AnimalsListView {
     private ListView<Animal> animalsListView;
 
     @FXML
-    private Button selectButton;
+    private Button cancelButton;
 
     @Setter
     private SimulationPresenter presenter;
@@ -26,10 +27,19 @@ public class AnimalsListView {
             protected void updateItem(Animal item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : item.toString());
+
+                setOnMouseClicked(event -> onAnimalSelected());
+                setOnMouseEntered(event -> {
+                    setStyle("-fx-background-color: lightblue;");
+                    setCursor(Cursor.HAND);
+                });
+                setOnMouseExited(event -> {
+                    setStyle("");
+                });
             }
         });
 
-        selectButton.setOnAction(event -> onAnimalSelected());
+        cancelButton.setOnAction(event -> presenter.onCancelSelectingAnimal());
     }
 
     public void setAnimals(Set<Animal> animals) {
@@ -42,6 +52,7 @@ public class AnimalsListView {
         Animal selectedAnimal = animalsListView.getSelectionModel().getSelectedItem();
         if (selectedAnimal != null) {
             presenter.selectAnimal(selectedAnimal);
+            presenter.displayAnimalStatistics();
         }
     }
 

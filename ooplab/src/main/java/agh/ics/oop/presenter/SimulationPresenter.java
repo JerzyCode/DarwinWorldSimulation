@@ -34,10 +34,9 @@ import javafx.scene.shape.Shape;
 import lombok.Setter;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 
-public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener {
+public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener, AnimalClickHandler {
     private static final int GRID_SIZE = 20;
 
 
@@ -70,8 +69,6 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Label avgLifespanLabel;
     @FXML
     private Label avgChildrenLabel;
-    @FXML
-    private Button chooseAnimalButton;
 
     private SimulationWorldMap worldMap;
     @Setter
@@ -82,19 +79,17 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Animal selectedAnimal;
     private AnimalStatisticsView animalStatisticsViewController;
     private AnimalsListView animalsListViewController;
-    private boolean isChoosingAnimal = false;
     private boolean shouldHighlightAnimalsWithMostPopularGenotype = false;
-    private StackPane highlightedPosition = null;
 
     private double scaleFactor = 1.0;
     private double initialX;
     private double initialY;
+    private boolean isRunning;
 
 
     @FXML
     void initialize() {
         System.out.println("initialize()");
-
         setGridOnScrollEvent();
         onGridDrag();
     }
@@ -120,6 +115,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     @Override
     public void onSimulationFinished() {
         closeRepositoryPort();
+        isRunning = false;
         Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader();
@@ -140,6 +136,8 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         if (configuration == null) {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
         }
+
+        isRunning = true;
 
         var simulationContext = new SimulationContext(configuration);
         worldMap = simulationContext.getWorldMap();
@@ -174,46 +172,21 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private void stopSimulation() {
         startStopButton.setText("Start");
         startStopButton.setOnAction(event -> resumeSimulation());
-        chooseAnimalButton.setDisable(false);
         simulationEngine.pauseAll();
+        isRunning = false;
     }
 
     private void resumeSimulation() {
         startStopButton.setText("Stop");
         simulationEngine.resumeAll();
-        chooseAnimalButton.setDisable(true);
         startStopButton.setOnAction(event -> stopSimulation());
-        chooseAnimalButton.setText("Choose animal");
-        chooseAnimalButton.setOnAction(event -> onChooseAnimalClicked());
+        isRunning = true;
     }
 
-    public void onChooseAnimalClicked() {
-        Platform.runLater(() -> {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getClassLoader().getResource("animals_list_view.fxml"));
-                Parent animalsView = loader.load();
-
-
-                animalsListViewController = loader.getController();
-                animalsListViewController.setPresenter(this);
-                animalsListViewController.setAnimals(worldMap.getAnimals());
-                mainBorderPane.setRight(animalsView);
-            } catch (IOException e) {
-                System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
-            }
-            startStopButton.setDisable(true);
-            chooseAnimalButton.setText("Confirm");
-            chooseAnimalButton.setOnAction(event -> displayAnimalStatistics());
-            isChoosingAnimal = true;
-        });
-    }
-
-    private void displayAnimalStatistics() {
+    void displayAnimalStatistics() {
         Platform.runLater(() -> {
             try {
                 startStopButton.setDisable(false);
-                chooseAnimalButton.setDisable(true);
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getClassLoader().getResource("animal_statistics_view.fxml"));
                 Parent animalsView = loader.load();
@@ -222,11 +195,44 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 animalStatisticsViewController.setAnimal(selectedAnimal);
                 animalStatisticsViewController.updateLabels(simulationContext.getStatistics().getCurrentDay());
                 mainBorderPane.setRight(animalsView);
-                isChoosingAnimal = false;
             } catch (IOException e) {
                 System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
             }
         });
+    }
+
+
+    @Override
+    public void onAnimalClick(Vector2d position) {
+        if (isRunning) {
+            return;
+        }
+
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getClassLoader().getResource("animals_list_view.fxml"));
+                Parent animalsView = loader.load();
+                animalsListViewController = loader.getController();
+                animalsListViewController.setPresenter(this);
+                animalsListViewController.setAnimals(worldMap.getAnimals()
+                        .stream()
+                        .filter(animal -> animal.getPosition() == position)
+                        .collect(Collectors.toSet()));
+                mainBorderPane.setRight(animalsView);
+            } catch (IOException e) {
+                System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
+            }
+
+            selectAnimal(null);
+            startStopButton.setDisable(true);
+        });
+    }
+
+    void onCancelSelectingAnimal() {
+        mainBorderPane.setRight(null);
+        selectedAnimal = null;
+        startStopButton.setDisable(false);
     }
 
     private void clearGrid() {
@@ -273,7 +279,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                                 System.out.println("TUTAJ NIE MOZE BYC NULL> CO ZNACZY ZE JEST PROBLEM Z WATKAMI");
                             } else {
                                 boolean isHighlighted = simulationContext.getStatistics().getMostPopularGenotype().equals(animal.getGenome().getGens()) && shouldHighlightAnimalsWithMostPopularGenotype;
-                                AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE, isHighlighted);
+                                AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE, isHighlighted, this);
                                 positionContainer.getChildren().add(animalComponent);
                             }
                         } else {
@@ -282,32 +288,8 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                             positionContainer.getChildren().add(rectangle);
                         }
                     }
-
-                    positionContainer.setOnMouseClicked(event -> handlePositionClick(elements, positionContainer));
-
                     mapGrid.add(positionContainer, x, y);
                 });
-    }
-
-    private void handlePositionClick(List<WorldElement> elements, StackPane positionContainer) {
-        if (!isChoosingAnimal) {
-            return;
-        }
-
-        if (highlightedPosition != null) {
-            highlightedPosition.getStyleClass().remove("highlighted");
-        }
-
-        positionContainer.getStyleClass().add("highlighted");
-        highlightedPosition = positionContainer;
-
-//        elements.forEach(element -> System.out.println("- " + element));
-        animalsListViewController
-                .setAnimals(
-                        elements.stream()
-                                .filter(worldElement -> worldElement instanceof Animal)
-                                .map(worldElement -> (Animal) worldElement)
-                                .collect(Collectors.toSet()));
     }
 
     private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
@@ -398,4 +380,6 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
         shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
     }
+
+
 }
