@@ -9,7 +9,6 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.HashSet;
 import java.util.Set;
 
-//TODO otestować
 class Gardener {
     private final int plantGrowth;
     private final int plantEnergyGain;
@@ -21,12 +20,12 @@ class Gardener {
         this.plantVariant = plantVariant;
     }
 
-    public Set<Plant> createPlantsDaily(int currentPlantsCount, int mapCellsCount, Boundary boundary, Set<Vector2d> unavailablePositions) {
+    Set<Plant> createPlantsDaily(int currentPlantsCount, int mapCellsCount, Boundary boundary, Set<Vector2d> unavailablePositions) {
             return createPlants(currentPlantsCount, mapCellsCount, boundary, plantGrowth, unavailablePositions);
 
     }
 
-    public Set<Plant> createPlants(int currentPlantsCount, int mapCellsCount, Boundary boundary, int plantCount, Set<Vector2d> unavailablePositions) {
+    Set<Plant> createPlants(int currentPlantsCount, int mapCellsCount, Boundary boundary, int plantCount, Set<Vector2d> unavailablePositions) {
         var plants = new HashSet<Plant>();
         var countOfAvailablePlacesForPlants = mapCellsCount - currentPlantsCount;
         plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
