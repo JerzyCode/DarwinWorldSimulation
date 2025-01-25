@@ -90,11 +90,11 @@ class SimulationStatisticsCalculatorTest {
 
         // then
         assertTrue(averageTimeLifeOnMapWithOnlyAnimals.isPresent());
-        assertEquals(15, averageTimeLifeOnMapWithOnlyAnimals.getAsDouble(), 0.01);
+        assertEquals(16, averageTimeLifeOnMapWithOnlyAnimals.getAsDouble(), 0.01);
         simulationWithoutPlantsAndFires.handleDayEnds();
         averageTimeLifeOnMapWithOnlyAnimals = simulationWithoutPlantsAndFiresStatistics.getAverageDeadAnimalTimeLife();
         assertTrue(averageTimeLifeOnMapWithOnlyAnimals.isPresent());
-        assertEquals(15, averageTimeLifeOnMapWithOnlyAnimals.getAsDouble(), 0.01);
+        assertEquals(16, averageTimeLifeOnMapWithOnlyAnimals.getAsDouble(), 0.01);
         assertTrue(simulationWithoutAnimalsStatistics.getAverageDeadAnimalTimeLife().isEmpty());
         assertTrue(simulationWithAnimalsStatistics.getAverageDeadAnimalTimeLife().isEmpty());
 

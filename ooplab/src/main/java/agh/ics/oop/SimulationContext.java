@@ -46,6 +46,7 @@ public class SimulationContext implements StatisticsDataProvider {
     }
 
     public void handleDayEnds() {
+        handleDeadAnimals();
         worldMap.clearDeadAnimals();
         worldMap.getAnimals().forEach(this::handleAnimalDayEnds);
         worldMap.handleDayEnds(currentDay);
@@ -83,11 +84,15 @@ public class SimulationContext implements StatisticsDataProvider {
     private void handleAnimalDayEnds(Animal animal) {
         worldMap.move(animal, MoveDirection.FORWARD);
         animal.decreaseEnergy(1);
+    }
 
-        if (animal.isDead()) {
-            deadAnimals.add(animal);
-            animal.setEndDay(currentDay);
-        }
+    private void handleDeadAnimals() {
+        worldMap.getAnimals().stream()
+                .filter(Animal::isDead)
+                .forEach(animal -> {
+                    deadAnimals.add(animal);
+                    animal.setEndDay(currentDay);
+                });
     }
 
     void notifySimulationFinished() {

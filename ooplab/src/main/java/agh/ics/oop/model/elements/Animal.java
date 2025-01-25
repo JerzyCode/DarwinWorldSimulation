@@ -154,7 +154,7 @@ public class Animal implements WorldElement {
     }
 
     public int getEndDay() throws AnimalStillAliveException {
-        if (endDay == 0) {
+        if (!isDead()) {
             throw new AnimalStillAliveException(this);
         }
         return endDay;

@@ -164,7 +164,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         var simulationContext = simulation.getSimulationContext();
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
-        simulationContext.addMapChangedListener(new LoggerListener());
+//        simulationContext.addMapChangedListener(new LoggerListener());
         simulationContext.addSimulationFinishedListener(this);
 
         preferablePlantArea = PlantPreferableAreaCalculator.getPreferableArea(worldMap.getCurrentBounds());
