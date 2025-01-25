@@ -1,8 +1,7 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.SimulationContext;
-import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.listener.LoggerListener;
 import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.listener.SimulationFinishedListener;
 import agh.ics.oop.model.Boundary;
@@ -69,10 +68,10 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Label avgChildrenLabel;
 
     @Setter
+    private Simulation simulation;
+    @Setter
     private Configuration configuration;
     private SimulationWorldMap worldMap;
-    private SimulationEngine simulationEngine;
-    private SimulationContext simulationContext;
     private StatisticsRepositoryPort statisticsRepository;
     private Animal selectedAnimal;
     private AnimalStatisticsView animalStatisticsViewController;
@@ -89,7 +88,6 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     @FXML
     void initialize() {
-        System.out.println("initialize()");
         setGridOnScrollEvent();
         onGridDrag();
     }
@@ -123,7 +121,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 mainBorderPane.setLeft(null);
 
                 SimulationSummaryPresenter presenter = loader.getController();
-                presenter.setGraphData(simulationContext.getGraphData());
+                presenter.setGraphData(simulation.getSimulationContext().getGraphData());
             } catch (IOException e) {
                 System.out.println("Couldn't load simulation summary view, e=" + e.getMessage());
             }
@@ -163,31 +161,19 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
         isRunning = true;
 
-        var simulationContext = new SimulationContext(configuration);
+        var simulationContext = simulation.getSimulationContext();
         worldMap = simulationContext.getWorldMap();
-        preferablePlantArea = PlantPreferableAreaCalculator.getPreferableArea(worldMap.getCurrentBounds());
-
         simulationContext.addMapChangedListener(this);
-        this.simulationContext = simulationContext;
-        this.statisticsRepository = new CsvStatisticsRepositoryAdapter();
-//        simulationContext.addMapChangedListener(new LoggerListener());
+        simulationContext.addMapChangedListener(new LoggerListener());
+        simulationContext.addSimulationFinishedListener(this);
 
-        this.simulationContext.addSimulationFinishedListener(this);
-        var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
-
-
-        simulationEngine = new SimulationEngine(simulation);
-        simulationEngine.runAsyncInThreadPool();
+        preferablePlantArea = PlantPreferableAreaCalculator.getPreferableArea(worldMap.getCurrentBounds());
+        statisticsRepository = new CsvStatisticsRepositoryAdapter();
 
         startStopButton.setText("Stop");
         startStopButton.setOnAction(event -> stopSimulation());
     }
 
-    public void endSimulation() {
-        if (simulationEngine != null) {
-            simulationEngine.stopAll();
-        }
-    }
 
     public void selectAnimal(Animal animal) {
         this.selectedAnimal = animal;
@@ -196,17 +182,27 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
 
     private void stopSimulation() {
-        startStopButton.setText("Start");
-        startStopButton.setOnAction(event -> resumeSimulation());
-        simulationEngine.pauseAll();
-        isRunning = false;
+        if (simulation != null) {
+            startStopButton.setText("Start");
+            simulation.pause();
+            startStopButton.setOnAction(event -> resumeSimulation());
+            isRunning = false;
+        }
     }
 
     private void resumeSimulation() {
-        startStopButton.setText("Stop");
-        simulationEngine.resumeAll();
-        startStopButton.setOnAction(event -> stopSimulation());
-        isRunning = true;
+        if (simulation != null) {
+            startStopButton.setText("Stop");
+            simulation.resume();
+            startStopButton.setOnAction(event -> stopSimulation());
+            isRunning = true;
+        }
+    }
+
+    public void endSimulation() {
+        if (simulation != null) {
+            simulation.end();
+        }
     }
 
     void displayAnimalStatistics() {
@@ -219,7 +215,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
                 animalStatisticsViewController = loader.getController();
                 animalStatisticsViewController.setAnimal(selectedAnimal);
-                animalStatisticsViewController.updateLabels(simulationContext.getStatistics().getCurrentDay());
+                animalStatisticsViewController.updateLabels(simulation.getSimulationContext().getStatistics().getCurrentDay());
                 mainBorderPane.setRight(animalsView);
             } catch (IOException e) {
                 System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
@@ -329,7 +325,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     }
 
     private void updateStatisticsDisplay() {
-        var statistics = simulationContext.getStatistics();
+        var statistics = simulation.getSimulationContext().getStatistics();
         animalCountLabel.setText(String.valueOf(statistics.getAnimalCount()));
         plantCountLabel.setText(String.format("%d", statistics.getPlantCount()));
         freeFieldsLabel.setText(String.format("%d", statistics.getFreeFieldsCount()));
@@ -350,7 +346,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     private void saveStatistics() {
         if (configuration.getSimulationConfiguration().isSaveStatisticsCsv()) {
-            statisticsRepository.save(simulationContext.getStatistics(), worldMap.getId().toString());
+            statisticsRepository.save(simulation.getSimulationContext().getStatistics(), worldMap.getId().toString());
         }
     }
 
@@ -413,7 +409,10 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     private AnimalComponent createAnimalComponent(Animal animal) {
         boolean isSelected = animal.equals(selectedAnimal);
-        boolean isHighlighted = simulationContext.getStatistics().getMostPopularGenotype().equals(animal.getGenome().getGens()) && shouldHighlightAnimalsWithMostPopularGenotype;
+        boolean isHighlighted = simulation.getSimulationContext()
+                .getStatistics()
+                .getMostPopularGenotype()
+                .equals(animal.getGenome().getGens()) && shouldHighlightAnimalsWithMostPopularGenotype;
         return new AnimalComponent(animal, isSelected, GRID_SIZE, isHighlighted, this);
     }
 

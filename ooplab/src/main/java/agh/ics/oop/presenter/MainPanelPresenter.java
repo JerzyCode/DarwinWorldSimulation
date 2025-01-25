@@ -1,5 +1,8 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationContext;
+import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.configuration.Configuration;
 import agh.ics.oop.model.configuration.ConfigurationValidator;
 import agh.ics.oop.model.exceptions.WrongConfigurationParameterException;
@@ -23,6 +26,7 @@ public class MainPanelPresenter {
     private Label errorLabel;
 
     private ConfigurationPresenter configurationPresenter;
+    private final SimulationEngine simulationEngine = new SimulationEngine();
 
     private final ConfigurationValidator validator = new ConfigurationValidator();
 
@@ -53,7 +57,7 @@ public class MainPanelPresenter {
             System.out.println("Starting simulation with configuration: " + configuration);
 
             SimulationPresenter presenter = loader.getController();
-            presenter.setConfiguration(configuration);
+            createSimulation(configuration, presenter);
 
             hideErrorMessage();
             configureStage(stage, viewRoot);
@@ -61,11 +65,23 @@ public class MainPanelPresenter {
             stage.show();
 
         } catch (WrongConfigurationParameterException e) {
-            System.out.println(e.getMessage());
             showErrorMessage(e.getMessage());
         }
-
     }
+
+    public void onCloseThreadPool() {
+        simulationEngine.closeThreadPool();
+    }
+
+    private void createSimulation(Configuration configuration, SimulationPresenter presenter) {
+        var simulationContext = new SimulationContext(configuration);
+        var simulation = new Simulation(simulationContext, configuration.getSimulationConfiguration().getDaysCount());
+        presenter.setConfiguration(configuration);
+        presenter.setSimulation(simulation);
+        var simulationId = simulationEngine.addSimulation(simulation);
+        simulationEngine.runAsyncInThreadPool(simulationId);
+    }
+
 
     private void configureStage(Stage primaryStage, BorderPane viewRoot) {
         var scene = new Scene(viewRoot);

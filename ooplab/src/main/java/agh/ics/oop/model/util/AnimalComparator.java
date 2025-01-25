@@ -4,6 +4,7 @@ import agh.ics.oop.model.elements.Animal;
 
 import java.util.Comparator;
 import java.util.Random;
+
 public class AnimalComparator implements Comparator<Animal> {
     private final Random random = new Random();
 

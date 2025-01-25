@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.presenter.MainPanelPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,10 +13,11 @@ public class SimulationApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("main_panel.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("main_panel.fxml"));
         Pane viewRoot = loader.load();
+        MainPanelPresenter mainPanelPresenter = loader.getController();
         configureStage(stage, viewRoot);
+        stage.setOnCloseRequest(event -> mainPanelPresenter.onCloseThreadPool());
         stage.show();
     }
 

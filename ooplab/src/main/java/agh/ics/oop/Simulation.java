@@ -1,10 +1,13 @@
 package agh.ics.oop;
 
+import lombok.Getter;
+
 public class Simulation implements Runnable {
     private final int daysCount;
+    @Getter
     private final SimulationContext simulationContext;
     private volatile boolean paused = false;
-    private volatile boolean stopped = false;
+    private volatile boolean ended = false;
 
 
     public Simulation(SimulationContext simulationContext, int daysCount) {
@@ -20,13 +23,12 @@ public class Simulation implements Runnable {
                     try {
                         wait();
                     } catch (InterruptedException e) {
-                        // TODO: Nie wiem czy to oznacza wątek jako przerwany czy robi głupią rzecz czyli przerywa samego siebie
                         Thread.currentThread().interrupt();
                         return;
                     }
                 }
 
-                if (stopped) {
+                if (ended) {
                     return;
                 }
             }
@@ -35,7 +37,6 @@ public class Simulation implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                // TODO: Nie wiem czy to oznacza wątek jako przerwany czy robi głupią rzecz czyli przerywa samego siebie
                 Thread.currentThread().interrupt();
                 break;
             }
@@ -53,8 +54,8 @@ public class Simulation implements Runnable {
         notifyAll();
     }
 
-    public synchronized void stop() {
-        stopped = true;
+    public synchronized void end() {
+        ended = true;
         paused = false;
         notifyAll();
     }
