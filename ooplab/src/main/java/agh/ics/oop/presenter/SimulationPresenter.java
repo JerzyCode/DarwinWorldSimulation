@@ -78,6 +78,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private StatisticsRepositoryPort statisticsRepository;
     private Animal selectedAnimal;
     private AnimalStatisticsView animalStatisticsViewController;
+    private AnimalsListView animalsListViewController;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -188,9 +189,9 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 Parent animalsView = loader.load();
 
 
-                AnimalsListView controller = loader.getController();
-                controller.setPresenter(this);
-                controller.setAnimals(worldMap.getAnimals());
+                animalsListViewController = loader.getController();
+                animalsListViewController.setPresenter(this);
+                animalsListViewController.setAnimals(worldMap.getAnimals());
                 mainBorderPane.setRight(animalsView);
             } catch (IOException e) {
                 System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
@@ -278,14 +279,12 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private void handlePositionClick(List<WorldElement> elements) {
         System.out.println("Clicked on position with elements:");
         elements.forEach(element -> System.out.println("- " + element));
-
-        elements.stream()
-                .filter(element -> element instanceof Animal)
-                .findFirst()
-                .ifPresent(animal -> {
-                    selectedAnimal = (Animal) animal;
-                    drawMap();
-                });
+        animalsListViewController
+                .setAnimals(
+                        elements.stream()
+                                .filter(worldElement -> worldElement instanceof Animal)
+                                .map(worldElement -> (Animal) worldElement)
+                                .collect(Collectors.toSet()));
     }
 
     private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
