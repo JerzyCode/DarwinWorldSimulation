@@ -93,6 +93,7 @@
                     GridPane.columnIndex = "3" GridPane.rowIndex = "1">
             <items>
                 <MenuItem fx:id = "forestEquatorsVariant" mnemonicParsing = "false" text = "Forest Equators"/>
+                <MenuItem fx:id = "fullRandomPlantVariant" mnemonicParsing = "false" text = "Full random"/>
             </items>
         </MenuButton>
 

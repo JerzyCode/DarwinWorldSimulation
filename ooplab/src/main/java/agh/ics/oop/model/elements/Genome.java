@@ -63,7 +63,7 @@ public class Genome {
     }
 
     public Gen getActivatedGen() {
-        return gens.get(currentIndex);
+        return gens.get(currentIndex % gens.size());
     }
 
     public List<Gen> getGens() {

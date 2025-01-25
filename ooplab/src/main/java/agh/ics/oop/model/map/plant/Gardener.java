@@ -9,18 +9,20 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.HashSet;
 import java.util.Set;
 
-//TODO otestować
 class Gardener {
     private final int plantGrowth;
     private final int plantEnergyGain;
+    private final PlantVariant plantVariant;
 
     Gardener(PlantVariant plantVariant, int plantGrowth, int energyGain) {
         this.plantGrowth = plantGrowth;
         this.plantEnergyGain = energyGain;
+        this.plantVariant = plantVariant;
     }
 
     Set<Plant> createPlantsDaily(int currentPlantsCount, int mapCellsCount, Boundary boundary, Set<Vector2d> unavailablePositions) {
-        return createPlants(currentPlantsCount, mapCellsCount, boundary, plantGrowth, unavailablePositions);
+            return createPlants(currentPlantsCount, mapCellsCount, boundary, plantGrowth, unavailablePositions);
+
     }
 
     Set<Plant> createPlants(int currentPlantsCount, int mapCellsCount, Boundary boundary, int plantCount, Set<Vector2d> unavailablePositions) {
@@ -28,10 +30,12 @@ class Gardener {
         var countOfAvailablePlacesForPlants = mapCellsCount - currentPlantsCount;
         plantCount = Math.min(plantCount, countOfAvailablePlacesForPlants);
 
-        var preferredArea = getPreferableArea(boundary);
-
-        RandomPositionGenerator randomizer = new RandomPositionGenerator(plantCount, boundary.rightTopCorner().getX(),
-                boundary.rightTopCorner().getY(), unavailablePositions , preferredArea);
+        RandomPositionGenerator randomizer = switch (plantVariant) {
+            case FORESTED_EQUATORS -> new RandomPositionGenerator(plantCount, boundary.rightTopCorner().getX(),
+                    boundary.rightTopCorner().getY(), unavailablePositions , getPreferableArea(boundary));
+            case FULL_RANDOM -> new RandomPositionGenerator(plantCount, boundary.rightTopCorner().getX(),
+                    boundary.rightTopCorner().getY(), unavailablePositions);
+        };
 
         for (Vector2d position: randomizer) {
             plants.add(new Plant(position, plantEnergyGain));
@@ -39,7 +43,6 @@ class Gardener {
 
         return plants;
     }
-
 
     private Boundary getPreferableArea(Boundary boundary) {
         var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY() + 1;

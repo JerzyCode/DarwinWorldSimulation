@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="agh.ics.oop.presenter.AnimalStatisticsView"
+            prefHeight="200.0" prefWidth="200.0">
+    <VBox spacing="10.0" style="-fx-padding: 10;" prefWidth="200.0">
+        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Statystyki zwierzęcia"/>
+
+        <TitledPane collapsible="false" text="Genom">
+            <Label fx:id="genomeLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Brak danych" wrapText="true"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Aktywny gen">
+            <Label fx:id="activeGeneLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Brak danych"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Energia">
+            <Label fx:id="energyLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0.0"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Zjedzone rośliny">
+            <Label fx:id="eatenPlantsLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Liczba dzieci">
+            <Label fx:id="childrenLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Liczba potomków">
+            <Label fx:id="descendantsLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Dni życia">
+            <Label fx:id="lifespanLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        </TitledPane>
+
+        <TitledPane collapsible="false" text="Dzień śmierci">
+            <Label fx:id="deathDayLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Żyje"/>
+        </TitledPane>
+    </VBox>
+</AnchorPane>

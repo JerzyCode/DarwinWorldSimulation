@@ -17,7 +17,6 @@ public class SimulationEngine {
         this.executor = Executors.newFixedThreadPool(4);
     }
 
-    // TODO: nie ma to żadnego sensu
     public SimulationEngine(Simulation simulation) {
         this.simulations = List.of(simulation);
         this.threads = new ArrayList<>();
@@ -52,8 +51,16 @@ public class SimulationEngine {
         }
     }
 
-    public void shutDown(){
-        executor.shutdownNow();
+    public void pauseAll() {
+        simulations.forEach(Simulation::pause);
+    }
+
+    public void resumeAll() {
+        simulations.forEach(Simulation::resume);
+    }
+
+    public void stopAll() {
+        simulations.forEach(Simulation::stop);
     }
 
 }
