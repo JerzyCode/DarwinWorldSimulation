@@ -26,6 +26,7 @@ public class MainPanelPresenter {
 
     private final ConfigurationValidator validator = new ConfigurationValidator();
 
+    @FXML
     public void initialize() throws IOException {
         loadConfigurationViews();
     }
@@ -39,6 +40,7 @@ public class MainPanelPresenter {
     }
 
 
+    @FXML
     public void openSimulationWindow() throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
