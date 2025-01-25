@@ -17,6 +17,7 @@ import agh.ics.oop.model.map.WorldMap;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.repository.CsvStatisticsRepositoryAdapter;
 import agh.ics.oop.model.repository.StatisticsRepositoryPort;
+import agh.ics.oop.presenter.components.AnimalComponent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +28,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.Setter;
@@ -145,7 +145,6 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         simulationEngine = new SimulationEngine(simulation);
         simulationEngine.runAsyncInThreadPool();
 
-//        startStopButton.setDisable(true);
         startStopButton.setText("Stop");
         startStopButton.setOnAction(event -> stopSimulation());
     }
@@ -253,50 +252,15 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 rectangle.setFill(Color.LIGHTGREEN);
                 mapGrid.add(rectangle, x, y);
             } else if (element instanceof Animal animal) {
-                var animalDrawing = createAnimalDrawing(animal.getEnergy());
-
-                if (animal.equals(selectedAnimal)) {
-                    Shape border = new Rectangle(GRID_SIZE, GRID_SIZE);
-                    border.setFill(Color.TRANSPARENT); // Środek przezroczysty
-                    border.setStroke(Color.BLUE); // Niebieska ramka
-                    border.setStrokeWidth(2.0);
-
-                    StackPane stack = new StackPane(); // Umieść elementy w stosie
-                    stack.getChildren().addAll(animalDrawing, border);
-
-                    mapGrid.add(stack, x, y); // Dodaj stos do siatki
-                } else {
-                    mapGrid.add(animalDrawing, x, y);
-                }
+                boolean isSelected = animal.equals(selectedAnimal);
+                AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE);
+                mapGrid.add(animalComponent, x, y);
             } else {
                 rectangle.setFill(Color.RED);
                 mapGrid.add(rectangle, x, y);
             }
 
         });
-    }
-
-    private Pane createAnimalDrawing(int animalEnergy) {
-        Pane pane = new Pane();
-        double centerX = (double) GRID_SIZE / 2;
-        double centerY = (double) GRID_SIZE / 2;
-        double radius = (double) GRID_SIZE / 2 - 2;
-        Circle head = new Circle(centerX, centerY, radius);
-        head.setFill(calculateColor(animalEnergy));
-        pane.getChildren().add(head);
-        return pane;
-    }
-
-    private Color calculateColor(int animalEnergy) {
-        int maxEnergy = 40;
-        animalEnergy = Math.max(0, Math.min(animalEnergy, maxEnergy));
-        double energyFactor = (double) animalEnergy / maxEnergy;
-
-        int red = 0;
-        int green = (int) (255 * energyFactor);
-        int blue = (int) (128 + (127 * energyFactor));
-
-        return Color.rgb(red, green, blue);
     }
 
     private int calculateGridWidth(Vector2d leftBot, Vector2d rightTop) {
