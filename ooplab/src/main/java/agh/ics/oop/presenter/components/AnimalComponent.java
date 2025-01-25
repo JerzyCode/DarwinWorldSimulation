@@ -13,7 +13,7 @@ public class AnimalComponent extends StackPane {
     private final Animal animal;
     private final int gridSize;
 
-    public AnimalComponent(Animal animal, boolean isSelected, int gridSize) {
+    public AnimalComponent(Animal animal, boolean isSelected, int gridSize, boolean isHighlighted) {
         this.animal = animal;
         this.gridSize = gridSize;
 
@@ -26,6 +26,10 @@ public class AnimalComponent extends StackPane {
             border.setStroke(Color.BLUE);
             border.setStrokeWidth(2.0);
             getChildren().add(border);
+        }
+
+        if (isHighlighted) {
+            animalDrawing.getStyleClass().add("highlighted");
         }
 
     }

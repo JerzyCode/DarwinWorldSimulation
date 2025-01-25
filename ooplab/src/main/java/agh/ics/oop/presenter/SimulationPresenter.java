@@ -52,6 +52,9 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     @FXML
     private Button startStopButton;
 
+    @FXML
+    private Button highlightAnimalsWithMostPopularGenotypeButton;
+
     //    Stats
     @FXML
     private Label animalCountLabel;
@@ -80,6 +83,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private AnimalStatisticsView animalStatisticsViewController;
     private AnimalsListView animalsListViewController;
     private boolean isChoosingAnimal = false;
+    private boolean shouldHighlightAnimalsWithMostPopularGenotype = false;
     private StackPane highlightedPosition = null;
 
     private double scaleFactor = 1.0;
@@ -265,8 +269,13 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                             positionContainer.getChildren().add(rectangle);
                         } else if (element instanceof Animal animal) {
                             boolean isSelected = animal.equals(selectedAnimal);
-                            AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE);
-                            positionContainer.getChildren().add(animalComponent);
+                            if (simulationContext.getStatistics().getMostPopularGenotype() == null) {
+                                System.out.println("TUTAJ NIE MOZE BYC NULL> CO ZNACZY ZE JEST PROBLEM Z WATKAMI");
+                            } else {
+                                boolean isHighlighted = simulationContext.getStatistics().getMostPopularGenotype().equals(animal.getGenome().getGens()) && shouldHighlightAnimalsWithMostPopularGenotype;
+                                AnimalComponent animalComponent = new AnimalComponent(animal, isSelected, GRID_SIZE, isHighlighted);
+                                positionContainer.getChildren().add(animalComponent);
+                            }
                         } else {
                             Shape rectangle = new Rectangle(GRID_SIZE, GRID_SIZE);
                             rectangle.setFill(Color.RED);
@@ -281,7 +290,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     }
 
     private void handlePositionClick(List<WorldElement> elements, StackPane positionContainer) {
-        if(!isChoosingAnimal){
+        if (!isChoosingAnimal) {
             return;
         }
 
@@ -292,7 +301,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         positionContainer.getStyleClass().add("highlighted");
         highlightedPosition = positionContainer;
 
-        elements.forEach(element -> System.out.println("- " + element));
+//        elements.forEach(element -> System.out.println("- " + element));
         animalsListViewController
                 .setAnimals(
                         elements.stream()
@@ -386,4 +395,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         mapGrid.setOnMouseReleased(event -> mapGrid.setCursor(Cursor.DEFAULT));
     }
 
+    public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
+        shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
+    }
 }
