@@ -79,6 +79,8 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     private Animal selectedAnimal;
     private AnimalStatisticsView animalStatisticsViewController;
     private AnimalsListView animalsListViewController;
+    private boolean isChoosingAnimal = false;
+    private StackPane highlightedPosition = null;
 
     private double scaleFactor = 1.0;
     private double initialX;
@@ -199,6 +201,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
             startStopButton.setDisable(true);
             chooseAnimalButton.setText("Confirm");
             chooseAnimalButton.setOnAction(event -> displayAnimalStatistics());
+            isChoosingAnimal = true;
         });
     }
 
@@ -215,6 +218,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 animalStatisticsViewController.setAnimal(selectedAnimal);
                 animalStatisticsViewController.updateLabels(simulationContext.getStatistics().getCurrentDay());
                 mainBorderPane.setRight(animalsView);
+                isChoosingAnimal = false;
             } catch (IOException e) {
                 System.out.println("Couldn't load animal statistics view, e=" + e.getMessage());
             }
@@ -270,14 +274,24 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                         }
                     }
 
-                    positionContainer.setOnMouseClicked(event -> handlePositionClick(elements));
+                    positionContainer.setOnMouseClicked(event -> handlePositionClick(elements, positionContainer));
 
                     mapGrid.add(positionContainer, x, y);
                 });
     }
 
-    private void handlePositionClick(List<WorldElement> elements) {
-        System.out.println("Clicked on position with elements:");
+    private void handlePositionClick(List<WorldElement> elements, StackPane positionContainer) {
+        if(!isChoosingAnimal){
+            return;
+        }
+
+        if (highlightedPosition != null) {
+            highlightedPosition.getStyleClass().remove("highlighted");
+        }
+
+        positionContainer.getStyleClass().add("highlighted");
+        highlightedPosition = positionContainer;
+
         elements.forEach(element -> System.out.println("- " + element));
         animalsListViewController
                 .setAnimals(
