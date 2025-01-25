@@ -25,7 +25,7 @@
             </TitledPane>
 
             <TitledPane collapsible = "false" text = "The most popular genotype">
-                <Label fx:id = "popularGenotypeLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "Brak danych"
+                <Label fx:id = "popularGenotypeLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "No Data"
                        wrapText = "true"/>
             </TitledPane>
 

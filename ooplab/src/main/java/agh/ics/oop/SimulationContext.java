@@ -17,7 +17,6 @@ import agh.ics.oop.model.statistics.GraphData;
 import agh.ics.oop.model.statistics.SimulationStatisticsCalculator;
 import agh.ics.oop.model.statistics.Statistics;
 import agh.ics.oop.model.statistics.StatisticsDataProvider;
-import agh.ics.oop.model.util.RandomPositionGenerator;
 import lombok.Getter;
 
 import java.util.*;
@@ -29,6 +28,7 @@ public class SimulationContext implements StatisticsDataProvider {
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
+    private final Random random = new Random();
     private final List<SimulationFinishedListener> listeners = new ArrayList<>();
     private final Statistics simulationStatistics = new Statistics();
     private final SimulationStatisticsCalculator statisticsCalculator = new SimulationStatisticsCalculator(this);
@@ -62,20 +62,22 @@ public class SimulationContext implements StatisticsDataProvider {
 
     private void initAnimals() {
         var boundary = worldMap.getCurrentBounds();
-        var randomizer = new RandomPositionGenerator(
-                configuration.getSimulationConfiguration().getStartAnimalCount(),
-                boundary.rightTopCorner().getX(),
-                boundary.rightTopCorner().getY(),
-                Set.of());
 
-        for (Vector2d position : randomizer) {
-            var animal = animalFactory.createAnimal(position, currentDay);
+        for (int i = 0; i < configuration.getSimulationConfiguration().getStartAnimalCount(); i++) {
+            var animal = animalFactory.createAnimal(getRandomAnimalPosition(boundary), currentDay);
             try {
                 worldMap.place(animal);
             } catch (IncorrectPositionException e) {
                 System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
             }
         }
+    }
+
+    private Vector2d getRandomAnimalPosition(Boundary boundary) {
+        var x = random.nextInt(boundary.rightTopCorner().getX() + 1);
+        var y = random.nextInt(boundary.rightTopCorner().getY() + 1);
+
+        return new Vector2d(x, y);
     }
 
     private void handleAnimalDayEnds(Animal animal) {
