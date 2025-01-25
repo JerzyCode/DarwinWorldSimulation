@@ -21,6 +21,7 @@ public class AnimalListView {
     @Setter
     private SimulationPresenter presenter;
 
+    @FXML
     public void initialize() {
         animalListView.setCellFactory(param -> new ListCell<>() {
             @Override

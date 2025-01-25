@@ -95,7 +95,6 @@ public class ConfigurationPresenter {
         savedScrollPane.setFitToWidth(true);
         saveNameInput.textProperty().addListener((observable, oldValue, newValue) -> clearError());
         errorLabel.setMaxWidth(200);
-
     }
 
     public void setConfiguration(Configuration configuration) {
@@ -249,6 +248,7 @@ public class ConfigurationPresenter {
     }
 
 
+    @FXML
     public void onSaveConfiguration() {
         var inputName = saveNameInput.getText();
         try {

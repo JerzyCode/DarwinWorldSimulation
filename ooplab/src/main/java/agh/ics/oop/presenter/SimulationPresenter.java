@@ -130,6 +130,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         });
     }
 
+    @FXML
     public void onHighlightAnimalsWithMostPopularGenotypeClicked() {
         shouldHighlightAnimalsWithMostPopularGenotype = !shouldHighlightAnimalsWithMostPopularGenotype;
         if (shouldHighlightAnimalsWithMostPopularGenotype) {
@@ -139,6 +140,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         }
     }
 
+    @FXML
     public void showPreferredPlantPositions() {
         if (preferablePlantArea == null) {
             return;
@@ -153,6 +155,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         Platform.runLater(this::drawMap);
     }
 
+    @FXML
     public void onSimulationStartClicked() {
         if (configuration == null) {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
