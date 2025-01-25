@@ -39,7 +39,7 @@
         </TitledPane>
 
         <TitledPane collapsible="false" text="Death day">
-            <Label fx:id="deathDayLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Żyje"/>
+            <Label fx:id="deathDayLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="is alive"/>
         </TitledPane>
     </VBox>
 </AnchorPane>
