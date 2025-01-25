@@ -8,37 +8,37 @@
             fx:controller="agh.ics.oop.presenter.AnimalStatisticsView"
             prefHeight="200.0" prefWidth="200.0">
     <VBox spacing="10.0" style="-fx-padding: 10;" prefWidth="200.0">
-        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Statystyki zwierzęcia"/>
+        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Animal Statistics"/>
 
         <TitledPane collapsible="false" text="Genom">
-            <Label fx:id="genomeLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Brak danych" wrapText="true"/>
+            <Label fx:id="genomeLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="No data" wrapText="true"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Aktywny gen">
-            <Label fx:id="activeGeneLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Brak danych"/>
+        <TitledPane collapsible="false" text="Activated gen">
+            <Label fx:id="activeGeneLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="No data"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Energia">
+        <TitledPane collapsible="false" text="Energy">
             <Label fx:id="energyLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0.0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Zjedzone rośliny">
+        <TitledPane collapsible="false" text="Count of eaten plants">
             <Label fx:id="eatenPlantsLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Liczba dzieci">
+        <TitledPane collapsible="false" text="Count of children">
             <Label fx:id="childrenLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Liczba potomków">
+        <TitledPane collapsible="false" text="Count of descendants">
             <Label fx:id="descendantsLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Dni życia">
+        <TitledPane collapsible="false" text="Lifetime ">
             <Label fx:id="lifespanLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Dzień śmierci">
+        <TitledPane collapsible="false" text="Death day">
             <Label fx:id="deathDayLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="Żyje"/>
         </TitledPane>
     </VBox>

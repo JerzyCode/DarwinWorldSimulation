@@ -10,34 +10,34 @@
     <left>
         <VBox prefWidth = "150.0" spacing = "10"
               style = "-fx-background-color: #e0e0e0; -fx-padding: 10;">
-            <Label style = "-fx-font-weight: bold;" text = "Statystyki"/>
+            <Label style = "-fx-font-weight: bold;" text = "Statistics"/>
 
-            <TitledPane collapsible = "false" text = "Liczba zwierzaków">
+            <TitledPane collapsible = "false" text = "Count of animals">
                 <Label fx:id = "animalCountLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
             </TitledPane>
 
-            <TitledPane collapsible = "false" text = "Liczba roślin">
+            <TitledPane collapsible = "false" text = "Count of plants">
                 <Label fx:id = "plantCountLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
             </TitledPane>
 
-            <TitledPane collapsible = "false" text = "Liczba wolnych pól">
+            <TitledPane collapsible = "false" text = "Count of empty fields">
                 <Label fx:id = "freeFieldsLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
             </TitledPane>
 
-            <TitledPane collapsible = "false" text = "Najpopularniejsze genotypy">
+            <TitledPane collapsible = "false" text = "The most popular genotype">
                 <Label fx:id = "popularGenotypeLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "Brak danych"
                        wrapText = "true"/>
             </TitledPane>
 
-            <TitledPane collapsible = "false" text = "Średni poziom energii">
+            <TitledPane collapsible = "false" text = "Average energy">
                 <Label fx:id = "avgEnergyLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
             </TitledPane>
 
-            <TitledPane collapsible = "false" text = "Średnia długość życia">
+            <TitledPane collapsible = "false" text = "Average lifetime">
                 <Label fx:id = "avgLifespanLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
             </TitledPane>
 
-            <TitledPane collapsible = "false" text = "Średnia liczba dzieci">
+            <TitledPane collapsible = "false" text = "Average count of children">
                 <Label fx:id = "avgChildrenLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
             </TitledPane>
 
