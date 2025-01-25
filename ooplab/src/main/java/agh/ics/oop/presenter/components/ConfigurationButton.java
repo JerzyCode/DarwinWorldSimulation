@@ -37,10 +37,10 @@ public class ConfigurationButton extends HBox {
         saveNameLabel.setStyle("-fx-padding: 5;");
         clickablePane.getChildren().add(saveNameLabel);
 
-        clickablePane.setOnMouseEntered(event -> clickablePane.setStyle("-fx-background-color: lightblue; -fx-border-color: black;"));
-        clickablePane.setOnMouseExited(event -> clickablePane.setStyle("-fx-border-color: black;"));
-        clickablePane.setOnMousePressed(event -> clickablePane.setStyle("-fx-background-color: deepskyblue; -fx-border-color: black;"));
-        clickablePane.setOnMouseReleased(event -> clickablePane.setStyle("-fx-background-color: lightblue; -fx-border-color: black;"));
+        clickablePane.setOnMouseEntered(event -> clickablePane.setStyle("-fx-background-color: lightblue;"));
+        clickablePane.setOnMouseExited(event -> clickablePane.setStyle(""));
+        clickablePane.setOnMousePressed(event -> clickablePane.setStyle("-fx-background-color: deepskyblue;"));
+        clickablePane.setOnMouseReleased(event -> clickablePane.setStyle("-fx-background-color: lightblue;"));
         clickablePane.setOnMouseClicked(onLoadHandler);
         clickablePane.setCursor(Cursor.HAND);
 

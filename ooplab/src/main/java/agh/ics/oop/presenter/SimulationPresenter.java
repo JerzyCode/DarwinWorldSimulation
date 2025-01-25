@@ -68,9 +68,9 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     @FXML
     private Label avgChildrenLabel;
 
-    private SimulationWorldMap worldMap;
     @Setter
     private Configuration configuration;
+    private SimulationWorldMap worldMap;
     private SimulationEngine simulationEngine;
     private SimulationContext simulationContext;
     private StatisticsRepositoryPort statisticsRepository;
