@@ -79,8 +79,8 @@ public class SimulationContext implements StatisticsDataProvider {
     }
 
     private void handleAnimalDayEnds(Animal animal) {
-        animal.decreaseEnergy(1);
         worldMap.move(animal, MoveDirection.FORWARD);
+        animal.decreaseEnergy(1);
 
         if (animal.isDead()) {
             deadAnimals.add(animal);
