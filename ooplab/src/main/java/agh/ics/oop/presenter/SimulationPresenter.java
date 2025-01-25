@@ -94,12 +94,10 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     }
 
     public void drawMap() {
-        synchronized (simulationContext) {
-            var mapBoundary = worldMap.getCurrentBounds();
-            clearGrid();
-            fillGrid(mapBoundary);
-            drawElements();
-        }
+        var mapBoundary = worldMap.getCurrentBounds();
+        clearGrid();
+        fillGrid(mapBoundary);
+        drawElements();
     }
 
     @Override
@@ -107,7 +105,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         if (event.getEventType() == EventType.DAY_ENDS) {
             Platform.runLater(this::drawMap);
             Platform.runLater(this::updateStatisticsDisplay);
-            Platform.runLater(this::saveStatistics);
+            saveStatistics();
         }
     }
 
@@ -164,7 +162,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     public void selectAnimal(Animal animal) {
         this.selectedAnimal = animal;
-        drawMap();
+        Platform.runLater(this::drawMap);
     }
 
 

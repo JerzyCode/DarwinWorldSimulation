@@ -71,7 +71,7 @@ abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implem
     }
 
     protected void placeAnimalAtNewPosition(Animal animal) {
-        var animalsAtPosition = animals.computeIfAbsent(animal.getPosition(), k -> new HashSet<>());
+        var animalsAtPosition = animals.computeIfAbsent(animal.getPosition(), k -> Collections.newSetFromMap(new ConcurrentHashMap<>()));
         animalsAtPosition.add(animal);
     }
 
