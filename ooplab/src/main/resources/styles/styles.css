@@ -7,3 +7,7 @@
     -fx-border-color: black;
 }
 
+.highlighted {
+    -fx-border-color: #d4ff2f;
+    -fx-border-width: 3;
+}
