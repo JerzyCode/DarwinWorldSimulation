@@ -6,7 +6,7 @@ public class Simulation implements Runnable {
     private final int daysCount;
     @Getter
     private final SimulationContext simulationContext;
-    private volatile boolean paused = false;
+    private volatile boolean paused = true;
     private volatile boolean ended = false;
 
 

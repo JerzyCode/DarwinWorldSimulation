@@ -158,10 +158,9 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         if (configuration == null) {
             throw new PresenterHasNoConfigurationException("Presenter has no configuration!");
         }
-
         isRunning = true;
-
         var simulationContext = simulation.getSimulationContext();
+
         worldMap = simulationContext.getWorldMap();
         simulationContext.addMapChangedListener(this);
 //        simulationContext.addMapChangedListener(new LoggerListener());
@@ -169,6 +168,8 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
         preferablePlantArea = PlantPreferableAreaCalculator.getPreferableArea(worldMap.getCurrentBounds());
         statisticsRepository = new CsvStatisticsRepositoryAdapter();
+
+        simulation.resume();
 
         startStopButton.setText("Stop");
         startStopButton.setOnAction(event -> stopSimulation());
