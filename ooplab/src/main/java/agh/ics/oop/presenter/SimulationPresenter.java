@@ -140,7 +140,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
 
     @FXML
     public void showPreferredPlantPositions() {
-        if (preferablePlantArea == null) {
+        if (preferablePlantArea == null || isRunning) {
             return;
         }
 
@@ -284,7 +284,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
     }
 
     private void highlightPlantPreferableArea() {
-        if (!preferredPlantPositionsVisible) {
+        if (!preferredPlantPositionsVisible || isRunning) {
             return;
         }
 
