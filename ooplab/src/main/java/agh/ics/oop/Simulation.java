@@ -34,7 +34,7 @@ public class Simulation implements Runnable {
 
             simulationContext.handleDayEnds();
             try {
-                Thread.sleep(50);
+                Thread.sleep(150);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
