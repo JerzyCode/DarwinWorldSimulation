@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +31,7 @@ public class Animal implements WorldElement {
     @Builder.Default
     private final Set<Animal> parents = new HashSet<>();
     @Builder.Default
-    private final Set<Animal> children = new HashSet<>();
+    private final Set<Animal> children = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private int countOfEatenPlants;
     @Setter
     private int endDay;
