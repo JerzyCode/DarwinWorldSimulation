@@ -7,7 +7,7 @@ public class ConfigurationValidator {
     static final int MAX_WIDTH = 150;
     static final int MIN_HEIGHT = 5;
     static final int MIN_WIDTH = 5;
-    static final int MAX_PLANT_GROWTH = 500;
+    static final int MAX_PLANT_GROWTH = 150;
     static final int MIN_GENOME_LENGTH = 1;
     static final int MAX_GENOME_LENGTH = 100;
     static final int MAX_START_ANIMAL_COUNT = 1000;
