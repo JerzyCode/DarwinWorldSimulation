@@ -135,6 +135,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         } else {
             highlightAnimalsWithMostPopularGenotypeButton.setText("Enable Highlighting Popular Genotype");
         }
+        Platform.runLater(this::drawMap);
     }
 
     @FXML
