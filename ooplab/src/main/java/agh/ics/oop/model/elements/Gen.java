@@ -16,6 +16,10 @@ public class Gen {
         this.index = index;
     }
 
+    public Gen(Gen other) {
+        this.index = other.index;
+    }
+
     MapDirection rotate(MapDirection direction) {
         return direction.rotate(index * 45);
     }

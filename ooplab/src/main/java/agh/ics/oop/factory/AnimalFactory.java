@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class AnimalFactory {
     private final AnimalConfiguration animalConfiguration;
@@ -75,9 +76,11 @@ public class AnimalFactory {
 
         var activatedGenIndex = random.nextInt(0, animalConfiguration.getGenomeLength());
 
-        var childGens = new ArrayList<Gen>();
-        childGens.addAll(dominating.getPartOfGens(dominatingGensSize, dominatingLeft));
-        childGens.addAll(other.getPartOfGens(otherGensSize, !dominatingLeft));
+        var childGens = Stream
+                .concat(dominating.getPartOfGens(dominatingGensSize, dominatingLeft).stream(),
+                        other.getPartOfGens(otherGensSize, !dominatingLeft).stream())
+                .map(Gen::new)
+                .toList();
         var childGenome = new Genome(childGens, animalConfiguration.getMutationVariant(), activatedGenIndex);
         childGenome.mutate(random.nextInt(
                 animalConfiguration.getMinimumMutationCount(),
