@@ -8,6 +8,7 @@ public class ConfigurationValidator {
     static final int MIN_HEIGHT = 5;
     static final int MIN_WIDTH = 5;
     static final int MAX_PLANT_GROWTH = 500;
+    static final int MIN_GENOME_LENGTH = 1;
     static final int MAX_GENOME_LENGTH = 100;
     static final int MAX_START_ANIMAL_COUNT = 1000;
 
@@ -23,6 +24,9 @@ public class ConfigurationValidator {
         }
         if (animalConfiguration.getStartEnergy() <= 0) {
             throw new WrongConfigurationParameterException("Start energy must be greater than 0");
+        }
+        if (animalConfiguration.getGenomeLength() < MIN_GENOME_LENGTH) {
+            throw new WrongConfigurationParameterException(String.format("Genome length cannot be lower than %s", MIN_GENOME_LENGTH));
         }
     }
 
