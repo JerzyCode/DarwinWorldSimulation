@@ -2,6 +2,8 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.InvalidAngleException;
 
+import java.util.Random;
+
 public enum MapDirection {
     NORTH(new Vector2d(0, 1), "N"),
     NORTH_EAST(new Vector2d(1, 1), "NE"),
@@ -14,6 +16,7 @@ public enum MapDirection {
 
     private final Vector2d vector;
     private final String symbol;
+    private static final Random RANDOM = new Random();
 
     MapDirection(Vector2d vector, String symbol) {
         this.vector = vector;
@@ -53,6 +56,12 @@ public enum MapDirection {
 
     public Vector2d toUnitVector() {
         return vector;
+    }
+
+    public static MapDirection getRandomDirection() {
+        MapDirection[] directions = MapDirection.values();
+        int randomIndex = RANDOM.nextInt(directions.length);
+        return directions[randomIndex];
     }
 
     public String getSymbol() {

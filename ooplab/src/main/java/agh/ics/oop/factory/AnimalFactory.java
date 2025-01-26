@@ -31,7 +31,7 @@ public class AnimalFactory {
     public Animal createAnimal(Vector2d position, int birthDay) {
         return Animal.builder()
                 .position(position)
-                .orientation(MapDirection.NORTH)
+                .orientation(MapDirection.getRandomDirection())
                 .genome(createGenome())
                 .startDay(birthDay)
                 .wellFedEnergy(animalConfiguration.getWellFedEnergy())
@@ -52,7 +52,7 @@ public class AnimalFactory {
             var newAnimal = Animal.builder()
                     .energy(2 * animalConfiguration.getLossCopulateEnergy())
                     .position(parent1.getPosition())
-                    .orientation(MapDirection.NORTH)
+                    .orientation(MapDirection.getRandomDirection())
                     .parents(Set.of(parent1, parent2))
                     .countOfEatenPlants(0)
                     .wellFedEnergy(animalConfiguration.getWellFedEnergy())
@@ -91,10 +91,11 @@ public class AnimalFactory {
 
     private Genome createGenome() {
         List<Gen> gens = new ArrayList<>();
+        var activatedGenIndex = random.nextInt(0, animalConfiguration.getGenomeLength());
         for (int i = 0; i < animalConfiguration.getGenomeLength(); i++) {
             gens.add(new Gen(random.nextInt(0, MapDirection.values().length)));
         }
 
-        return new Genome(gens, animalConfiguration.getMutationVariant());
+        return new Genome(gens, animalConfiguration.getMutationVariant(), activatedGenIndex);
     }
 }

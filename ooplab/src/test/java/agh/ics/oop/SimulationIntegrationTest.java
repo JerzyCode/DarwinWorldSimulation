@@ -39,6 +39,7 @@ class SimulationIntegrationTest {
                 .simulationConfiguration(simulationConfiguration)
                 .animalConfiguration(AnimalConfiguration.builder()
                         .startEnergy(15)
+                        .genomeLength(2)
                         .build())
                 .build();
 
