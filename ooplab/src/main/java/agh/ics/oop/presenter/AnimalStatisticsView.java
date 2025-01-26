@@ -24,6 +24,9 @@ public class AnimalStatisticsView {
     private Label deathDayLabel;
 
     @Setter
+    private OnCancelTrackingHandler onCancelTrackingHandler;
+
+    @Setter
     private Animal animal;
 
     public void updateLabels(int currentDay) {
@@ -45,5 +48,10 @@ public class AnimalStatisticsView {
             lifespanLabel.setText(String.format("%d", currentDay - animal.getStartDay() + 1));
             deathDayLabel.setText("Animal is alive");
         }
+    }
+
+    @FXML
+    public void onStopTracking() {
+        onCancelTrackingHandler.onCancelTrackingAnimal();
     }
 }

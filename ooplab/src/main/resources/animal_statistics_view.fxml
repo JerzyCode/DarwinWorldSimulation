@@ -3,43 +3,46 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="agh.ics.oop.presenter.AnimalStatisticsView"
-            prefHeight="200.0" prefWidth="200.0">
-    <VBox spacing="10.0" style="-fx-padding: 10;" prefWidth="200.0">
-        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Animal Statistics"/>
+<AnchorPane xmlns = "http://javafx.com/javafx"
+            xmlns:fx = "http://javafx.com/fxml"
+            fx:controller = "agh.ics.oop.presenter.AnimalStatisticsView"
+            prefHeight = "200.0" prefWidth = "200.0">
+    <VBox spacing = "10.0" style = "-fx-padding: 10;" prefWidth = "200.0">
+        <Label style = "-fx-font-weight: bold; -fx-font-size: 16;" text = "Animal Statistics"/>
 
-        <TitledPane collapsible="false" text="Genom">
-            <Label fx:id="genomeLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="No data" wrapText="true"/>
+        <TitledPane collapsible = "false" text = "Genom">
+            <Label fx:id = "genomeLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "No data"
+                   wrapText = "true"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Activated gen">
-            <Label fx:id="activeGeneLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="No data"/>
+        <TitledPane collapsible = "false" text = "Activated gen">
+            <Label fx:id = "activeGeneLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "No data"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Energy">
-            <Label fx:id="energyLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0.0"/>
+        <TitledPane collapsible = "false" text = "Energy">
+            <Label fx:id = "energyLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0.0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Count of eaten plants">
-            <Label fx:id="eatenPlantsLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        <TitledPane collapsible = "false" text = "Count of eaten plants">
+            <Label fx:id = "eatenPlantsLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Count of children">
-            <Label fx:id="childrenLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        <TitledPane collapsible = "false" text = "Count of children">
+            <Label fx:id = "childrenLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Count of descendants">
-            <Label fx:id="descendantsLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        <TitledPane collapsible = "false" text = "Count of descendants">
+            <Label fx:id = "descendantsLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Lifetime ">
-            <Label fx:id="lifespanLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="0"/>
+        <TitledPane collapsible = "false" text = "Lifetime ">
+            <Label fx:id = "lifespanLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "0"/>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="Death day">
-            <Label fx:id="deathDayLabel" style="-fx-font-size: 14; -fx-padding: 5;" text="is alive"/>
+        <TitledPane collapsible = "false" text = "Death day">
+            <Label fx:id = "deathDayLabel" style = "-fx-font-size: 14; -fx-padding: 5;" text = "is alive"/>
         </TitledPane>
+
+        <Button text = "Stop Tracking" minWidth = "200" onAction="#onStopTracking"/>
     </VBox>
 </AnchorPane>

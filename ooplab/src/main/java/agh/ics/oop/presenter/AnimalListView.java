@@ -38,7 +38,7 @@ public class AnimalListView {
             }
         });
 
-        cancelButton.setOnAction(event -> presenter.onCancelSelectingAnimal());
+        cancelButton.setOnAction(event -> presenter.onCancelTrackingAnimal());
     }
 
     public void setAnimals(Set<Animal> animals) {

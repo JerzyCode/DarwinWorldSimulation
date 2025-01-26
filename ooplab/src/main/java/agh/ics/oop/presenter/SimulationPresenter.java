@@ -1,7 +1,6 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.listener.LoggerListener;
 import agh.ics.oop.listener.MapChangeListener;
 import agh.ics.oop.listener.SimulationFinishedListener;
 import agh.ics.oop.model.Boundary;
@@ -35,7 +34,7 @@ import lombok.Setter;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener, PositionClickHandler {
+public class SimulationPresenter implements MapChangeListener, SimulationFinishedListener, PositionClickHandler, OnCancelTrackingHandler {
     private static final int GRID_SIZE = 20;
 
     @FXML
@@ -214,6 +213,7 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
                 Parent animalsView = loader.load();
 
                 animalStatisticsViewController = loader.getController();
+                animalStatisticsViewController.setOnCancelTrackingHandler(this);
                 animalStatisticsViewController.setAnimal(selectedAnimal);
                 animalStatisticsViewController.updateLabels(simulation.getSimulationContext().getStatistics().getCurrentDay());
                 mainBorderPane.setRight(animalsView);
@@ -251,10 +251,11 @@ public class SimulationPresenter implements MapChangeListener, SimulationFinishe
         });
     }
 
-    void onCancelSelectingAnimal() {
+    @Override
+    public void onCancelTrackingAnimal() {
         mainBorderPane.setRight(null);
-        selectedAnimal = null;
         startStopButton.setDisable(false);
+        selectAnimal(null);
     }
 
     private void clearGrid() {
