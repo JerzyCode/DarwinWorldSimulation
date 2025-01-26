@@ -9,7 +9,6 @@ public class Simulation implements Runnable {
     private volatile boolean paused = true;
     private volatile boolean ended = false;
 
-
     public Simulation(SimulationContext simulationContext, int daysCount) {
         this.simulationContext = simulationContext;
         this.daysCount = daysCount;

@@ -56,10 +56,49 @@ public class SimulationContext implements StatisticsDataProvider {
     }
 
 
+    public void addMapChangedListener(MapChangeListener listener) {
+        ((AbstractWorldMap) worldMap).addListener(listener);
+    }
+
+    public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {
+        listeners.add(simulationFinishedListener);
+    }
+
+    @Override
+    public Set<Animal> getDeadAnimals() {
+        return Collections.unmodifiableSet(deadAnimals);
+    }
+
+    @Override
+    public Set<Animal> getAliveAnimals() {
+        return worldMap.getAnimals();
+    }
+
+    @Override
+    public Set<WorldElement> getMapElements() {
+        return (Set<WorldElement>) worldMap.getElements();
+    }
+
+    @Override
+    public Boundary getCurrentBoundary() {
+        return worldMap.getCurrentBounds();
+    }
+
+    public List<GraphData> getGraphData() {
+        return simulationStatistics.getHistory();
+    }
+
+    public Statistics getStatistics() {
+        return simulationStatistics;
+    }
+
+    void notifySimulationFinished() {
+        listeners.forEach(SimulationFinishedListener::onSimulationFinished);
+    }
+
     private Animal breedAnimals(Animal parent1, Animal parent2) {
         return animalFactory.birthAnimal(parent1, parent2, currentDay);
     }
-
 
     private void initAnimals() {
         var boundary = worldMap.getCurrentBounds();
@@ -93,52 +132,6 @@ public class SimulationContext implements StatisticsDataProvider {
                     deadAnimals.add(animal);
                     animal.setEndDay(currentDay);
                 });
-    }
-
-    void notifySimulationFinished() {
-        listeners.forEach(SimulationFinishedListener::onSimulationFinished);
-    }
-
-
-    public void addMapChangedListener(MapChangeListener listener) {
-        ((AbstractWorldMap) worldMap).addListener(listener);
-    }
-
-    public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {
-        listeners.add(simulationFinishedListener);
-    }
-
-
-    @Override
-    public Set<Animal> getDeadAnimals() {
-        return Collections.unmodifiableSet(deadAnimals);
-    }
-
-    @Override
-    public Set<Animal> getAliveAnimals() {
-        return worldMap.getAnimals();
-    }
-
-    @Override
-    public Set<WorldElement> getMapElements() {
-        return (Set<WorldElement>) worldMap.getElements();
-    }
-
-    @Override
-    public Boundary getCurrentBoundary() {
-        return worldMap.getCurrentBounds();
-    }
-
-    public List<GraphData> getGraphData() {
-        return simulationStatistics.getHistory();
-    }
-
-    public Statistics getStatistics() {
-        return simulationStatistics;
-    }
-
-    public UUID getWorldMapUuid() {
-        return worldMap.getId();
     }
 
 }

@@ -2,12 +2,11 @@ package agh.ics.oop.model.util;
 
 import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlantPreferableAreaCalculator {
-
-    private PlantPreferableAreaCalculator() {
-
-    }
 
     public static Boundary getPreferableArea(Boundary boundary) {
         var countOfRows = boundary.rightTopCorner().getY() - boundary.leftBottomCorner().getY() + 1;

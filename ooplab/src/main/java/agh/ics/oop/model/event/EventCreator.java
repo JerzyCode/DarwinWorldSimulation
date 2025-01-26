@@ -4,6 +4,9 @@ import agh.ics.oop.model.Vector2d;
 
 public class EventCreator {
 
+    private EventCreator() {
+    }
+
     public static MapChangedEvent createFirePlacedEvent(Vector2d firePosition) {
         return MapChangedEvent.builder()
                 .eventType(EventType.FIRE_PLACED)

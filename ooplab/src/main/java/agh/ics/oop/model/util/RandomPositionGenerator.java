@@ -8,7 +8,7 @@ import java.util.*;
 public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vector2d> {
     private final LinkedList<Vector2d> preferredPositions = new LinkedList<>();
     private final LinkedList<Vector2d> otherPositions = new LinkedList<>();
-    Random random = new Random();
+    private final Random random = new Random();
     private final Boundary preferredArea;
     private int elementsCount;
 
@@ -43,10 +43,9 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
             return otherPositions.poll();
         }
 
-        if(random.nextDouble() < 0.8) {
+        if (random.nextDouble() < 0.8) {
             return preferredPositions.poll();
-        }
-        else {
+        } else {
             return otherPositions.poll();
         }
     }
@@ -58,8 +57,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
                 if (!unavailablePositions.contains(position)) {
                     if (isPreferredPosition(position)) {
                         preferredPositions.add(position);
-                    }
-                    else {
+                    } else {
                         otherPositions.add(position);
                     }
                 }

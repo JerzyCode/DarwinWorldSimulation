@@ -1,10 +1,10 @@
 package agh.ics.oop.model.statistics;
 
-import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
 @Getter
+@RequiredArgsConstructor
 public class GraphData {
     private final int currentDay;
     private final int animalCount;

@@ -15,6 +15,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
     private final List<String> saveNames = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
     private final File directory;
+    public static final String JSON_EXTENSION = "%s.json";
 
     JsonConfigurationRepositoryAdapter(String path) {
         directory = DirectoryInitializer.getDirectory(path);
@@ -32,7 +33,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
         }
 
         try {
-            var newSave = new File(directory, String.format("%s.json", saveName));
+            var newSave = new File(directory, String.format(JSON_EXTENSION, saveName));
             mapper.writeValue(newSave, configuration);
             saveNames.add(saveName);
         } catch (IOException e) {
@@ -46,7 +47,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
             throw new DeleteSaveException(String.format("Save %s does not exist.", saveName));
         }
 
-        var saveToDelete = new File(directory, String.format("%s.json", saveName));
+        var saveToDelete = new File(directory, String.format(JSON_EXTENSION, saveName));
         var deleted = saveToDelete.delete();
 
         if (!deleted) {
@@ -62,7 +63,7 @@ public class JsonConfigurationRepositoryAdapter implements ConfigurationReposito
             throw new LoadConfigurationException(String.format("Save %s no exists", saveName));
         }
 
-        File savedConfiguration = new File(directory, String.format("%s.json", saveName));
+        File savedConfiguration = new File(directory, String.format(JSON_EXTENSION, saveName));
 
         try {
             return mapper.readValue(savedConfiguration, Configuration.class);

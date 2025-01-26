@@ -1,5 +1,8 @@
 package agh.ics.oop.model.configuration;
 
+import lombok.Getter;
+
+@Getter
 public enum WorldMapVariant {
     EARTH("Earth"),
     FIRE("Fire Earth");
@@ -8,9 +11,5 @@ public enum WorldMapVariant {
 
     WorldMapVariant(String displayText) {
         this.displayText = displayText;
-    }
-
-    public String getDisplayText() {
-        return displayText;
     }
 }

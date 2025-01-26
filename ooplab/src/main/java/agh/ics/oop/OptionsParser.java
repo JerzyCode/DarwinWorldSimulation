@@ -5,7 +5,6 @@ import agh.ics.oop.model.move.MoveDirection;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class OptionsParser {
 
@@ -13,7 +12,7 @@ public class OptionsParser {
         return Arrays.stream(directions)
                 .map(OptionsParser::parse)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static MoveDirection parse(String direction) {

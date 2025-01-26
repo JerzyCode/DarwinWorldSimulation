@@ -12,15 +12,12 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-abstract public class SimulationAbstractWorldMap extends AbstractWorldMap implements SimulationWorldMap {
+public abstract class SimulationAbstractWorldMap extends AbstractWorldMap implements SimulationWorldMap {
     protected final Map<Vector2d, Set<Animal>> animals;
 
-    public SimulationAbstractWorldMap() {
+    protected SimulationAbstractWorldMap() {
         this.animals = new ConcurrentHashMap<>();
     }
-
-    @Override
-    public abstract void handleDayEnds(int currentDay);
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException {

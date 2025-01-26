@@ -13,7 +13,7 @@ import java.util.Set;
 public class AnimalListView {
 
     @FXML
-    private ListView<Animal> animalListView;
+    private ListView<Animal> animalCells;
 
     @FXML
     private Button cancelButton;
@@ -23,7 +23,7 @@ public class AnimalListView {
 
     @FXML
     public void initialize() {
-        animalListView.setCellFactory(param -> new ListCell<>() {
+        animalCells.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Animal item, boolean empty) {
                 super.updateItem(item, empty);
@@ -42,13 +42,13 @@ public class AnimalListView {
     }
 
     public void setAnimals(Set<Animal> animals) {
-        if (animalListView != null) {
-            animalListView.getItems().setAll(animals);
+        if (animalCells != null) {
+            animalCells.getItems().setAll(animals);
         }
     }
 
     private void onAnimalSelected() {
-        Animal selectedAnimal = animalListView.getSelectionModel().getSelectedItem();
+        Animal selectedAnimal = animalCells.getSelectionModel().getSelectedItem();
         if (selectedAnimal != null) {
             presenter.selectAnimal(selectedAnimal);
             presenter.displayAnimalStatistics();

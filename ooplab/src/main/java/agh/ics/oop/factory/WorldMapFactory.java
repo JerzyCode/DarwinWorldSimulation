@@ -22,7 +22,6 @@ public class WorldMapFactory {
         };
     }
 
-
     private Earth createEarth() {
         var width = worldMapConfiguration.getWidth();
         var height = worldMapConfiguration.getHeight();
@@ -43,7 +42,6 @@ public class WorldMapFactory {
         var plantGrowth = worldMapConfiguration.getPlantGrowth();
         var startPlantCount = worldMapConfiguration.getStartPlantCount();
         var energyGain = worldMapConfiguration.getEnergyGain();
-
 
         return new FireEarth(width, height, fireFrequency, fireDuration, plantGrowth, startPlantCount, energyGain, plantVariant, breeder);
     }

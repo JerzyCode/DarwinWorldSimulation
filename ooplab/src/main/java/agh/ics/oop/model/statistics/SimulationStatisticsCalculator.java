@@ -49,7 +49,7 @@ public class SimulationStatisticsCalculator {
 
     public int getPlantCount() {
         return (int) statisticsDataProvider.getMapElements().stream()
-                .filter(element -> element instanceof Plant)
+                .filter(Plant.class::isInstance)
                 .count();
     }
 

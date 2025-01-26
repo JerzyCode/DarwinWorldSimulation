@@ -1,5 +1,8 @@
 package agh.ics.oop.model.configuration;
 
+import lombok.Getter;
+
+@Getter
 public enum PlantVariant {
     FULL_RANDOM("Full random"),
     FORESTED_EQUATORS("Forest Equators");
@@ -8,9 +11,5 @@ public enum PlantVariant {
 
     PlantVariant(String displayText) {
         this.displayText = displayText;
-    }
-
-    public String getDisplayText() {
-        return displayText;
     }
 }

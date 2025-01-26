@@ -13,5 +13,4 @@ public class PositionOccupiedByWorldElementException extends IncorrectPositionEx
         super(String.format(MESSAGE_DIFFERENT_CLASSES, elementType, position, occupiedByElementType));
     }
 
-
 }

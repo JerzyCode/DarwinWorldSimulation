@@ -2,11 +2,15 @@ package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.configuration.MutationVariant;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.Random;
 
 public class Gen {
+    private static final Random RANDOM = new Random();
+    @Getter(AccessLevel.PACKAGE)
     private int index;
 
     public Gen(int index) {
@@ -18,40 +22,6 @@ public class Gen {
 
     public Gen(Gen other) {
         this.index = other.index;
-    }
-
-    MapDirection rotate(MapDirection direction) {
-        return direction.rotate(index * 45);
-    }
-
-    void mutate(MutationVariant variant) {
-        switch (variant) {
-            case MutationVariant.FULL_RANDOM -> mutateFullRandom();
-            case MutationVariant.LITTLE_CORRECTION -> mutateLittleCorrection();
-        }
-    }
-
-    int getIndex() {
-        return index;
-    }
-
-    private void mutateFullRandom() {
-        var random = new Random();
-        var prev = index;
-        while (prev == index) {
-            index = random.nextInt(0, MapDirection.values().length);
-        }
-    }
-
-    private void mutateLittleCorrection() {
-        var random = new Random();
-
-        if (index == 0) {
-            index = random.nextBoolean() ? 1 : 7;
-        } else {
-            int direction = random.nextBoolean() ? 1 : -1;
-            index = (index + direction) % MapDirection.values().length;
-        }
     }
 
     @Override
@@ -71,4 +41,32 @@ public class Gen {
     public String toString() {
         return "%d".formatted(index);
     }
+
+    MapDirection rotate(MapDirection direction) {
+        return direction.rotate(index * 45);
+    }
+
+    void mutate(MutationVariant variant) {
+        switch (variant) {
+            case MutationVariant.FULL_RANDOM -> mutateFullRandom();
+            case MutationVariant.LITTLE_CORRECTION -> mutateLittleCorrection();
+        }
+    }
+
+    private void mutateFullRandom() {
+        var prev = index;
+        while (prev == index) {
+            index = RANDOM.nextInt(0, MapDirection.values().length);
+        }
+    }
+
+    private void mutateLittleCorrection() {
+        if (index == 0) {
+            index = RANDOM.nextBoolean() ? 1 : 7;
+        } else {
+            int direction = RANDOM.nextBoolean() ? 1 : -1;
+            index = (index + direction) % MapDirection.values().length;
+        }
+    }
+
 }

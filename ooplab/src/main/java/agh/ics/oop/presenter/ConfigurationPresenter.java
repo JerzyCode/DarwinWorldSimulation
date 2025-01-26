@@ -57,7 +57,7 @@ public class ConfigurationPresenter {
     @FXML
     private MenuItem forestEquatorsVariant;
     @FXML
-    public MenuItem fullRandomPlantVariant;
+    private MenuItem fullRandomPlantVariant;
     @FXML
     private TextField daysCountInput;
     @FXML
@@ -75,7 +75,7 @@ public class ConfigurationPresenter {
     @FXML
     private TextField startPlantCountInput;
     @FXML
-    public CheckBox saveStatisticsToggle;
+    private CheckBox saveStatisticsToggle;
 
     private WorldMapVariant mapVariant;
     private PlantVariant plantVariant;
@@ -137,6 +137,18 @@ public class ConfigurationPresenter {
                 .build();
     }
 
+    @FXML
+    public void onSaveConfiguration() {
+        var inputName = saveNameInput.getText();
+        try {
+            configurationRepositoryPort.save(createConfiguration(), inputName);
+            addLoadSavedConfigurationPane(inputName);
+        } catch (SaveFailedException e) {
+            System.out.println(e.getMessage());
+            displayError(e.getMessage());
+        }
+    }
+
     private void switchWorldMapVariant(WorldMapVariant newVariant) {
         this.mapVariant = newVariant;
         switch (newVariant) {
@@ -189,16 +201,15 @@ public class ConfigurationPresenter {
 
     private void setTextFieldValidation() {
         mainGridPane.getChildren().stream()
-                .filter(node -> node instanceof TextField)
-                .map(node -> (TextField) node)
+                .filter(TextField.class::isInstance)
+                .map(TextField.class::cast)
                 .forEach(textField -> {
                     textField.setTextFormatter(createTextFormatter());
                     textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                        if (!newValue) {
-                            if (textField.getText().isEmpty()) {
-                                textField.setText("0");
-                            }
+                        if (Boolean.FALSE.equals(newValue) && textField.getText().isEmpty()) {
+                            textField.setText("0");
                         }
+
                     });
                 });
     }
@@ -206,13 +217,13 @@ public class ConfigurationPresenter {
     private TextFormatter<String> createTextFormatter() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
-            if (text.matches("[0-9]*")) {
-                if (change.getControlNewText().isEmpty() ||
-                        change.getControlNewText().equals("0") ||
-                        !change.getControlNewText().startsWith("0")) {
-                    return change;
-                }
+            if (text.matches("[0-9]*") &&
+                    (change.getControlNewText().isEmpty() ||
+                            change.getControlNewText().equals("0") ||
+                            !change.getControlNewText().startsWith("0"))) {
+                return change;
             }
+
 
             return null;
         };
@@ -247,18 +258,6 @@ public class ConfigurationPresenter {
         choosePlantVariant(configuration.getWorldMapConfiguration().getPlantVariant());
     }
 
-
-    @FXML
-    public void onSaveConfiguration() {
-        var inputName = saveNameInput.getText();
-        try {
-            configurationRepositoryPort.save(createConfiguration(), inputName);
-            addLoadSavedConfigurationPane(inputName);
-        } catch (SaveFailedException e) {
-            System.out.println(e.getMessage());
-            displayError(e.getMessage());
-        }
-    }
 
     private void loadSavedConfiguration(String saveName) {
         try {

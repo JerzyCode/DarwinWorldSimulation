@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.InvalidAngleException;
+import lombok.Getter;
 
 import java.util.Random;
 
@@ -15,6 +16,7 @@ public enum MapDirection {
     NORTH_WEST(new Vector2d(-1, 1), "NW");
 
     private final Vector2d vector;
+    @Getter
     private final String symbol;
     private static final Random RANDOM = new Random();
 
@@ -62,9 +64,5 @@ public enum MapDirection {
         MapDirection[] directions = MapDirection.values();
         int randomIndex = RANDOM.nextInt(directions.length);
         return directions[randomIndex];
-    }
-
-    public String getSymbol() {
-        return symbol;
     }
 }

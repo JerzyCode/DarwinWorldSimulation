@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractPlantMap extends SimulationAbstractWorldMap implements PlantWorldMap {
     protected final Map<Vector2d, Plant> plants;
 
-    public AbstractPlantMap() {
+    protected AbstractPlantMap() {
         super();
         this.plants = new ConcurrentHashMap<>();
     }

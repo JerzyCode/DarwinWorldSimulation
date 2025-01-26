@@ -1,7 +1,10 @@
 package agh.ics.oop.model;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class Vector2d {
     private final int x;
     private final int y;
@@ -9,14 +12,6 @@ public class Vector2d {
     public Vector2d(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public boolean precedes(Vector2d other) {

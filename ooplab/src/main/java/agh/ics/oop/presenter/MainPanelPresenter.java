@@ -27,20 +27,11 @@ public class MainPanelPresenter {
 
     private ConfigurationPresenter configurationPresenter;
     private final SimulationEngine simulationEngine = new SimulationEngine();
-
     private final ConfigurationValidator validator = new ConfigurationValidator();
 
     @FXML
     public void initialize() throws IOException {
         loadConfigurationViews();
-    }
-
-    private void loadConfigurationViews() throws IOException {
-        var configurationViewLoader = new FXMLLoader(getClass().getResource(CONFIGURATION_VIEW_RESOURCE));
-        AnchorPane configurationView = configurationViewLoader.load();
-        configurationPresenter = configurationViewLoader.getController();
-        configurationPresenter.setConfiguration(Configuration.getDefaultConfig());
-        contentContainer.getChildren().add(configurationView);
     }
 
 
@@ -71,6 +62,14 @@ public class MainPanelPresenter {
 
     public void onCloseThreadPool() {
         simulationEngine.closeThreadPool();
+    }
+
+    private void loadConfigurationViews() throws IOException {
+        var configurationViewLoader = new FXMLLoader(getClass().getResource(CONFIGURATION_VIEW_RESOURCE));
+        AnchorPane configurationView = configurationViewLoader.load();
+        configurationPresenter = configurationViewLoader.getController();
+        configurationPresenter.setConfiguration(Configuration.getDefaultConfig());
+        contentContainer.getChildren().add(configurationView);
     }
 
     private void createSimulation(Configuration configuration, SimulationPresenter presenter) {

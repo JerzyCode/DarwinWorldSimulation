@@ -8,6 +8,8 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
 import agh.ics.oop.model.event.EventCreator;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.PositionOccupiedByWorldElementException;
+import agh.ics.oop.model.exceptions.PositionOutOfMapBoundaryException;
 import agh.ics.oop.model.map.simulation.SimulationWorldMap;
 import agh.ics.oop.model.move.Move;
 import agh.ics.oop.model.move.MoveAdjuster;
@@ -138,7 +140,7 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                         .filter(Animal::canMakeChild)
                         .sorted(animalComparator.reversed())
                         .limit(2)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .filter(animals -> animals.size() == 2)
                 .forEach(animalsToBreed -> {
                     var parent1 = animalsToBreed.getFirst();
@@ -151,7 +153,8 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
         var child = breeder.breed(parent1, parent2);
         try {
             place(child);
-        } catch (IncorrectPositionException ignored) {
+        } catch (IncorrectPositionException e) {
+            System.out.println("Child cannot be breded, e=" + e.getMessage());
         }
     }
 
@@ -160,7 +163,12 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
-                    } catch (IncorrectPositionException ignored) {
+                    } catch (PositionOccupiedByWorldElementException e) {
+                        // ignored
+                    } catch (PositionOutOfMapBoundaryException e) {
+                        System.out.println("initPlant position out of bound, e=" + e.getMessage());
+                    } catch (IncorrectPositionException e) {
+                        System.out.println("initPlant incorrect position, e=" + e.getMessage());
                     }
                 });
     }
@@ -170,7 +178,12 @@ public class Earth extends AbstractPlantMap implements MoveAdjuster, SimulationW
                 .forEach(plant -> {
                     try {
                         placePlant(plant);
+                    } catch (PositionOccupiedByWorldElementException e) {
+                        // ignored
+                    } catch (PositionOutOfMapBoundaryException e) {
+                        System.out.println("growPlantsDaily position out of bound, e=" + e.getMessage());
                     } catch (IncorrectPositionException e) {
+                        System.out.println("growPlantsDaily incorrect position, e=" + e.getMessage());
                     }
                 });
     }

@@ -1,9 +1,12 @@
 package agh.ics.oop.model.repository;
 
 import agh.ics.oop.model.exceptions.DirectoryNotCreatedException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class DirectoryInitializer {
 
     static File getDirectory(String path) {

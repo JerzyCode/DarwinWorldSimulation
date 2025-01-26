@@ -1,7 +1,6 @@
 package agh.ics.oop.model.map;
 
 import agh.ics.oop.listener.MapChangeListener;
-import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.WorldElement;
@@ -79,14 +78,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         return mapVisualizer.draw(bounds.leftBottomCorner(), bounds.rightTopCorner());
     }
 
-    public abstract Boundary getCurrentBounds();
-
-    protected final boolean isPositionWithinMapBoundary(Vector2d position) {
-        var boundary = getCurrentBounds();
-        return position.follows(boundary.leftBottomCorner()) &&
-                position.precedes(boundary.rightTopCorner());
-    }
-
 
     public void addListener(MapChangeListener listener) {
         mapChangeListeners.add(listener);
@@ -99,4 +90,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected void notifyListeners(MapChangedEvent event) {
         mapChangeListeners.forEach(listener -> listener.mapChanged(this, event));
     }
+
+    protected final boolean isPositionWithinMapBoundary(Vector2d position) {
+        var boundary = getCurrentBounds();
+        return position.follows(boundary.leftBottomCorner()) &&
+                position.precedes(boundary.rightTopCorner());
+    }
+
 }
