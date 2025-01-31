@@ -22,7 +22,7 @@ public class Simulation implements Runnable {
                     try {
                         wait();
                     } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
+                        Thread.currentThread().interrupt(); // jaki jest sens wysyłać interrupt sobie samemu?
                         return;
                     }
                 }
@@ -37,7 +37,7 @@ public class Simulation implements Runnable {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                break;
+                break; // nie wygodniej by było złapać poza pętlą?
             }
         }
 

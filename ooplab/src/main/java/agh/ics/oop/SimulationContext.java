@@ -28,7 +28,7 @@ public class SimulationContext implements StatisticsDataProvider {
     private final SimulationWorldMap worldMap;
     private int currentDay;
     private final Set<Animal> deadAnimals;
-    private final Random random = new Random();
+    private final Random random = new Random(); // static?
     private final List<SimulationFinishedListener> listeners = new ArrayList<>();
     private final Statistics simulationStatistics = new Statistics();
     private final SimulationStatisticsCalculator statisticsCalculator = new SimulationStatisticsCalculator(this);
@@ -57,7 +57,7 @@ public class SimulationContext implements StatisticsDataProvider {
 
 
     public void addMapChangedListener(MapChangeListener listener) {
-        ((AbstractWorldMap) worldMap).addListener(listener);
+        ((AbstractWorldMap) worldMap).addListener(listener); // rzutowanie? czemu takie pośrednictwo? nie lepiej dodawać wprost do mapy?
     }
 
     public void addSimulationFinishedListener(SimulationFinishedListener simulationFinishedListener) {
@@ -76,7 +76,7 @@ public class SimulationContext implements StatisticsDataProvider {
 
     @Override
     public Set<WorldElement> getMapElements() {
-        return (Set<WorldElement>) worldMap.getElements();
+        return (Set<WorldElement>) worldMap.getElements(); // rzutowanie?
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SimulationContext implements StatisticsDataProvider {
             var animal = animalFactory.createAnimal(getRandomAnimalPosition(boundary), currentDay);
             try {
                 worldMap.place(animal);
-            } catch (IncorrectPositionException e) {
+            } catch (IncorrectPositionException e) { // czy to się może zdarzyć?
                 System.out.println("createAnimals(), animal not placed: message=" + e.getMessage());
             }
         }

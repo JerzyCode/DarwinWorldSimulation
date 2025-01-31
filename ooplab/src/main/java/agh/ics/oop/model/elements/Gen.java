@@ -11,7 +11,7 @@ import java.util.Random;
 public class Gen {
     private static final Random RANDOM = new Random();
     @Getter(AccessLevel.PACKAGE)
-    private int index;
+    private int index; // index?
 
     public Gen(int index) {
         if (index < 0 || index >= MapDirection.values().length) {
@@ -42,12 +42,12 @@ public class Gen {
         return "%d".formatted(index);
     }
 
-    MapDirection rotate(MapDirection direction) {
+    MapDirection rotate(MapDirection direction) { // modyfikator dostępu?
         return direction.rotate(index * 45);
     }
 
-    void mutate(MutationVariant variant) {
-        switch (variant) {
+    void mutate(MutationVariant variant) { // modyfikator dostępu?
+        switch (variant) { // czy switch jest najbardziej eleganckim rozwiązaniem?
             case MutationVariant.FULL_RANDOM -> mutateFullRandom();
             case MutationVariant.LITTLE_CORRECTION -> mutateLittleCorrection();
         }

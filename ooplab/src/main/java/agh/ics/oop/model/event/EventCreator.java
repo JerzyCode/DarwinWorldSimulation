@@ -25,7 +25,7 @@ public class EventCreator {
         return MapChangedEvent.builder()
                 .eventType(EventType.ANIMAL_MOVED)
                 .message(String.format("Animal moved to position: %s", animalPosition))
-                .build();
+                .build(); // gdyby nie wzorzec builder to zajęłoby to aż... 1 linijkę
     }
 
     public static MapChangedEvent createAnimalPlacedEvent(Vector2d animalPosition) {

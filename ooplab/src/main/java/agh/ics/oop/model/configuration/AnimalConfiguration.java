@@ -16,7 +16,7 @@ public class AnimalConfiguration {
     private final int minimumMutationCount;
     private final int maximumMutationCount;
     private final int wellFedEnergy;
-    private final int lossCopulateEnergy;
+    private final int lossCopulateEnergy; // nazwa
     private final MutationVariant mutationVariant;
     private final int genomeLength;
 

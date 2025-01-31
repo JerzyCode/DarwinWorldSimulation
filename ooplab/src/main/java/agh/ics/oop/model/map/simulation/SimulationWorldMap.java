@@ -5,7 +5,7 @@ import agh.ics.oop.model.map.WorldMap;
 
 import java.util.Set;
 
-public interface SimulationWorldMap extends WorldMap {
+public interface SimulationWorldMap extends WorldMap { // czemu to jest dodatkowy interfejs?
     void handleDayEnds(int currentDay);
 
     void clearDeadAnimals();

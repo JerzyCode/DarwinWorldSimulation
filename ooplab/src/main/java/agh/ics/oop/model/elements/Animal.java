@@ -77,7 +77,7 @@ public class Animal implements WorldElement {
     }
 
     public Set<Animal> getParents() {
-        return Collections.unmodifiableSet(parents);
+        return Collections.unmodifiableSet(parents); // a to by w ogóle mogło być niemodyfikowalne - raczej się nie zmienia rodziców w czasie życia
     }
 
     public Set<Animal> getDescendants() {
@@ -86,11 +86,11 @@ public class Animal implements WorldElement {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException {
+    public List<Gen> getPartOfGens(int count, boolean left) throws InvalidCountException { // czemu nie IllegalArgumentException? i czemu checked?
         if (count < 0) {
             throw new InvalidCountException();
         }
-        return genome.getPartOfGenome(count, left);
+        return genome.getPartOfGenome(count, left); // po co takie pośrednictwo?
     }
 
     public void move(MoveValidator moveValidator) {

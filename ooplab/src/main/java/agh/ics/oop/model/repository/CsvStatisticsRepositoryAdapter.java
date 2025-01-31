@@ -9,7 +9,7 @@ public class CsvStatisticsRepositoryAdapter implements StatisticsRepositoryPort,
     private final File directory;
     private BufferedWriter writer;
 
-    CsvStatisticsRepositoryAdapter(String path) {
+    CsvStatisticsRepositoryAdapter(String path) { // modyfikator dostępu?
         directory = DirectoryInitializer.getDirectory(path);
     }
 

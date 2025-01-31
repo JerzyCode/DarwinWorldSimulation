@@ -9,7 +9,7 @@ import java.io.File;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class DirectoryInitializer {
 
-    static File getDirectory(String path) {
+    static File getDirectory(String path) { // modyfikator dostępu?
         File directory = new File(path);
         if (!directory.exists()) {
             var createdDirectory = directory.mkdirs();

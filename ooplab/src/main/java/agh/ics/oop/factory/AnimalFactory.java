@@ -36,8 +36,8 @@ public class AnimalFactory {
                 .startDay(birthDay)
                 .wellFedEnergy(animalConfiguration.getWellFedEnergy())
                 .energy(animalConfiguration.getStartEnergy())
-                .parents(new HashSet<>())
-                .countOfEatenPlants(0)
+                .parents(new HashSet<>()) // sens buildera polega na tym, że nie musimy przekazywać wartości dla wszystkich atrybutów
+                .countOfEatenPlants(0) // a można się urodzić mając już zjedzoną trawę?
                 .build();
     }
 

@@ -726,7 +726,7 @@ class AnimalTest {
     }
 
     @Test
-    void testBirthAnimal(){
+    void testBirthAnimal() {
         // given
 
         var genome = new Genome(List.of(new Gen(0), new Gen(1), new Gen(2), new Gen(3)));

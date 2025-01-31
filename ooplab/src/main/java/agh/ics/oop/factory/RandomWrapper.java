@@ -3,8 +3,8 @@ package agh.ics.oop.factory;
 import java.util.Random;
 
 //test purpose
-class RandomWrapper {
-    private final Random random = new Random();
+class RandomWrapper { // co wnosi ta klasa?
+    private final Random random = new Random(); // static?
 
     int nextInt(int origin, int bound) {
         return random.nextInt(origin, bound);

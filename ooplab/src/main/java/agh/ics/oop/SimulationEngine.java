@@ -21,7 +21,7 @@ public class SimulationEngine {
         return uuid;
     }
 
-    public void runAsyncInThreadPool(UUID simulationUUID) {
+    public void runAsyncInThreadPool(UUID simulationUUID) { // jest sens rozdzielać dodanie symulacji od uruchomienia?
         var simulation = simulations.get(simulationUUID);
         executor.submit(simulation);
     }

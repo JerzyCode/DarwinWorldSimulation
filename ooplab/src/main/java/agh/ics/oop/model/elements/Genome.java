@@ -26,7 +26,7 @@ public class Genome {
         this.currentIndex = index;
     }
 
-    public void mutate(int count) {
+    public void mutate(int count) { // public?
         count = Math.min(count, gens.size());
 
         var indices = new ArrayList<Integer>();

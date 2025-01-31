@@ -52,7 +52,7 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
     }
 
     @Override
-    public boolean placeFire(Fire fire) {
+    public boolean placeFire(Fire fire) { // public?
         var position = fire.getPosition();
         if (canPlaceFire(position)) {
             fires.put(position, fire);
@@ -74,7 +74,7 @@ public class FireEarth extends Earth implements FireWorldMap, FireValidator {
 
 
     @Override
-    public void placePlant(Plant plant) throws IncorrectPositionException {
+    public void placePlant(Plant plant) throws IncorrectPositionException { // public?
         var position = plant.getPosition();
         if (isFireAtPosition(position)) {
             throw new PositionOccupiedByWorldElementException(position, Plant.class.getSimpleName(), Fire.class.getSimpleName());
