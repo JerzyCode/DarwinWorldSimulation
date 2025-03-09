@@ -30,9 +30,10 @@
 2. Download and install the **JavaFX SDK** if not already installed:
     - [JavaFX SDK](https://gluonhq.com/products/javafx/)
 3. Build and run using Gradle:
-   ```bash
-   ./gradlew run
-   ```
+
+   build:    ```./gradlew build```
+
+   run: ```./gradlew run```
 
 ## 🎮 How to Use the Project
 1. **Start a new simulation** by selecting a predefined configuration or creating a custom one.
